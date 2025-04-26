@@ -1,0 +1,158 @@
+/**  main  **/
+div.contenedor-main-home {
+    background-color: rgb(211, 211, 211);
+}
+
+div.contenedor-main-home h5 {
+    margin-top: 10px;
+    color: #042549;
+}
+
+div.contenedor-main-home p {
+    font-size: 14px;
+    color: #042549;
+}
+
+/*!  carrusel  !*/
+div.carousel {
+    width: 100%;
+    margin: auto;
+}
+
+div.carousel-item img {
+    height: 88vh;
+    padding-bottom: 2px;
+}
+
+/*!  carrusel  !*/
+
+div.caja-letras {
+    width: 60%;
+    margin: auto;
+    position: absolute;
+    z-index: 1;
+    top: 75%;
+    left: 20%;
+    text-align: center;
+    background-color: #222222;
+    border-radius: 10px;
+    padding: 24px;
+}
+
+div.caja-letras h1 {
+    color: white;
+}
+
+div.caja-letras p {
+    color: white;
+}
+
+div.caja-letras button {
+    background-color: #238744;
+    border-radius: 50px;
+    padding: 14px 14px;
+    border: none;
+    width: 25%;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-letras button:hover {
+    cursor: pointer;
+    background: #1d3d5f;
+    box-shadow: 7px 7px 0px -1px rgba(0, 0, 0, 0.75);
+    transform: translateY(-7px);
+}
+
+div.caja-letras a button {
+    text-decoration: none;
+    font-size: 18px;
+}
+
+div.contenedor-textos {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 60%;
+    margin: auto;
+}
+
+hr.linea-main {
+    border-color: #042549;
+    opacity: 0.8;
+    width: 100%;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+hr.linea-main-2 {
+    border-color: #042549;
+    opacity: 0.8;
+    width: 100%;
+    margin: 0;
+    margin-top: 20px;
+}
+
+div.caja-textos {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 50px;
+    height: 50%;
+    padding-top: 10px;
+}
+
+div.caja-textos2 {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+    height: 50%;
+    padding-bottom: 10px;
+}
+
+div.caja-comoFunciona-izq {
+    width: 50%;
+    padding: 0 60px 0 0;
+}
+
+div.caja-comoFunciona-der {
+    width: 50%;
+    text-align: end;
+    padding: 0 0 0 60px;
+}
+
+div.imagen-derecha {
+    width: 50%;
+    text-align: end;
+    padding-left: 60px;
+    padding-top: 10px;
+}
+
+div.imagen-izquiera {
+    width: 50%;
+    text-align: start;
+    padding-right: 60px;
+    padding-top: 10px;
+}
+
+div.imagen-derecha img,
+div.imagen-izquiera img {
+    width: 100%;
+    height: 90%;
+    border-radius: 5px;
+}
+/**  main  **/
+
+/*?  MEDIA QUERIES  ?*/
+@media (max-width: 1200px) {
+}
+
+@media (max-width: 992px) {
+}
+
+@media (max-width: 768px) {
+}
+
+@media (max-width: 480px) {
+}
+/*?  MEDIA QUERIES  ?*/

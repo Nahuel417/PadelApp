@@ -1,0 +1,16 @@
+verde claro: #94C93D
+verde inputs: #004919
+verde header: #238744;
+verde oscuro: #004919
+#5e936f
+
+
+azul oscuro: #042549
+azul oscuro2: #092747
+azul claro: #1452aa
+
+fondo blanco: #d3d3d3
+
+gris opaco: #333333
+
+

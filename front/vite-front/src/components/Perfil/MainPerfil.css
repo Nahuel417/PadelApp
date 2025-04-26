@@ -1,0 +1,361 @@
+/**  main  **/
+* {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+#main {
+    background-color: #d3d3d3;
+}
+
+div.contenedor-main-perfil {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+    min-height: 69vh;
+}
+
+div.contenedor-main-perfil h3 {
+    color: #092747;
+}
+
+hr.linea-titulo {
+    border-color: #092747;
+    opacity: 0.8;
+}
+
+div.contenedor-perfil {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+    gap: 90px;
+    width: 100%;
+    margin: 90px 0;
+}
+
+div.caja-avatar {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+div.caja-avatar div.card {
+    display: flex;
+    max-width: 300px;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 50%;
+    border: none;
+    transition: all 0.4s ease-in-out;
+}
+
+div.card:hover {
+    transform: scale(1.03);
+}
+
+div.card a {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: none;
+}
+
+div.card a img {
+    border: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+div.card a div.card-img-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid transparent;
+    border-radius: 50%;
+    background-color: black;
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease-out;
+}
+
+div.card a div.card-img-overlay p {
+    color: white;
+    margin: 0;
+    padding: 10px;
+}
+
+div.card a:hover > div.card-img-overlay {
+    opacity: 0.7;
+    visibility: visible;
+}
+
+div.contenedor-editarAvatar {
+    width: 70%;
+    height: 105%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    color: #092747;
+    border-radius: 10px;
+    background-color: #238744;
+    box-shadow: 15px 15px 0px -1px rgba(0, 0, 0, 0.75);
+    left: 12%;
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.3s ease-in-out;
+}
+
+div.contenedor-editarAvatar.mostrar {
+    opacity: 1;
+    transform: scale(1);
+}
+
+div.contenedor-editarAvatar.ocultar {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+div.contenedor-editarAvatar p {
+    font-size: 18px;
+    margin: 0%;
+}
+
+div.contenedor-editarAvatar div {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+div.contenedor-editarAvatar div label {
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+div.contenedor-editarAvatar div input {
+    width: 100%;
+    color: white;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    outline: none;
+    padding: 2px;
+    font-size: 14px;
+    background-color: #004919;
+    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease-in-out;
+    margin-bottom: 20px;
+}
+
+input[type='file']::-webkit-file-upload-button {
+    background: rgba(0, 73, 26, 0.5);
+    border: 1px solid transparent;
+    border-radius: 3px;
+    outline: none;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 18px;
+    padding: 2.5px;
+}
+
+input[type='file']::-webkit-file-upload-button:hover {
+    cursor: pointer;
+    border: 1px solid #238744;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+div.contenedor-editarAvatar div input:hover {
+    box-shadow: 7px 7px 0px -1px rgba(0, 0, 0, 0.8);
+    transform: translateY(-7px);
+    cursor: pointer;
+}
+
+div.contenedor-editarAvatar div.caja-botones-avatar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+div.contenedor-editarAvatar div.caja-botones-avatar button {
+    color: black;
+    border: 1px solid transparent;
+    border-radius: 50px;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    background-color: #004919;
+    width: 35%;
+    opacity: 0.7;
+    margin-top: 30px;
+    transition: all 0.3s ease-in-out;
+}
+
+div.contenedor-editarAvatar div button:hover {
+    box-shadow: 7px 7px 0px -1px rgba(0, 0, 0, 0.75);
+    transform: translateY(-7px);
+    background: #004919;
+    color: white;
+    opacity: 1;
+}
+
+div.contenedor-editarAvatar div button.cerrar:hover {
+    box-shadow: 7px 7px 0px -1px rgba(0, 0, 0, 0.75);
+    transform: translateY(-7px);
+    background: rgba(211, 211, 211, 0.9);
+    color: black;
+    opacity: 1;
+}
+
+div.caja-info {
+    width: 30%;
+}
+
+div.caja-info h4 {
+    color: #092747;
+    margin-bottom: 30px;
+    text-transform: capitalize;
+}
+
+div.caja-info p {
+    color: #092747;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+div.caja-botones {
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    gap: 20px;
+}
+
+div.caja-botones button#boton-cerrarSesion {
+    width: 80%;
+    border: 1px solid #238744;
+    outline: none;
+    border-radius: 50px;
+    padding: 7px;
+    background-color: rgba(35, 135, 68, 0.4);
+    font-size: 16px;
+    color: black;
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-botones button#boton-cerrarSesion:hover {
+    box-shadow: 7px 7px 0px -1px rgba(0, 0, 0, 0.75);
+    transform: translateY(-7px);
+    background: #238744;
+    color: white;
+}
+
+div.caja-botones button#boton-eliminar {
+    width: 80%;
+    border: 1px solid red;
+    outline: none;
+    border-radius: 50px;
+    padding: 7px;
+    background-color: rgba(255, 0, 0, 0.2);
+    font-size: 16px;
+    color: black;
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-botones button#boton-eliminar:hover {
+    background-color: red;
+    color: white;
+    box-shadow: 7px 7px 0px -1px rgba(0, 0, 0, 0.75);
+    transform: translateY(-7px);
+}
+/** alerts **/
+.swal-modal {
+    width: 550px;
+}
+
+.swal-text {
+    font-size: 18px;
+}
+
+.swal-button {
+    background-color: #238744;
+    outline: none;
+}
+
+.swal-button:not([disabled]):hover {
+    background-color: #004919;
+}
+
+.swal-button--cancel {
+    color: white;
+    background-color: rgba(255, 0, 0, 0.7);
+}
+
+.swal-button--cancel:not([disabled]):hover {
+    background-color: rgb(97, 0, 0);
+}
+/** alerts **/
+/**  main  **/
+
+/*?  MEDIA QUERIES  ?*/
+@media (max-width: 1500px) {
+    div.contenedor-main-perfil {
+        width: 80%;
+    }
+
+    div.contenedor-main-perfil {
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 1200px) {
+    div.contenedor-perfil {
+        gap: 130px;
+    }
+
+    div.caja-avatar div.card {
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 992px) {
+    div.caja-botones button#boton-cerrarSesion,
+    div.caja-botones button#boton-eliminar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    div.contenedor-main-perfil {
+        margin-top: 40px;
+    }
+
+    div.contenedor-perfil {
+        flex-direction: column;
+        margin-top: 0;
+        margin-bottom: 40px;
+        gap: 60px;
+    }
+
+    div.caja-info {
+        width: 80%;
+        text-align: center;
+        margin: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    div.caja-avatar div.card {
+        min-width: 240px;
+    }
+}
+/*?  MEDIA QUERIES  ?*/

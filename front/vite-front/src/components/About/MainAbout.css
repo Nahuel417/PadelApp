@@ -1,0 +1,54 @@
+/**  main  **/
+* {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+#main {
+    background-color: #d3d3d3;
+}
+
+div.contenedor-main-about {
+    width: 60%;
+    /* min-height: 61.4vh; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+div.contenedor-main-about h2 {
+    color: #092747;
+}
+
+hr.linea-titulo {
+    border-color: #092747;
+    opacity: 0.8;
+}
+
+div.caja-info-about p {
+    color: #092747;
+    font-size: 18px;
+}
+
+div.caja-info-about h3,
+div.caja-info-about h4 {
+    color: #092747;
+}
+
+div.caja-info-about ul li {
+    color: #092747;
+}
+
+article.formacion,
+article.contacto {
+    margin: 40px 0;
+}
+
+h3.despedida {
+    text-align: center;
+}
+
+/**  main  **/

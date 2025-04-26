@@ -1,0 +1,32 @@
+/**  main  **/
+* {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+#main {
+    background-color: #d3d3d3;
+}
+
+div.contenedor-main-error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 60%;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: 60px;
+}
+
+div.contenedor-main-error h3 {
+    color: #092747;
+    margin: 0;
+}
+
+hr.linea-titulo {
+    border-color: #092747;
+    opacity: 0.8;
+    width: 100%;
+    margin: 10px 0 20px 0;
+}
+/**  main  **/

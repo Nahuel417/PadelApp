@@ -1,0 +1,249 @@
+/**  main  **/
+* {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+#main {
+    background-color: #d3d3d3;
+}
+
+div.contenedor-main-alquilar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 60%;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: 60px;
+}
+
+div.contenedor-main-alquilar h3 {
+    color: #092747;
+    margin: 0;
+}
+
+hr.linea-titulo {
+    border-color: #092747;
+    opacity: 0.8;
+    width: 100%;
+    margin: 10px 0 20px 0;
+}
+
+div.contenedor-main-alquilar p.aviso {
+    padding: 15px;
+    font-size: 16px;
+    background-color: #1d3d5f;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-inputs {
+    margin-top: 50px;
+    border-radius: 10px;
+    background-color: #238744;
+    padding: 20px 40px;
+    box-shadow: 15px 15px 0px -1px rgba(0, 0, 0, 0.75);
+}
+
+div.caja-inputs p.feedback-negativo {
+    font-size: 14px;
+    height: 14px;
+    margin: 8px 0 0 5px;
+    color: rgb(175, 4, 4);
+}
+
+div.caja-inputs label {
+    font-size: 18px;
+    color: white;
+}
+
+div.caja-asunto {
+    display: flex;
+    flex-direction: column;
+    margin: 50px 0;
+}
+
+div.caja-asunto div.caja-select select {
+    color: white;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    outline: none;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #004919;
+    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.7);
+    margin-top: 5px;
+    appearance: none;
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-asunto div.caja-select select:hover {
+    cursor: pointer;
+    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.9);
+    transform: translateY(-7px);
+}
+
+div.caja-asunto div.caja-select select:focus {
+    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.9);
+    transform: translateY(-7px);
+}
+
+div.caja-select svg {
+    position: absolute;
+    right: 10px;
+    top: 40%;
+    pointer-events: none;
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-asunto div.caja-select select:hover ~ svg {
+    transform: translateY(-7px);
+}
+
+div.caja-asunto div.caja-select select:focus ~ svg {
+    transform: translateY(-7px);
+}
+
+div.caja-datos {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px 0;
+}
+
+div.caja-inputsDatos {
+    display: flex;
+    flex-direction: column;
+    width: 22%;
+}
+
+div.caja-select {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+div.caja-select input,
+div.caja-select select {
+    width: 100%;
+}
+
+input[type='date']::-webkit-inner-spin-button,
+input[type='date']::-webkit-calendar-picker-indicator {
+    -webkit-appearance: none;
+    cursor: pointer;
+    opacity: 0;
+}
+
+input[type='time']::-webkit-inner-spin-button,
+input[type='time']::-webkit-calendar-picker-indicator {
+    -webkit-appearance: none;
+    cursor: pointer;
+    opacity: 0;
+}
+
+div.caja-select select,
+div.caja-select input {
+    color: white;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    outline: none;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #004919;
+    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.7);
+    margin-top: 5px;
+    appearance: none;
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-select select:hover,
+div.caja-select input:hover {
+    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.9);
+    transform: translateY(-7px);
+    cursor: pointer;
+}
+
+div.caja-select select:focus,
+div.caja-select input:focus {
+    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.9);
+    transform: translateY(-7px);
+}
+
+div.caja-select select:hover ~ svg,
+div.caja-select input:hover ~ svg {
+    transform: translateY(-7px);
+}
+
+div.caja-select select:focus ~ svg,
+div.caja-select input:focus ~ svg {
+    transform: translateY(-7px);
+}
+
+div.caja-boton {
+    margin: 50px 0;
+    padding-top: 30px;
+}
+
+div.caja-boton button {
+    color: black;
+    border: 1px solid transparent;
+    border-radius: 50px;
+    outline: none;
+    padding: 8px;
+    font-size: 16px;
+    background-color: #004919;
+    width: 100%;
+    opacity: 0.7;
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-boton button:hover {
+    box-shadow: 7px 7px 0px -1px rgba(0, 0, 0, 0.75);
+    transform: translateY(-7px);
+    background: #004919;
+    color: white;
+    opacity: 1;
+}
+/** alerts **/
+.swal-modal {
+    width: 550px;
+}
+
+.swal-text {
+    font-size: 18px;
+}
+
+.swal-button {
+    background-color: #238744;
+    outline: none;
+}
+
+.swal-button:not([disabled]):hover {
+    background-color: #004919;
+}
+
+.swal-button--cancel {
+    color: white;
+    background-color: rgba(255, 0, 0, 0.7);
+}
+
+.swal-button--cancel:not([disabled]):hover {
+    background-color: rgb(97, 0, 0);
+}
+/** alerts **/
+/**  main  **/
+
+/*?  MEDIA QUERIES  ?*/
+@media (max-width: 1200px) {
+}
+
+@media (max-width: 992px) {
+}
+
+@media (max-width: 768px) {
+}
+
+@media (max-width: 480px) {
+}
+/*?  MEDIA QUERIES  ?*/
