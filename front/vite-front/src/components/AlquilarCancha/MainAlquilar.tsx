@@ -8,16 +8,16 @@ const Main = () => {
     const userActive = useSelector((state) => state.userData.userActive);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (userActive === null) {
-            swal({
-                title: '¡Error de autenticación!',
-                text: 'Debe iniciar sesión para continuar',
-                icon: 'warning',
-            });
-            navigate('/login');
-        }
-    }, [userActive, navigate]);
+    // useEffect(() => {
+    //     if (userActive === null) {
+    //         swal({
+    //             title: '¡Error de autenticación!',
+    //             text: 'Debe iniciar sesión para continuar',
+    //             icon: 'warning',
+    //         });
+    //         navigate('/login');
+    //     }
+    // }, [userActive, navigate]);
 
     return (
         <>
