@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 const CajaPaginas = () => {
@@ -17,7 +16,7 @@ const CajaPaginas = () => {
                 <Link to="/alquilar-cancha"> Alquilar Cancha </Link>
             </li>
             <li>
-                <Link to="/login"> Iniciar Sesión </Link>
+                <Link to="/registro"> Registrar Usuario </Link>
             </li>
         </div>
     );

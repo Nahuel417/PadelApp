@@ -18,12 +18,14 @@ const InputsAlquilar = ({ user }) => {
         try {
             const response = await axios.post('http://localhost:3000/appointments/schedule', formData);
             const appointmentData = response.data;
+
             dispatch(addUserAppointments(appointmentData));
         } catch (error) {
             swal({
                 title: '¡Error!',
                 text: error.response.data.error,
                 icon: 'error',
+                //@ts-ignore
                 button: 'Aceptar',
             });
         }
@@ -38,7 +40,7 @@ const InputsAlquilar = ({ user }) => {
                     horario: '',
                     cancha: '',
                     entrenador: '',
-                    userId: user.id,
+                    userId: user?.id,
                 }}
                 validate={validateAlquilarCancha}
                 onSubmit={(valores, { resetForm }) => {
@@ -48,6 +50,7 @@ const InputsAlquilar = ({ user }) => {
                         title: '¡Exito!',
                         text: 'Cancha Alquilada con exito!',
                         icon: 'success',
+                        //@ts-ignore
                         button: 'Continuar',
                     });
                     navigate('/historial');

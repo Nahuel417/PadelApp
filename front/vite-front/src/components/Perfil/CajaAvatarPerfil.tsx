@@ -18,7 +18,7 @@ const CajaAvatarPerfil = () => {
     return (
         <div className="caja-avatar" id="caja-avatar">
             <div className="card">
-                <Link onClick={handleOnClick}>
+                <Link to="" onClick={handleOnClick}>
                     <img src={user.avatar} alt={`${user.name} ${user.last_name}`} />
                     <div className="card-img-overlay caja-botonEditar">
                         <p>Editar Foto de Perfil</p>

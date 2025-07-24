@@ -1,48 +1,59 @@
 import { Formik, Form, Field } from 'formik';
 import { validateLogin } from '../../helpers/validations';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { addUserActive } from '../../redux/reducer';
-import axios from 'axios';
-import { useEffect } from 'react';
+import swal from 'sweetalert';
+import { signIn } from '../../services/auth';
+import { supabase } from '../../services/supabaseClient';
+import { useUserStore } from '../../store/userStore';
 
 const CajaFormLogin = () => {
-    const userActive = useSelector((state) => state.userData.userActive);
-
-    const dispatch = useDispatch();
+    const addUserActive = useUserStore((state) => state.addUserActive);
     const navigate = useNavigate();
 
-    const postFunctionLogin = async (formData) => {
+    const postFunctionLogin = async (formData: { email: string; password: string; rememberMe: boolean }) => {
         try {
-            const response = await axios.post('http://localhost:3000/users/login', formData);
-            const userData = response.data.user;
+            const data = await signIn(formData.email, formData.password);
+            const { data: userData, error } = await supabase.from('users').select('*').eq('id', data.user.id).maybeSingle();
 
-            if (response.data.login) {
-                dispatch(addUserActive(userData));
-                navigate('/mi-perfil');
+            if (error || !userData) {
+                throw new Error(error?.message || 'Usuario no encontrado');
             }
-        } catch (error) {
+
+            // Guardar en localStorage o sessionStorage según checkbox
+            const storage = formData.rememberMe ? localStorage : sessionStorage;
+            storage.setItem('userActive', JSON.stringify(userData));
+
+            addUserActive(userData);
+            swal({
+                title: '¡Bienvenido!',
+                text: 'Has iniciado sesión correctamente.',
+                icon: 'success',
+                // @ts-ignore
+                button: 'Continuar',
+            });
+
+            navigate('/mi-perfil');
+        } catch (error: any) {
+            const supabaseErrorMessage =
+                error?.message === 'Invalid login credentials' || error?.code === 'invalid_credentials' ? 'Credenciales invalidas.' : error?.message || 'Ocurrió un error inesperado.';
+
             swal({
                 title: '¡Error!',
-                text: error.response.data.error,
+                text: supabaseErrorMessage,
                 icon: 'error',
+                // @ts-ignore
                 button: 'Aceptar',
             });
         }
     };
 
-    useEffect(() => {
-        if (userActive !== null) {
-            navigate('/mi-perfil');
-        }
-    }, [userActive, navigate]);
-
     return (
         <>
-            <Formik
+            <Formik<{ email: string; password: string; rememberMe: boolean }>
                 initialValues={{
                     email: '',
                     password: '',
+                    rememberMe: false,
                 }}
                 validate={validateLogin}
                 onSubmit={(valores) => {
@@ -65,7 +76,7 @@ const CajaFormLogin = () => {
 
                             <div className="cookie-recuerdame" id="cookie-recuerdame">
                                 <div>
-                                    <Field type="checkbox" name="cookie" id="inputCookie" />
+                                    <Field type="checkbox" name="rememberMe" id="inputRememberMe" />
                                     <label>Recuerdame</label>
                                 </div>
 

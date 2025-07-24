@@ -5,7 +5,9 @@ import { validateRegister } from '../../helpers/validations';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CajaLabelRegistro from './CajaLabelRegistro';
-import axios from 'axios';
+import { signUp } from '../../services/auth';
+import { supabase } from '../../services/supabaseClient';
+import { IRegisterForm } from '../../interfaces/authInterfaces';
 
 const CajaFormRegistro = () => {
     const [labels1, setLabels1] = useState(labelsRegistro1);
@@ -13,14 +15,31 @@ const CajaFormRegistro = () => {
 
     const navigate = useNavigate();
 
-    const postFunctionRegister = async (formData) => {
+    const postFunctionRegister = async (formData: IRegisterForm) => {
         try {
-            await axios.post('http://localhost:3000/users/register', formData);
+            const data = await signUp(formData.email, formData.password);
+
+            const user = data.user;
+
+            if (user) {
+                console.log('entro');
+
+                await supabase.from('users').insert([
+                    {
+                        id: user.id,
+                        first_name: formData.first_name,
+                        last_name: formData.last_name,
+                        birthday: formData.birthday,
+                        email: formData.email,
+                    },
+                ]);
+            }
 
             swal({
                 title: '¡Exito!',
                 text: 'Fue registrado con exito!',
                 icon: 'success',
+                // @ts-ignore
                 button: 'Continuar',
             });
 
@@ -30,6 +49,7 @@ const CajaFormRegistro = () => {
                 title: '¡Error!',
                 text: error.response.data.error,
                 icon: 'error',
+                // @ts-ignore
                 button: 'Aceptar',
             });
         }
@@ -39,7 +59,7 @@ const CajaFormRegistro = () => {
         <>
             <Formik
                 initialValues={{
-                    name: '',
+                    first_name: '',
                     last_name: '',
                     email: '',
                     password: '',
@@ -56,8 +76,7 @@ const CajaFormRegistro = () => {
                             <div className="contendor-form-registro" id="contendor-form-registro">
                                 <div className="caja-inputs-1" id="caja-inputs-1">
                                     {labels1.map((label, index) => {
-                                        const errorName =
-                                            label === 'nombre' ? 'name' : label === 'contraseña' ? 'password' : label === 'Fecha de Nacimiento' ? 'birthday' : 'email';
+                                        const errorName = label === 'nombre' ? 'first_name' : label === 'contraseña' ? 'password' : label === 'Fecha de Nacimiento' ? 'birthday' : 'email';
 
                                         return <CajaLabelRegistro key={index} label={label} errores={errors[errorName]} />;
                                     })}

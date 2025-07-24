@@ -3,13 +3,15 @@ import InputsAlquilar from './InputsAlquilar';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './MainAlquilar.css';
+import { RootState } from '../../redux/store';
+import { useUserStore } from '../../store/userStore';
 
 const Main = () => {
-    const userActive = useSelector((state) => state.userData.userActive);
+    const userActive = useUserStore((state) => state.userActive);
     const navigate = useNavigate();
 
     // useEffect(() => {
-    //     if (userActive === null) {
+    //     if (!userActive) {
     //         swal({
     //             title: '¡Error de autenticación!',
     //             text: 'Debe iniciar sesión para continuar',
@@ -30,7 +32,7 @@ const Main = () => {
                         Complete el siguiente formulario para alquilar una cancha. <b>Recuerde que el horario para hacerlo es de 15:00hs a 23:00hs.</b>
                     </p>
 
-                    <InputsAlquilar user={userActive !== null ? userActive.user : ''} />
+                    <InputsAlquilar user={userActive ? userActive : null} />
                 </div>
             </main>
         </>

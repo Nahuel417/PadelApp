@@ -187,6 +187,7 @@ div.cookie-recuerdame span a {
 div.cookie-recuerdame span a:hover {
     text-decoration: none;
 }
+
 /** alerts **/
 .swal-modal {
     width: 550px;
@@ -196,15 +197,8 @@ div.cookie-recuerdame span a:hover {
     font-size: 18px;
 }
 
-.swal-button {
-    background-color: #238744;
-    outline: none;
-}
-
-.swal-button:not([disabled]):hover {
-    background-color: #004919;
-}
 /** alerts **/
+
 /**  main  **/
 
 /*?  MEDIA QUERIES  ?*/

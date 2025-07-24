@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    userActive: null,
+    userActive: undefined,
     userAppointments: [],
 };
 
@@ -13,7 +13,7 @@ const userSlice = createSlice({
             state.userActive = action.payload;
         },
 
-        removeUserActive: (state, action) => {
+        removeUserActive: (state) => {
             state.userActive = null;
         },
 

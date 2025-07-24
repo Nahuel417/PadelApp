@@ -1,44 +1,41 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { userAppointments } from '../../redux/reducer';
 import CajaTurno from './CajaTurno';
 import CajaThead from './CajaThead';
 import axios from 'axios';
+// import Swal from 'sweetalert2';
 import './MainMiHistorial.css';
+import { RootState } from '../../redux/store';
+import { useUserStore } from '../../store/userStore';
+import { Reservation } from '../../interfaces/reservationInterface';
 
 const MainMiHistorial = () => {
-    const allUserAppointments = useSelector((state) => state.userData.userAppointments);
-    const [turnos, setTurnos] = useState([]);
-    const userActive = useSelector((state) => state.userData.userActive);
+    const userActive = useUserStore((state) => state.userActive);
+    const allUserAppointments = useSelector((state: RootState) => state.userData.userAppointments);
+    // const userReservations = useUserStore((state) => state.userReservations);
+    // const setUserReservations = useUserStore((state) => state.setUserReservations);
+    // const [turnos, setTurnos] = useState([]);
+    const [turnos, setTurnos] = useState<Reservation[]>([]);
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const fetchData = async () => {
-        try {
-            await axios.get(`http://localhost:3000/users/${userActive.user.id}`).then((res) => setTurnos(res.data.appointments));
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     // useEffect para la peticion al back
     useEffect(() => {
-        if (userActive !== null) {
-            fetchData();
-        } else {
-            swal({
-                title: '¡Error de autenticación!',
-                text: 'Debe iniciar sesión para continuar',
-                icon: 'warning',
-            });
-            navigate('/login');
-        }
-    }, [userActive, navigate]);
+        const fetchData = async () => {
+            try {
+                await axios.get(`http://localhost:3000/users/${userActive?.id}`).then((res) => setTurnos(res.data.appointments));
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     // useEffect para despachar los turnos
     useEffect(() => {
+        // setUserReservations(turnos);
         dispatch(userAppointments(turnos));
     }, [dispatch, turnos]);
 
@@ -57,8 +54,8 @@ const MainMiHistorial = () => {
                         <CajaThead />
 
                         {allUserAppointments?.length ? (
-                            allUserAppointments.map((turno) => {
-                                return <CajaTurno key={turno.id} turno={turno} />;
+                            allUserAppointments.map((reserva) => {
+                                return <CajaTurno key={reserva.id} reserva={reserva} />;
                             })
                         ) : (
                             <p className="ningun-turno">No se encontraron turnos realizados.</p>

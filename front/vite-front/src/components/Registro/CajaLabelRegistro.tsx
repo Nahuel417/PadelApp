@@ -50,7 +50,7 @@ const CajaLabelRegistro = ({ label, errores }) => {
                 <>
                     <Field
                         type={label === 'contraseña' ? 'password' : 'text'}
-                        name={label === 'nombre' ? 'name' : label === 'apellido' ? 'last_name' : label === 'contraseña' ? 'password' : 'email'}
+                        name={label === 'nombre' ? 'first_name' : label === 'apellido' ? 'last_name' : label === 'contraseña' ? 'password' : 'email'}
                         className={label}
                         placeholder={`Ingrese su ${label}`}
                     />
@@ -59,7 +59,7 @@ const CajaLabelRegistro = ({ label, errores }) => {
                         <p className="feedback-negativo" id="feedback-negativo"></p>
                     ) : (
                         <ErrorMessage
-                            name={label === 'nombre' ? 'name' : label === 'apellido' ? 'last_name' : label === 'contraseña' ? 'password' : 'email'}
+                            name={label === 'nombre' ? 'first_name' : label === 'apellido' ? 'last_name' : label === 'contraseña' ? 'password' : 'email'}
                             component={() => (
                                 <p className="feedback-negativo" id="feedback-negativo">
                                     {errores}

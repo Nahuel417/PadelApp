@@ -1,8 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import CajaAvatarPerfil from './CajaAvatarPerfil';
 import CajaInfoPerfil from './CajaInfoPerfil';
 import './MainPerfil.css';
+import { useUserStore } from '../../store/userStore';
+import { useEffect } from 'react';
 
 const MainPerfil = () => {
+    const userActive = useUserStore((state) => state.userActive);
+
     return (
         <>
             <main id="main">
@@ -13,7 +18,7 @@ const MainPerfil = () => {
                     <div className="contenedor-perfil">
                         <CajaAvatarPerfil />
 
-                        <CajaInfoPerfil />
+                        <CajaInfoPerfil userActive={userActive} />
                     </div>
                 </div>
             </main>

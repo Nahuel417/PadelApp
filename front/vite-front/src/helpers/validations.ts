@@ -1,6 +1,21 @@
+interface Errors {
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+    birthday?: string;
+    message?: string;
+    asunto?: string;
+    fecha?: string;
+    horario?: string;
+    cancha?: string;
+    entrenador?: string;
+}
+
 //! Validaciones del Login
 export const validateLogin = (valores) => {
-    let errores = {};
+    let errores: Errors = {};
 
     //* email */
     const isEmail = /^.+@.+\..+$/;
@@ -8,7 +23,6 @@ export const validateLogin = (valores) => {
     else if (!isEmail.test(valores.email)) errores.email = 'Debe ingresar un email valido';
 
     //* password */
-    // const isAlphanumeric = /^[a-zA-Z0-9]+$/;
     function isAlphanumeric(password) {
         return password.split('').some((caracter) => caracter >= '0' && caracter <= '9');
     }
@@ -21,12 +35,12 @@ export const validateLogin = (valores) => {
 
 //! Validaciones del Register
 export const validateRegister = (valores) => {
-    let errores = {};
+    let errores: Errors = {};
 
     //* name */
     const validName = /^(?!\s*$)[\p{L}\s]+$/u;
-    if (!valores.name) errores.name = 'Debe ingresar un nombre';
-    else if (!validName.test(valores.name)) errores.name = 'Nombre invalido';
+    if (!valores.first_name) errores.first_name = 'Debe ingresar un nombre';
+    else if (!validName.test(valores.first_name)) errores.first_name = 'Nombre invalido';
 
     //* last_name */
     const validLast_name = /^(?!\s*$)[\p{L}\s]+$/u;
@@ -68,7 +82,7 @@ export const validateRegister = (valores) => {
 
 //! Validaciones del alquilar
 export const validateAlquilarCancha = (valores) => {
-    let errores = {};
+    let errores: Errors = {};
 
     //* asunto */
     if (!valores.asunto) errores.asunto = 'Debe seleccionar un asunto';
@@ -99,7 +113,7 @@ export const validateAlquilarCancha = (valores) => {
 
 //! Validaciones del Contacto
 export const validateContact = (valores) => {
-    let errores = {};
+    let errores: Errors = {};
 
     //* email */
     const isEmail = /^.+@.+\..+$/;
