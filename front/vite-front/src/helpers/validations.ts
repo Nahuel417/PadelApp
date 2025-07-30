@@ -6,7 +6,7 @@ interface Errors {
     confirmPassword?: string;
     birthday?: string;
     message?: string;
-    asunto?: string;
+    affair?: string;
     fecha?: string;
     horario?: string;
     cancha?: string;
@@ -85,7 +85,7 @@ export const validateAlquilarCancha = (valores) => {
     let errores: Errors = {};
 
     //* asunto */
-    if (!valores.asunto) errores.asunto = 'Debe seleccionar un asunto';
+    if (!valores.affair) errores.affair = 'Debe seleccionar un asunto';
 
     //* date */
     const fechaActual = new Date().toISOString().split('T')[0];
@@ -106,7 +106,7 @@ export const validateAlquilarCancha = (valores) => {
     if (!valores.cancha) errores.cancha = 'Debe ingresar un cancha';
 
     //* entrenador */
-    if (valores.asunto !== 'Jugar' && (!valores.entrenador || valores.entrenador === '- -')) errores.entrenador = 'Debe seleccionar un entrenador';
+    if (valores.affair !== 'Jugar' && (!valores.entrenador || valores.entrenador === '- -')) errores.entrenador = 'Debe seleccionar un entrenador';
 
     return errores;
 };

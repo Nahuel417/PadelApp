@@ -12,7 +12,7 @@ interface UserState {
 
     setUserReservations: (reservations: Reservation[]) => void;
     addUserReservation: (reservation: Reservation) => void;
-    editUserReservation: (id: string, status: string) => void;
+    editUserReservation: (id: string, status: string, cancelled_at: string) => void;
 }
 
 export const useUserStore = create<UserState>()((set) => ({
@@ -29,8 +29,8 @@ export const useUserStore = create<UserState>()((set) => ({
             userReservations: [...state.userReservations, reservation],
         })),
 
-    editUserReservation: (id, status) =>
+    editUserReservation: (id, status, cancelled_at) =>
         set((state) => ({
-            userReservations: state.userReservations.map((r) => (r.id === id ? { ...r, status } : r)),
+            userReservations: state.userReservations.map((r) => (r.id === id ? { ...r, status, cancelled_at } : r)),
         })),
 }));

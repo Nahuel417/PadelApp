@@ -1,29 +1,28 @@
-import { useEffect, useState } from 'react';
-import { editUserAppointment } from '../../redux/reducer';
-import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import { useState } from 'react';
 import { Reservation } from '../../interfaces/reservationInterface';
+import { cancelReservation } from '../../services/reservation';
+import { useUserStore } from '../../store/userStore';
+import { ReservationStatus } from '../../utils/reservationStatus.enum';
 
 interface ReservaProps {
     reserva: Reservation;
 }
 
-// const CajaTurno = ({ reserva: { id, asunto, fecha, horario, cancha, entrenador, status } }) => {
 const CajaTurno = ({ reserva }: ReservaProps) => {
     const { id, affair, user_id, court_id, coach_id, reservation_date, start_time, end_time, total_amount, status, payment_status } = reserva;
-
-    const horario = `${start_time} - ${end_time}`;
-
+    const editUserReservation = useUserStore((state) => state.editUserReservation);
     const [estado, setEstado] = useState(status);
-    const dispatch = useDispatch();
+
+    const reservationStatus = ReservationStatus;
+    const horario = `${start_time} - ${end_time}`;
 
     const postFunctionLogin = async () => {
         try {
-            const response = await axios.put(`http://localhost:3000/appointments/cancel/${reserva.id}`);
-            const appointmentData = response.data;
+            const appointmentData: Reservation = await cancelReservation(id);
+            const cancelled_at = new Date().toISOString();
 
-            dispatch(editUserAppointment({ id: appointmentData.id, status: 'cancelado' }));
-            setEstado('cancelado');
+            setEstado(reservationStatus.CANCELLED);
+            editUserReservation(appointmentData.id, reservationStatus.CANCELLED, cancelled_at);
         } catch (error) {
             swal({
                 title: '¡Error!',
@@ -91,7 +90,10 @@ const CajaTurno = ({ reserva }: ReservaProps) => {
                 <span>{`Entrenador ${coach_id}`}</span>
             </div>
             <div>
-                <button className={estado !== 'cancelado' ? 'boton-cancelar' : 'boton-cancelado'} onClick={() => cambiarEstado()} disabled={estado === 'cancelado'}>
+                <button
+                    className={estado !== reservationStatus.CANCELLED ? 'boton-cancelar' : 'boton-cancelado'}
+                    onClick={() => cambiarEstado()}
+                    disabled={estado === reservationStatus.CANCELLED}>
                     Cancelar
                 </button>
             </div>

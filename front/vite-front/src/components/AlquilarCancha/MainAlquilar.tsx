@@ -1,25 +1,9 @@
-import React, { useEffect } from 'react';
 import InputsAlquilar from './InputsAlquilar';
-import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import './MainAlquilar.css';
-import { RootState } from '../../redux/store';
 import { useUserStore } from '../../store/userStore';
+import './MainAlquilar.css';
 
 const Main = () => {
     const userActive = useUserStore((state) => state.userActive);
-    const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     if (!userActive) {
-    //         swal({
-    //             title: '¡Error de autenticación!',
-    //             text: 'Debe iniciar sesión para continuar',
-    //             icon: 'warning',
-    //         });
-    //         navigate('/login');
-    //     }
-    // }, [userActive, navigate]);
 
     return (
         <>

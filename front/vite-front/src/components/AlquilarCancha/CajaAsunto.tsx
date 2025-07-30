@@ -11,7 +11,7 @@ const CajaAsunto = ({ error }) => {
                 <label> Asunto </label>
             </div>
             <div className="caja-select">
-                <Field as="select" name="asunto" id="select-asunto">
+                <Field as="select" name="affair" id="select-asunto">
                     <option value={''} disabled selected>
                         Seleccione un Asunto
                     </option>
@@ -33,7 +33,7 @@ const CajaAsunto = ({ error }) => {
                 <p className="feedback-negativo" id="feedback-negativo"></p>
             ) : (
                 <ErrorMessage
-                    name="asunto"
+                    name="affair"
                     component={() => (
                         <p className="feedback-negativo" id="feedback-negativo">
                             {error}

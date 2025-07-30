@@ -13,10 +13,10 @@ const CajaInputsDatos = ({ label, errores, valores, setFieldValue }) => {
     };
 
     useEffect(() => {
-        if (valores.asunto === 'Jugar') {
+        if (valores.affair === 'Jugar') {
             setFieldValue('entrenador', '- -');
         }
-    }, [valores.asunto, setFieldValue]);
+    }, [valores.affair, setFieldValue]);
 
     return (
         <div className="caja-inputsDatos">
@@ -28,7 +28,7 @@ const CajaInputsDatos = ({ label, errores, valores, setFieldValue }) => {
                     <Field type={tipoInput(label)} name={tipoInput(label) === 'date' ? 'fecha' : 'horario'} />
                 ) : (
                     <Field as="select" name={label.toLocaleLowerCase()}>
-                        <option value="" disabled={label === 'Cancha' || valores.asunto === ''} selected>
+                        <option value="" disabled={label === 'Cancha' || valores.affair === ''} selected>
                             - -
                         </option>
                         {label === 'Cancha'
@@ -41,7 +41,7 @@ const CajaInputsDatos = ({ label, errores, valores, setFieldValue }) => {
                               })
                             : misEntrenadores.map((entrenador, index) => {
                                   return (
-                                      <option value={entrenador} key={index} disabled={valores.asunto === 'Jugar'}>
+                                      <option value={entrenador} key={index} disabled={valores.affair === 'Jugar'}>
                                           {entrenador}
                                       </option>
                                   );

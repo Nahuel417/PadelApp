@@ -1,5 +1,3 @@
-import React from 'react';
-
 const CajaThead = () => {
     return (
         <div className="caja-thead">

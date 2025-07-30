@@ -153,33 +153,7 @@ div.caja-turno button.boton-cancelado {
 div.caja-turno button.boton-cancelado:hover {
     cursor: not-allowed;
 }
-/** alerts **/
-.swal-modal {
-    width: 600px;
-}
 
-.swal-text {
-    font-size: 18px;
-}
-
-.swal-button {
-    background-color: #238744;
-    outline: none;
-}
-
-.swal-button:not([disabled]):hover {
-    background-color: #004919;
-}
-
-.swal-button--cancel {
-    color: white;
-    background-color: rgba(255, 0, 0, 0.7);
-}
-
-.swal-button--cancel:not([disabled]):hover {
-    background-color: rgb(97, 0, 0);
-}
-/** alerts **/
 /**  main  **/
 
 /*?  MEDIA QUERIES  ?*/
