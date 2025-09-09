@@ -36,73 +36,51 @@ div.contenedor-main-alquilar p.aviso {
     background-color: #1d3d5f;
     border-radius: 5px;
     transition: all 0.3s ease-in-out;
+    margin: 0;
 }
 
 div.caja-inputs {
     margin-top: 50px;
     border-radius: 10px;
-    background-color: #238744;
-    padding: 20px 40px;
-    box-shadow: 15px 15px 0px -1px rgba(0, 0, 0, 0.75);
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(128, 128, 128, 0.4);
+    padding: 40px 40px;
 }
 
 div.caja-inputs p.feedback-negativo {
-    font-size: 14px;
+    font-size: 12px;
     height: 14px;
-    margin: 8px 0 0 5px;
-    color: rgb(175, 4, 4);
+    margin: 2px 0 10px 5px;
+    color: red;
 }
 
 div.caja-inputs label {
     font-size: 18px;
-    color: white;
+    color: black;
 }
 
 div.caja-asunto {
     display: flex;
     flex-direction: column;
-    margin: 50px 0;
 }
 
-div.caja-asunto div.caja-select select {
-    color: white;
-    border-radius: 3px;
-    border: 1px solid transparent;
-    outline: none;
-    padding: 10px;
+div.caja-select select {
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    background-color: white;
+    color: black;
     font-size: 16px;
-    background-color: #004919;
-    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.7);
-    margin-top: 5px;
-    appearance: none;
-    transition: all 0.3s ease-in-out;
-}
-
-div.caja-asunto div.caja-select select:hover {
     cursor: pointer;
-    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.9);
-    transform: translateY(-7px);
+    transition: all 0.2s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
-div.caja-asunto div.caja-select select:focus {
-    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.9);
-    transform: translateY(-7px);
-}
-
-div.caja-select svg {
-    position: absolute;
-    right: 10px;
-    top: 40%;
-    pointer-events: none;
-    transition: all 0.3s ease-in-out;
-}
-
-div.caja-asunto div.caja-select select:hover ~ svg {
-    transform: translateY(-7px);
-}
-
-div.caja-asunto div.caja-select select:focus ~ svg {
-    transform: translateY(-7px);
+div.caja-select select:hover {
+    background-color: #e1f3ea;
+    border: 2px solid #238744;
 }
 
 div.caja-datos {
@@ -142,70 +120,23 @@ input[type='time']::-webkit-calendar-picker-indicator {
     opacity: 0;
 }
 
-div.caja-select select,
 div.caja-select input {
-    color: white;
+    color: black;
     border: 1px solid transparent;
     border-radius: 3px;
     outline: none;
     padding: 10px;
     font-size: 16px;
-    background-color: #004919;
-    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.7);
     margin-top: 5px;
     appearance: none;
     transition: all 0.3s ease-in-out;
 }
 
-div.caja-select select:hover,
 div.caja-select input:hover {
-    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.9);
-    transform: translateY(-7px);
     cursor: pointer;
 }
 
-div.caja-select select:focus,
-div.caja-select input:focus {
-    box-shadow: 6px 6px 0px -1px rgba(0, 0, 0, 0.9);
-    transform: translateY(-7px);
-}
-
-div.caja-select select:hover ~ svg,
-div.caja-select input:hover ~ svg {
-    transform: translateY(-7px);
-}
-
-div.caja-select select:focus ~ svg,
-div.caja-select input:focus ~ svg {
-    transform: translateY(-7px);
-}
-
-div.caja-boton {
-    margin: 50px 0;
-    padding-top: 30px;
-}
-
-div.caja-boton button {
-    color: black;
-    border: 1px solid transparent;
-    border-radius: 50px;
-    outline: none;
-    padding: 8px;
-    font-size: 16px;
-    background-color: #004919;
-    width: 100%;
-    opacity: 0.7;
-    transition: all 0.3s ease-in-out;
-}
-
-div.caja-boton button:hover {
-    box-shadow: 7px 7px 0px -1px rgba(0, 0, 0, 0.75);
-    transform: translateY(-7px);
-    background: #004919;
-    color: white;
-    opacity: 1;
-}
-/** alerts **/
+/* * alerts **/
 .swal-modal {
     width: 550px;
 }
@@ -213,7 +144,7 @@ div.caja-boton button:hover {
 .swal-text {
     font-size: 18px;
 }
-/** alerts **/
+/** alerts * */
 
 /**  main  **/
 

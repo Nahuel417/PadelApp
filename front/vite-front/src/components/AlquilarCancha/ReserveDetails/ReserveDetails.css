@@ -1,0 +1,138 @@
+div.contenedor-detalles-reserva {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.caja-select-cancha {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.listas-canchas {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+}
+
+.listas-canchas button.opcion-cancha {
+    padding: 5px 14px;
+    border: 2px solid #ccc;
+    color: black;
+    border-radius: 10px;
+    background-color: white;
+    transition: all 0.2s ease;
+    min-width: 120px;
+}
+
+.listas-canchas button.opcion-cancha:hover {
+    background-color: #e1f3ea;
+    border: 2px solid #238744;
+}
+
+.listas-canchas button.opcion-cancha.selected {
+    background-color: #e1f3ea;
+    border: 2px solid #238744;
+}
+
+select {
+    color: black;
+    outline: none;
+    border: none;
+    padding: 5px 8px;
+    font-size: 14px;
+    appearance: none;
+}
+
+option {
+    color: black;
+}
+
+.caja-select-entrenador {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.lista-entrenadores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.entrenador-btn {
+    background-color: #fff;
+    color: black;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    min-width: 150px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.entrenador-btn:hover {
+    background-color: #e1f3ea;
+    border: 2px solid #238744;
+}
+
+.entrenador-btn.selected {
+    background-color: #e1f3ea;
+    border: 2px solid #238744;
+}
+
+.entrenador-nombre {
+    display: flex;
+    gap: 20px;
+}
+
+.entrenador-nombre p {
+    color: black;
+    margin: 0;
+}
+
+.perfil-icon {
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.perfil-icon.disabled {
+    pointer-events: none;
+}
+
+.perfil-icon i {
+    color: black;
+}
+
+.perfil-icon:hover {
+    transform: scale(1.2);
+}
+
+.entrenador-tarifa {
+    color: black;
+}
+
+.opcion-cancha:disabled,
+.entrenador-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border: 2px solid #ccc;
+    background-color: #f5f5f5; /* gris claro */
+    color: #999;
+}
+
+/* Sobrescribo cualquier hover para disabled */
+.listas-canchas button.opcion-cancha:disabled:hover,
+.entrenador-btn:disabled:hover {
+    background-color: #f5f5f5;
+    border: 2px solid #ccc;
+}

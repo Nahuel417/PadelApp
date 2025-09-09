@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { asuntos } from '../../helpers/inputsDatos';
 import { ErrorMessage, Field } from 'formik';
+import { motion } from 'framer-motion';
+import { itemVariants } from '../Animations/listVariants';
 
 const CajaAsunto = ({ error }) => {
-    const [misAsuntos, setMisAsuntos] = useState(asuntos);
+    const [misAsuntos] = useState(asuntos);
 
     return (
-        <div className="caja-asunto">
+        <motion.div className="caja-asunto" variants={itemVariants} initial="hidden" animate="visible" exit="exit">
             <div className="caja-label">
-                <label> Asunto </label>
+                <label>Asunto</label>
             </div>
             <div className="caja-select">
-                <Field as="select" name="affair" id="select-asunto">
-                    <option value={''} disabled selected>
+                <Field
+                    as={motion.select} // Animamos el select directamente
+                    name="affair"
+                    id="select-asunto"
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit">
+                    <option value="" disabled>
                         Seleccione un Asunto
                     </option>
 
-                    {misAsuntos.map((asunto, index) => {
-                        return (
-                            <option value={asunto} key={index}>
-                                {asunto}
-                            </option>
-                        );
-                    })}
+                    {misAsuntos.map((asunto, index) => (
+                        <option value={asunto} key={index}>
+                            {asunto}
+                        </option>
+                    ))}
                 </Field>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-down-square-fill" viewBox="0 0 16 16">
-                    <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm4 4a.5.5 0 0 0-.374.832l4 4.5a.5.5 0 0 0 .748 0l4-4.5A.5.5 0 0 0 12 6z" />
-                </svg>
             </div>
 
             {error === undefined ? (
@@ -41,7 +44,7 @@ const CajaAsunto = ({ error }) => {
                     )}
                 />
             )}
-        </div>
+        </motion.div>
     );
 };
 

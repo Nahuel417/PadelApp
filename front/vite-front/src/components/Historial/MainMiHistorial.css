@@ -35,129 +35,27 @@ div.contenedor-main-historial p.aviso {
 div.contenedor-turnos {
     margin-top: 50px;
     border-radius: 10px;
-    background-color: #238744;
-    padding: 20px 40px;
-    box-shadow: 15px 15px 0px -1px rgba(0, 0, 0, 0.75);
-}
-
-div.caja-thead {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    padding: 6px;
-    border-bottom: 1px solid white;
-}
-
-div.caja-thead div {
-    display: flex;
-    justify-content: center;
-    color: white;
-    width: 12%;
-}
-
-div.caja-thead span {
-    font-size: 16px;
-    color: #032910;
-}
-
-p.ningun-turno {
-    font-size: 16px;
-    text-align: center;
-    margin-top: 40px;
-}
-
-div.caja-turno {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    background-color: transparent;
-    padding: 6px;
-    border-bottom: 1px solid #89bb99;
-    transition: all 0.2s ease-in-out;
-}
-
-div.caja-turno:hover {
-    cursor: default;
-    transform: scale(1.015);
-    border-radius: 3px;
     background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(128, 128, 128, 0.4);
+    padding: 30px 30px;
 }
 
-div.caja-turno div {
-    display: flex;
-    justify-content: center;
-    color: white;
-    width: 12%;
-}
+/* div.contenedor-tabla {
+    background-color: #238744;
+    border-radius: 10px;
+} */
 
 p.ningun-turno {
+    color: red;
     font-size: 16px;
     text-align: center;
     margin-top: 40px;
-}
-
-div.caja-turno span {
-    font-size: 14px;
-    text-transform: capitalize;
-}
-
-div.caja-turno div.caja-entrenador {
-    text-align: center;
-}
-
-div.caja-turno div.caja-spanEstado {
-    display: flex;
-    justify-content: center;
-    padding: 8px;
-    border-radius: 5px;
-    transition: all 0.2s;
-}
-
-div.caja-turno div.caja-spanEstado.activo {
-    background-color: #024e1c;
-}
-
-div.caja-turno div.caja-spanEstado.cancelado {
-    background: rgb(192, 78, 78);
-}
-
-div.caja-turno button.boton-cancelar {
-    background-color: rgba(0, 0, 0, 0.6);
-    outline: none;
-    border: none;
-    font-size: 14px;
-    padding: 8px;
-    width: 80%;
-    text-align: center;
-    border-radius: 3px;
-    transition: all 0.2s ease-in-out;
-}
-
-div.caja-turno button.boton-cancelar:hover {
-    background-color: #042b11;
-}
-
-div.caja-turno button.boton-cancelado {
-    background-color: #004919;
-    outline: none;
-    border: none;
-    font-size: 14px;
-    padding: 8px;
-    width: 80%;
-    text-align: center;
-    border-radius: 3px;
-    opacity: 0.5;
-}
-
-div.caja-turno button.boton-cancelado:hover {
-    cursor: not-allowed;
 }
 
 /**  main  **/
 
 /*?  MEDIA QUERIES  ?*/
-@media (max-width: 1500px) {
+/* @media (max-width: 1500px) {
     div.contenedor-main-historial {
         width: 65%;
     }
@@ -207,7 +105,7 @@ div.caja-turno button.boton-cancelado:hover {
     div.caja-turno div.caja-spanEstado.activo {
         padding: 8px 6px;
     }
-}
+} */
 
 @media (max-width: 768px) {
 }

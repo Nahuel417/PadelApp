@@ -1,9 +1,7 @@
-import { useNavigate } from 'react-router-dom';
 import CajaAvatarPerfil from './CajaAvatarPerfil';
 import CajaInfoPerfil from './CajaInfoPerfil';
-import './MainPerfil.css';
 import { useUserStore } from '../../store/userStore';
-import { useEffect } from 'react';
+import './MainPerfil.css';
 
 const MainPerfil = () => {
     const userActive = useUserStore((state) => state.userActive);

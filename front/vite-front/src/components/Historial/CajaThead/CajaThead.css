@@ -1,0 +1,23 @@
+div.caja-thead {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.4);
+    margin-bottom: 20px;
+}
+
+div.caja-thead div {
+    flex: 1;
+    text-align: start;
+    font-size: 14px;
+}
+
+div.caja-thead div.col-cancelar-thead {
+    text-align: end;
+}
+
+div.caja-thead span {
+    font-size: 0.875rem;
+    color: #1d3d5f;
+    font-weight: 600;
+}

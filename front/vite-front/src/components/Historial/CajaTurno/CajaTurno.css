@@ -1,0 +1,182 @@
+/* div.caja-turno {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background-color: transparent;
+    padding: 6px;
+    border-bottom: 1px solid #89bb99;
+    transition: all 0.2s ease-in-out;
+}
+
+div.caja-turno:hover {
+    cursor: default;
+    transform: scale(1.015);
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+div.caja-turno div {
+    display: flex;
+    justify-content: center;
+    color: white;
+    width: 12%;
+}
+
+div.caja-turno span {
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
+div.caja-turno div.caja-entrenador {
+    text-align: center;
+}
+
+div.caja-turno div.caja-spanEstado {
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 5px;
+    transition: all 0.2s;
+}
+
+div.caja-turno div.caja-spanEstado.activo {
+    background-color: #024e1c;
+}
+
+div.caja-turno div.caja-spanEstado.cancelado {
+    background: rgb(192, 78, 78);
+}
+
+div.caja-turno button.boton-cancelar {
+    background-color: rgba(0, 0, 0, 0.6);
+    outline: none;
+    border: none;
+    font-size: 14px;
+    padding: 8px;
+    width: 80%;
+    text-align: center;
+    border-radius: 3px;
+    transition: all 0.2s ease-in-out;
+}
+
+div.caja-turno button.boton-cancelar:hover {
+    background-color: #042b11;
+}
+
+div.caja-turno button.boton-cancelado {
+    background-color: #004919;
+    outline: none;
+    border: none;
+    font-size: 14px;
+    padding: 8px;
+    width: 80%;
+    text-align: center;
+    border-radius: 3px;
+    opacity: 0.5;
+}
+
+div.caja-turno button.boton-cancelado:hover {
+    cursor: not-allowed;
+} */
+
+/* Caja Turno - contraste real con el contenedor */
+div.caja-turno {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 10px 10px 10px 10px;
+    border: 3px solid #ccc;
+    color: black;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+
+    transition: all 0.3s ease-in-out;
+}
+
+div.caja-turno:hover {
+    /* transform: scale(1.02); */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background-color: white;
+    border-color: white;
+}
+
+div.caja-turno span {
+    color: black;
+}
+
+/* Columnas */
+div.caja-turno div {
+    flex: 1;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+div.caja-turno div.col-fecha,
+div.caja-turno div.col-horario,
+div.caja-turno div.col-asunto,
+div.caja-turno div.col-cancha,
+div.caja-turno div.col-estado,
+div.caja-turno div.col-entrenador {
+    text-align: start;
+}
+
+/* Estados de turno */
+/* div.caja-spanEstado {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    text-transform: capitalize;
+    transition: all 0.2s;
+    min-width: 80px;
+    color: #fff;
+}
+
+div.caja-spanEstado.activo {
+    background-color: #238744; 
+}
+
+div.caja-spanEstado.cancelado {
+    background-color: #c04e4e; 
+}
+
+div.caja-spanEstado.pendiente {
+    background-color: #f2b632; 
+    color: #092747; 
+} */
+
+/* Botones */
+div.col-cancelar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+div.col-cancelar button.boton-cancelar {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    background-color: #238744;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: end;
+    transition: all 0.2s;
+}
+
+div.col-cancelar button.boton-cancelar:hover {
+    background-color: #196033;
+}
+
+div.col-cancelar button.boton-cancelado {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    background-color: #555;
+    color: #eee;
+    cursor: not-allowed;
+    font-size: 14px;
+    font-weight: 600;
+}

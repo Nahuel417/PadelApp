@@ -1,0 +1,36 @@
+.error-msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: #fdecea;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 16px auto 0px auto;
+    width: 90%;
+    color: #b71c1c;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.error-msg span {
+    color: #b71c1c;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.error-msg i {
+    color: #b71c1c;
+    font-size: 1.5rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

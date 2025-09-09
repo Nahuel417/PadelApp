@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Reservation } from '../../interfaces/reservationInterface';
-import { cancelReservation } from '../../services/reservation';
-import { useUserStore } from '../../store/userStore';
-import { ReservationStatus } from '../../utils/reservationStatus.enum';
+import { Reservation } from '../../../interfaces/reservationInterface';
+import { cancelReservation } from '../../../services/reservation';
+import { useUserStore } from '../../../store/userStore';
+import { ReservationStatus } from '../../../utils/enums/reservationStatus.enum';
+import './CajaTurno.css';
 
 interface ReservaProps {
     reserva: Reservation;
@@ -71,29 +72,26 @@ const CajaTurno = ({ reserva }: ReservaProps) => {
 
     return (
         <div className="caja-turno">
-            <div>
+            <div className="col-fecha">
                 <span>{reservation_date}</span>
             </div>
-            <div>
+            <div className="col-horario">
                 <span>{horario}</span>
             </div>
-            <div>
+            <div className="col-asunto">
                 <span>{affair}</span>
             </div>
-            <div>
+            <div className="col-cancha">
                 <span>{`Cancha ${court_id}`}</span>
             </div>
-            <div className={`caja-spanEstado ${estado}`}>
+            <div className="col-estado">
                 <span className={`span-estado ${estado}`}>{estado}</span>
             </div>
-            <div className="caja-entrenador">
+            <div className="col-entrenador">
                 <span>{`Entrenador ${coach_id}`}</span>
             </div>
-            <div>
-                <button
-                    className={estado !== reservationStatus.CANCELLED ? 'boton-cancelar' : 'boton-cancelado'}
-                    onClick={() => cambiarEstado()}
-                    disabled={estado === reservationStatus.CANCELLED}>
+            <div className="col-cancelar">
+                <button className={estado !== reservationStatus.CANCELLED ? 'boton-cancelar' : 'boton-cancelado'} onClick={cambiarEstado} disabled={estado === reservationStatus.CANCELLED}>
                     Cancelar
                 </button>
             </div>

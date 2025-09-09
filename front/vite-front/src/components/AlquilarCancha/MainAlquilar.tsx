@@ -1,9 +1,10 @@
 import InputsAlquilar from './InputsAlquilar';
 import { useUserStore } from '../../store/userStore';
 import './MainAlquilar.css';
+import { User } from '../../interfaces/userInterface';
 
 const Main = () => {
-    const userActive = useUserStore((state) => state.userActive);
+    const userActive: User = useUserStore((state) => state.userActive);
 
     return (
         <>

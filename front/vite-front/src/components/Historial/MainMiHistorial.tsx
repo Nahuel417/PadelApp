@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import CajaTurno from './CajaTurno';
-import CajaThead from './CajaThead';
+import CajaTurno from './CajaTurno/CajaTurno';
+import CajaThead from './CajaThead/CajaThead';
 import './MainMiHistorial.css';
 import { useUserStore } from '../../store/userStore';
 import { Reservation } from '../../interfaces/reservationInterface';
@@ -49,13 +49,15 @@ const MainMiHistorial = () => {
                     <div className="contenedor-turnos" id="contenedor-turnos">
                         <CajaThead />
 
-                        {allUserAppointments?.length ? (
-                            allUserAppointments.map((reserva) => {
-                                return <CajaTurno key={reserva.id} reserva={reserva} />;
-                            })
-                        ) : (
-                            <p className="ningun-turno">No se encontraron turnos realizados.</p>
-                        )}
+                        <div className="contenedor-tabla">
+                            {allUserAppointments?.length ? (
+                                allUserAppointments.map((reserva) => {
+                                    return <CajaTurno key={reserva.id} reserva={reserva} />;
+                                })
+                            ) : (
+                                <p className="ningun-turno">No se encontraron turnos realizados.</p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </main>

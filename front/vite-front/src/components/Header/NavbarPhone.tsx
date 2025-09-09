@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
+import { useUserStore } from '../../store/userStore';
+import { UserRole } from '../../utils/enums/roles.enum';
 
 const NavbarPhone = ({ handleCerrar }) => {
-    const userActive = useSelector((state) => state.userData.userActive);
+    const userActive = useUserStore((state) => state.userActive);
     const ruta = useLocation();
 
     const [mostrar, setMostrar] = useState(false);
@@ -25,7 +26,7 @@ const NavbarPhone = ({ handleCerrar }) => {
     return (
         <div className={`ul-phone ${mostrar ? 'mostrar' : ''} ${ocultar ? 'ocultar' : ''}`}>
             <button className="boton-cerrar" onClick={handleOnClose}>
-                <i class="bi bi-x-lg"></i>
+                <i className="bi bi-x-lg"></i>
             </button>
 
             <ul>
@@ -38,20 +39,12 @@ const NavbarPhone = ({ handleCerrar }) => {
                 <li>
                     <Link to="/alquilar-cancha"> Alquilar Cancha </Link>
                 </li>
-                <li>
-                    <Link to="/contacto"> Contacto </Link>
-                </li>
+                <li>{!userActive || userActive?.role_id === UserRole.USER ? <Link to="/contacto"> Contacto </Link> : <Link to="/dashboard"> Dashboard </Link>}</li>
                 <li>
                     <Link to="/about"> About </Link>
                 </li>
                 <li>
-                    {userActive !== null ? (
-                        <Link to="/mi-perfil"> Perfil </Link>
-                    ) : ruta.pathname === '/login' ? (
-                        <Link to="/registro"> Registrarse </Link>
-                    ) : (
-                        <Link to="/login"> Iniciar Sesión </Link>
-                    )}
+                    {userActive ? <Link to="/mi-perfil"> Perfil </Link> : ruta.pathname === '/login' ? <Link to="/registro"> Registrarse </Link> : <Link to="/login"> Iniciar Sesión </Link>}
                 </li>
             </ul>
         </div>

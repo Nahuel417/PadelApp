@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import MainDashboard from '../components/Dashboard/MainDashboard';
 import { useUserStore } from '../store/userStore';
-import { UserRole } from '../utils/roles.enum';
+import { UserRole } from '../utils/enums/roles.enum';
 import CoachDashboard from '../components/Dashboard/CoachDashboard/CoachDashboard';
 import Header from '../components/Header/Header';
 
