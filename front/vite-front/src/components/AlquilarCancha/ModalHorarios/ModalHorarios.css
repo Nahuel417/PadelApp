@@ -190,7 +190,7 @@
     border: 2px solid #238744;
     border-radius: 10px;
     padding: 5px 16px;
-    margin-top: 15px;
+    margin-top: 10px;
     align-self: center;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
@@ -215,4 +215,58 @@
     color: #666;
     cursor: not-allowed;
     border: 2px solid #ccc;
+}
+
+.duracion-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 90%;
+    margin: auto;
+    margin-top: 5px;
+}
+
+.duracion-selector span {
+    font-weight: 500;
+    color: #1d3d5f;
+    font-size: 0.875rem;
+}
+
+.duracion-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-radius: 8px;
+}
+
+.duracion-btn {
+    padding: 6px 14px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    color: #1d3d5f;
+    font-weight: 500;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.duracion-btn:hover {
+    background-color: #e1f3ea;
+    border-color: #238744;
+    color: #238744;
+}
+
+.duracion-btn.selected {
+    background-color: #238744;
+    color: #fff;
+    border-color: #238744;
+}
+
+.duracion-btn:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
 }

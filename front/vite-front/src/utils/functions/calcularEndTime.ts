@@ -1,22 +1,30 @@
 export const calcularEndTime = (horarios: string[]) => {
     if (!horarios || horarios.length === 0) return null;
 
-    // Ordenar horarios
-    const sortedHoras = horarios
-        .map((h) => h.trim())
-        .sort((a, b) => {
-            const [ha, ma] = a.split(':').map(Number);
-            const [hb, mb] = b.split(':').map(Number);
-            return ha - hb || ma - mb;
-        });
+    // Convertimos a minutos
+    const timesInMinutes = horarios.map((h) => {
+        const [hh, mm] = h.split(':').map(Number);
+        return hh * 60 + mm;
+    });
 
-    const start_time = sortedHoras[0];
+    const firstTime = timesInMinutes[0]; // tomamos el primer horario seleccionado
+    const adjusted = timesInMinutes.map((t) => (t < firstTime ? t + 1440 : t));
+    adjusted.sort((a, b) => a - b);
 
-    // Calcular end_time sumando 1 hora al último horario
-    const [horasUlt, minutosUlt] = sortedHoras[sortedHoras.length - 1].split(':').map(Number);
-    const date = new Date();
-    date.setHours(horasUlt + 1, minutosUlt, 0, 0);
-    const end_time = date.toTimeString().slice(0, 5);
+    const start = adjusted[0];
+    const end = adjusted[adjusted.length - 1] + 60;
 
-    return { start_time, end_time };
+    const toHHMM = (m: number) => {
+        const total = m % 1440;
+        const h = Math.floor(total / 60)
+            .toString()
+            .padStart(2, '0');
+        const mm = (total % 60).toString().padStart(2, '0');
+        return `${h}:${mm}`;
+    };
+
+    return {
+        start_time: toHHMM(start),
+        end_time: toHHMM(end),
+    };
 };

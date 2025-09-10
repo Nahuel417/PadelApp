@@ -1,3 +1,4 @@
+import { getHorasBloque } from '../utils/functions/calcularBloquesHorarios';
 import { generarHorarios } from '../utils/functions/generarHorarios';
 import { supabase } from './supabaseClient';
 
@@ -60,20 +61,41 @@ export const fetchHorarios = async ({ affair, cancha, entrenador, fecha }) => {
 
     if (reservasError) throw reservasError;
 
-    // Mapear estado de reservas
-    const reservasMap: Record<string, string> = {};
-    reservas.forEach((r) => {
-        const [hStart, mStart] = r.start_time.split(':').map(Number);
-        const [hEnd, mEnd] = r.end_time.split(':').map(Number);
+    const generarReservasMap = (reservas: any[]) => {
+        const reservasMap: Record<string, 'pendiente' | 'no_disponible'> = {};
 
-        for (let h = hStart; h < hEnd; h++) {
-            const horaStr = `${String(h).padStart(2, '0')}:${String(mStart).padStart(2, '0')}`;
-            if (r.status === 'cancelled') continue;
-            if (r.status === 'pending') reservasMap[horaStr] = 'pendiente';
-            else if (r.status === 'confirmed' && r.payment_status === 'approved') reservasMap[horaStr] = 'no_disponible';
-            else if (r.status === 'confirmed' && r.payment_status === 'pending') reservasMap[horaStr] = 'pendiente';
-        }
-    });
+        reservas.forEach((r) => {
+            if (r.status === 'cancelled') return;
+
+            let [hStart, mStart] = r.start_time.split(':').map(Number);
+            let [hEnd, mEnd] = r.end_time.split(':').map(Number);
+
+            let startMinutes = hStart * 60 + mStart;
+            let endMinutes = hEnd * 60 + mEnd;
+
+            // Ignorar reservas "vacías"
+            if (startMinutes === endMinutes) return;
+
+            // Ajuste si cruza medianoche
+            if (endMinutes <= startMinutes) endMinutes += 24 * 60;
+
+            for (let t = startMinutes; t < endMinutes; t += 60) {
+                const h = Math.floor(t / 60) % 24;
+                const m = t % 60;
+                const horaStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+
+                if (r.status === 'pending' || (r.status === 'confirmed' && r.payment_status === 'pending')) {
+                    reservasMap[horaStr] = 'pendiente';
+                } else if (r.status === 'confirmed' && r.payment_status === 'approved') {
+                    reservasMap[horaStr] = 'no_disponible';
+                }
+            }
+        });
+
+        return reservasMap;
+    };
+
+    const reservasMap = generarReservasMap(reservas);
 
     // Ajuste para día actual considerando 01:00 como cambio de día
     const now = new Date();
@@ -81,23 +103,6 @@ export const fetchHorarios = async ({ affair, cancha, entrenador, fecha }) => {
     if (now.getHours() < 1) {
         todayAdjusted.setDate(todayAdjusted.getDate() - 1);
     }
-
-    // const marcarHorariosPasados = (horarios: { hora: string; estado: string }[]) => {
-    //     const now = new Date(); // hora actual
-    //     const hoyStr = todayAdjusted.toISOString().slice(0, 10); // usar todayAdjusted, no hoy real
-
-    //     return horarios.map((h) => {
-    //         const [hora, min] = h.hora.split(':').map(Number);
-    //         const fechaHorario = new Date(fecha + 'T00:00:00');
-    //         fechaHorario.setHours(hora, min, 0, 0);
-
-    //         if (fecha === hoyStr && fechaHorario <= now && h.estado === 'disponible') {
-    //             return { ...h, estado: 'no_disponible' };
-    //         }
-
-    //         return h;
-    //     });
-    // };
 
     const marcarHorariosPasados = (horarios: { hora: string; estado: string }[], openingTime: string) => {
         const now = new Date();

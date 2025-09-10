@@ -7,11 +7,23 @@ import './ModalHorarios.css';
 import { modalVariants } from '../../Animations/modalVariants';
 import SkeletonHorario from '../../Skeletons/SkeletonHorario/SkeletonHorario';
 import ErrorMessage from '../../ErrorMessage/ErrorMessage';
+// import { calcularBloques } from '../../../utils/functions/calcularBloquesHorarios';
+import { validarHorariosConsecutivos } from '../../../utils/functions/validarHorariosConsec';
+import { calcularMaxDuracion } from '../../../utils/functions/calcularMaxDuracion';
 
 const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
+    const [selectedHorario, setSelectedHorario] = useState<string | null>(null);
+    const [duracion, setDuracion] = useState<number>(1); // 1 hora por defecto
+
     const [diaHorarios, setDiaHorarios] = useState([]);
     const [loadingHorarios, setLoadingHorarios] = useState(true);
     const days = getNextDays();
+
+    const reservasMap = diaHorarios.reduce((acc, h) => {
+        // Bloqueamos si no se puede reservar
+        acc[h.hora] = h.estado === 'no_disponible' || h.estado === 'pendiente' ? 'no_disponible' : 'disponible';
+        return acc;
+    }, {} as Record<string, string>);
 
     // Si values.fecha ya tiene valor (por ejemplo editando), buscamos el índice correspondiente
     // Si no, usamos hoy como default
@@ -61,9 +73,8 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
     };
 
     const guardarReservas = async () => {
-        if (!values.cancha || values.horario.length === 0) return;
+        if (!values.cancha || !selectedHorario) return;
 
-        // Confirmación antes de crear reservas
         const confirmacion = await swal({
             title: '¿Estás seguro de crear la reserva?',
             icon: 'warning',
@@ -74,63 +85,45 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
 
         if (!confirmacion) return;
 
-        // Convertimos horarios a minutos
-        const timesInMinutes = values.horario.map((hora) => {
-            const [h, m] = hora.split(':').map(Number);
-            return h * 60 + m;
-        });
+        // Calcular start_time y end_time según duración
+        const [hh, mm] = selectedHorario.split(':').map(Number);
+        let startMinutes = hh * 60 + mm;
+        let endMinutes = startMinutes + duracion * 60;
 
-        // Ajustamos horarios que cruzan medianoche
-        const firstTime = timesInMinutes[0];
-        const adjustedTimes = timesInMinutes.map((t) => (t < firstTime ? t + 1440 : t));
+        // Ajuste si cruza medianoche
+        if (endMinutes >= 1440) endMinutes -= 1440;
 
-        // Ordenamos horarios
-        const selectedSorted = adjustedTimes.sort((a, b) => a - b);
+        const toHHMM = (m: number) => {
+            const h = Math.floor(m / 60)
+                .toString()
+                .padStart(2, '0');
+            const mm = (m % 60).toString().padStart(2, '0');
+            return `${h}:${mm}`;
+        };
 
-        // Verificamos continuidad (bloques de 1 hora)
-        for (let i = 1; i < selectedSorted.length; i++) {
-            if (selectedSorted[i] - selectedSorted[i - 1] !== 60) {
-                swal({
-                    icon: 'error',
-                    title: 'Horarios no continuos',
-                    text: 'Por favor selecciona horarios consecutivos.',
-                });
-                return;
-            }
-        }
-
-        const { start_time, end_time } = calcularEndTime(values.horario);
+        const reserva = {
+            user_id: values.userId,
+            court_id: values.cancha,
+            reservation_date: values.fecha,
+            start_time: toHHMM(startMinutes),
+            end_time: toHHMM(endMinutes),
+            total_amount: values.courtPrice * duracion, // ajusta precio según duración
+            status: userRole === 3 || userRole === 4 ? 'confirmed' : 'pending',
+            payment_status: userRole === 3 || userRole === 4 ? 'approved' : 'pending',
+            affair: values.affair,
+            coach_id: values.entrenador || null,
+        };
 
         try {
-            const reservas = values.horario.map((hora) => ({
-                user_id: values.userId,
-                court_id: values.cancha,
-                reservation_date: values.fecha,
-                start_time: start_time,
-                end_time: end_time,
-                total_amount: values.courtPrice, // ajusta según cancha
-                status: userRole === 3 || userRole === 4 ? 'confirmed' : 'pending',
-                payment_status: userRole === 3 || userRole === 4 ? 'approved' : 'pending',
-                affair: values.affair,
-                coach_id: values.entrenador || null,
-            }));
-
-            for (const reserva of reservas) {
-                console.log(reserva);
-                console.log(reservas);
-
-                await createReservation(reserva);
-            }
-            // addUserReservation(newReservation);
+            await createReservation(reserva);
 
             swal({
-                title: '¡Exito!',
-                text: '!Reserva realiza con exito!',
+                title: '¡Éxito!',
+                text: '¡Reserva realizada con éxito!',
                 icon: 'success',
                 //@ts-ignore
                 button: true,
             });
-
             setShowModal(false);
         } catch (error) {
             console.error(error);
@@ -200,13 +193,20 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
                                                             <button
                                                                 type="button"
                                                                 className={`horario-btn 
-                                                                ${h.estado === 'no_disponible' ? 'disabled' : ''} 
-                                                                ${h.estado === 'pendiente' ? 'pending' : ''} 
-                                                                ${isSelected ? 'selected' : ''}`}
+                                                                    ${h.estado === 'no_disponible' ? 'disabled' : ''} 
+                                                                    ${h.estado === 'pendiente' ? 'pending' : ''} 
+                                                                    ${selectedHorario === h.hora ? 'selected' : ''}`}
                                                                 disabled={h.estado === 'no_disponible'}
-                                                                onClick={() =>
-                                                                    setFieldValue('horario', isSelected ? values.horario.filter((hora) => hora !== h.hora) : [...values.horario, h.hora])
-                                                                }>
+                                                                onClick={() => {
+                                                                    if (selectedHorario === h.hora) {
+                                                                        setSelectedHorario(null);
+                                                                        setDuracion(1);
+                                                                    } else {
+                                                                        const maxDisponible = calcularMaxDuracion(h.hora, reservasMap);
+                                                                        setSelectedHorario(h.hora);
+                                                                        setDuracion(Math.min(duracion, maxDisponible)); // ajusta si la duración actual supera lo disponible
+                                                                    }
+                                                                }}>
                                                                 {h.hora}
                                                             </button>
                                                         </td>
@@ -221,7 +221,32 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
                         )}
                     </div>
 
-                    <button className="btn-alquilar" type="submit" onClick={guardarReservas} disabled={values.horario.length === 0}>
+                    <div className="duracion-selector">
+                        <span>Duración/Hora: </span>
+                        <div className="duracion-buttons">
+                            {[1, 2, 3, 4].map((dur) => (
+                                <button
+                                    key={dur}
+                                    type="button"
+                                    className={`duracion-btn ${duracion === dur ? 'selected' : ''}`}
+                                    // onClick={() => setDuracion(h)}
+                                    // onClick={() => {
+                                    //     const maxDisponible = calcularMaxDuracion(selectedHorario!, reservasMap);
+                                    //     setDuracion(Math.min(h, maxDisponible));
+                                    // }}
+                                    onClick={() => {
+                                        if (!selectedHorario) return;
+                                        const maxDisponible = calcularMaxDuracion(selectedHorario, reservasMap);
+                                        setDuracion(Math.min(dur, maxDisponible));
+                                    }}
+                                    disabled={selectedHorario ? calcularMaxDuracion(selectedHorario, reservasMap) < dur : true}>
+                                    {dur}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <button className="btn-alquilar" type="submit" onClick={guardarReservas} disabled={!selectedHorario}>
                         Alquilar Cancha
                     </button>
                 </div>
