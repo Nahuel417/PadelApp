@@ -5,6 +5,7 @@ import ReserveDetail from './ReserveDetails/ReserveDetails';
 import { User } from '../../interfaces/userInterface';
 import { useReservationStore } from '../../store/useReservationStore';
 import { useEffect } from 'react';
+import { getTodayAdjusted } from '../../utils/functions/getTodayAdjusted';
 
 interface InputsAlquilarProps {
     user: User | null;
@@ -22,7 +23,7 @@ const InputsAlquilar = ({ user }: InputsAlquilarProps) => {
             <Formik
                 initialValues={{
                     affair: '',
-                    fecha: new Date().toISOString().split('T')[0],
+                    fecha: getTodayAdjusted(),
                     horario: [],
                     cancha: '',
                     entrenador: '',

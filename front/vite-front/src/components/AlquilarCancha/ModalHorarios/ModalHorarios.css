@@ -1,4 +1,3 @@
-/*  */
 .contenedor-modal {
     display: flex;
     flex-direction: column;
@@ -149,11 +148,13 @@
 
 .horario-btn:hover {
     background-color: #238744;
+    border-color: #238744;
     color: #fff;
 }
 
 .horario-btn.disabled {
     background-color: #ccc;
+    border-color: #ccc;
     cursor: not-allowed;
     color: gray;
 }
@@ -164,6 +165,7 @@
 
 .horario-btn.pending {
     background-color: #ffd54f;
+    border-color: #ffd54f;
     color: gray;
     cursor: not-allowed;
 }
@@ -174,6 +176,7 @@
 
 .horario-btn.selected {
     background-color: #238744;
+    border-color: #238744;
     color: #fff;
 }
 

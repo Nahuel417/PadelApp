@@ -10,9 +10,20 @@ import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 
 const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
     const [diaHorarios, setDiaHorarios] = useState([]);
-    const [selectedDayIndex, setSelectedDayIndex] = useState(0); // día actual
-    const [days, setDays] = useState(getNextDays());
     const [loadingHorarios, setLoadingHorarios] = useState(true);
+    const days = getNextDays();
+
+    // Si values.fecha ya tiene valor (por ejemplo editando), buscamos el índice correspondiente
+    // Si no, usamos hoy como default
+    const todayExactDate = days[0].exactDate; // primer día = hoy
+    const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+
+    useEffect(() => {
+        setSelectedDayIndex(0);
+        setFieldValue('fecha', todayExactDate);
+        setDiaHorarios([]);
+        setFieldValue('horario', []); // resetea selección previa
+    }, []);
 
     // Traer horarios cada vez que cambia el día o la cancha
     useEffect(() => {
@@ -22,15 +33,12 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
             setLoadingHorarios(true);
             setDiaHorarios([]);
 
-            // Convertimos selectedDay a fecha real
-            const fechaStr = days[selectedDayIndex].date.toISOString().slice(0, 10);
-
             try {
                 const horariosDia = await fetchHorarios({
                     affair: values.affair,
                     cancha: values.cancha,
                     entrenador: values.entrenador,
-                    fecha: fechaStr,
+                    fecha: values.fecha,
                 });
 
                 setDiaHorarios(horariosDia);
@@ -91,13 +99,15 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
             }
         }
 
+        const { start_time, end_time } = calcularEndTime(values.horario);
+
         try {
             const reservas = values.horario.map((hora) => ({
                 user_id: values.userId,
                 court_id: values.cancha,
                 reservation_date: values.fecha,
-                start_time: hora,
-                end_time: calcularEndTime(hora),
+                start_time: start_time,
+                end_time: end_time,
                 total_amount: values.courtPrice, // ajusta según cancha
                 status: userRole === 3 || userRole === 4 ? 'confirmed' : 'pending',
                 payment_status: userRole === 3 || userRole === 4 ? 'approved' : 'pending',
@@ -106,6 +116,9 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
             }));
 
             for (const reserva of reservas) {
+                console.log(reserva);
+                console.log(reservas);
+
                 await createReservation(reserva);
             }
             // addUserReservation(newReservation);
@@ -145,7 +158,14 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
 
                     <div className="caja-dias-semana">
                         {days.map((day, idx) => (
-                            <button key={idx} type="button" className={`dia-btn ${selectedDayIndex === idx ? 'selected' : ''}`} onClick={() => setSelectedDayIndex(idx)}>
+                            <button
+                                key={idx}
+                                type="button"
+                                className={`dia-btn ${selectedDayIndex === idx ? 'selected' : ''}`}
+                                onClick={() => {
+                                    setSelectedDayIndex(idx);
+                                    setFieldValue('fecha', day.exactDate); // Guardamos la fecha exacta
+                                }}>
                                 {day.label}
                             </button>
                         ))}

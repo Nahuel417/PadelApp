@@ -71,7 +71,7 @@ const CajaTurno = ({ reserva }: ReservaProps) => {
     };
 
     return (
-        <div className="caja-turno">
+        <div className={`caja-turno ${estado}`}>
             <div className="col-fecha">
                 <span>{reservation_date}</span>
             </div>

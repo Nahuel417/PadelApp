@@ -2,7 +2,8 @@ import { generarHorarios } from '../utils/functions/generarHorarios';
 import { supabase } from './supabaseClient';
 
 export const fetchReservationsByUserId = async (userId: string) => {
-    const { data, error } = await supabase.from('reservations').select('*').eq('user_id', userId).order('reservation_date', { ascending: false }).limit(5);
+    const { data, error } = await supabase.from('reservations').select('*').eq('user_id', userId).order('reservation_date', { ascending: true });
+    // .limit(5);
 
     if (error) throw error;
     return data;
@@ -51,22 +52,79 @@ export const fetchHorarios = async ({ affair, cancha, entrenador, fecha }) => {
     const horariosCancha = generarHorarios(canchaData.opening_time, canchaData.closing_time);
 
     // Traer reservas de esa cancha y fecha
-    const { data: reservas, error: reservasError } = await supabase.from('reservations').select('start_time, payment_status, status').eq('court_id', cancha).eq('reservation_date', fecha);
+    const { data: reservas, error: reservasError } = await supabase
+        .from('reservations')
+        .select('start_time, end_time, payment_status, status')
+        .eq('court_id', cancha)
+        .eq('reservation_date', fecha);
 
     if (reservasError) throw reservasError;
 
     // Mapear estado de reservas
     const reservasMap: Record<string, string> = {};
     reservas.forEach((r) => {
-        const hora = r.start_time.slice(0, 5); // "08:00:00" -> "08:00"
-        if (r.status === 'cancelled') return;
+        const [hStart, mStart] = r.start_time.split(':').map(Number);
+        const [hEnd, mEnd] = r.end_time.split(':').map(Number);
 
-        if (r.payment_status === 'pending') reservasMap[hora] = 'pendiente';
-        else reservasMap[hora] = 'no_disponible';
+        for (let h = hStart; h < hEnd; h++) {
+            const horaStr = `${String(h).padStart(2, '0')}:${String(mStart).padStart(2, '0')}`;
+            if (r.status === 'cancelled') continue;
+            if (r.status === 'pending') reservasMap[horaStr] = 'pendiente';
+            else if (r.status === 'confirmed' && r.payment_status === 'approved') reservasMap[horaStr] = 'no_disponible';
+            else if (r.status === 'confirmed' && r.payment_status === 'pending') reservasMap[horaStr] = 'pendiente';
+        }
     });
 
+    // Ajuste para día actual considerando 01:00 como cambio de día
+    const now = new Date();
+    const todayAdjusted = new Date(now);
+    if (now.getHours() < 1) {
+        todayAdjusted.setDate(todayAdjusted.getDate() - 1);
+    }
+
+    // const marcarHorariosPasados = (horarios: { hora: string; estado: string }[]) => {
+    //     const now = new Date(); // hora actual
+    //     const hoyStr = todayAdjusted.toISOString().slice(0, 10); // usar todayAdjusted, no hoy real
+
+    //     return horarios.map((h) => {
+    //         const [hora, min] = h.hora.split(':').map(Number);
+    //         const fechaHorario = new Date(fecha + 'T00:00:00');
+    //         fechaHorario.setHours(hora, min, 0, 0);
+
+    //         if (fecha === hoyStr && fechaHorario <= now && h.estado === 'disponible') {
+    //             return { ...h, estado: 'no_disponible' };
+    //         }
+
+    //         return h;
+    //     });
+    // };
+
+    const marcarHorariosPasados = (horarios: { hora: string; estado: string }[], openingTime: string) => {
+        const now = new Date();
+
+        // Convertimos openingTime a número de hora (ej: '08:00' -> 8)
+        const openingHour = Number(openingTime.split(':')[0]);
+
+        return horarios.map((h) => {
+            const [hora, min] = h.hora.split(':').map(Number);
+            const fechaHorario = new Date(fecha + 'T00:00:00');
+            fechaHorario.setHours(hora, min, 0, 0);
+
+            // Solo marcar como no_disponible si es hoy, el horario ya pasó y es mayor o igual a la hora de apertura
+            if (
+                fecha === now.toISOString().slice(0, 10) && // es hoy
+                fechaHorario.getTime() <= now.getTime() && // ya pasó
+                h.estado === 'disponible' &&
+                hora >= openingHour
+            ) {
+                return { ...h, estado: 'no_disponible' };
+            }
+
+            return h;
+        });
+    };
+
     if (affair === 'Entrenar' && entrenador) {
-        // Traer disponibilidad del entrenador
         const { data: coachData, error: coachError } = await supabase.from('coach_availability').select('start_time, end_time').eq('coach_id', entrenador).eq('is_active', true);
 
         if (coachError) throw coachError;
@@ -76,56 +134,22 @@ export const fetchHorarios = async ({ affair, cancha, entrenador, fecha }) => {
             horariosEntrenador.push(...generarHorarios(d.start_time, d.end_time));
         });
 
-        // Combinar cancha + entrenador + reservas
-        const horariosConEstado = horariosCancha.map((h) => {
-            if (!horariosEntrenador.includes(h)) return { hora: h, estado: 'no_disponible' }; // entrenador no disponible
-            if (reservasMap[h]) return { hora: h, estado: reservasMap[h] }; // pendiente o no disponible por reserva
-            return { hora: h, estado: 'disponible' }; // libre
+        let horariosConEstado = horariosCancha.map((h) => {
+            if (!horariosEntrenador.includes(h)) return { hora: h, estado: 'no_disponible' };
+            if (reservasMap[h]) return { hora: h, estado: reservasMap[h] };
+            return { hora: h, estado: 'disponible' };
         });
 
-        // Filtrar horarios pasados si es hoy
-        const hoy = new Date().toISOString().slice(0, 10);
-        if (fecha === hoy) {
-            const ahora = new Date();
-            return horariosConEstado.map((h) => {
-                const [hora, min] = h.hora.split(':').map(Number);
-
-                // Ignorar 00 y 01
-                if (hora === 0 || hora === 1) return h;
-
-                const fechaHorario = new Date();
-                fechaHorario.setHours(hora, min, 0, 0);
-                if (fechaHorario <= ahora) return { ...h, estado: 'no_disponible' };
-                return h;
-            });
-        }
-
-        return horariosConEstado;
+        // return marcarHorariosPasados(horariosConEstado);
+        return marcarHorariosPasados(horariosConEstado, canchaData.opening_time);
     }
 
-    // Si no es Entrenar o no hay entrenador, solo marcar reservas sobre la cancha
+    // Si no es Entrenar o no hay entrenador
     let horariosConEstado = horariosCancha.map((h) => ({
         hora: h,
         estado: reservasMap[h] || 'disponible',
     }));
 
-    // Filtrar horarios pasados si es hoy
-    const hoy = new Date().toISOString().slice(0, 10);
-    if (fecha === hoy) {
-        const ahora = new Date();
-        horariosConEstado = horariosConEstado.map((h) => {
-            const [hora, min] = h.hora.split(':').map(Number);
-
-            // Ignorar 00 y 01
-            if (hora === 0 || hora === 1) return h;
-
-            const fechaHorario = new Date();
-            fechaHorario.setHours(hora, min, 0, 0);
-
-            if (fechaHorario <= ahora) return { ...h, estado: 'no_disponible' };
-            return h;
-        });
-    }
-
-    return horariosConEstado;
+    // return marcarHorariosPasados(horariosConEstado);
+    return marcarHorariosPasados(horariosConEstado, canchaData.opening_time);
 };

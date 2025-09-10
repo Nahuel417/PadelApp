@@ -5,6 +5,7 @@ import ModalHorarios from '../ModalHorarios/ModalHorarios';
 import Skeleton from '../../Skeletons/SkeletonButonns/Skeleton';
 import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 import './ReserveDetails.css';
+import { getNextDays } from '../../../utils/functions/getNextDay';
 
 const ReserveDetail = ({ affair, setFieldValue, values, userRole, coaches, loading, courts }) => {
     const [modalKey, setModalKey] = useState(0);
@@ -12,7 +13,9 @@ const ReserveDetail = ({ affair, setFieldValue, values, userRole, coaches, loadi
     const [shouldOpenModal, setShouldOpenModal] = useState(false);
 
     const openModal = () => {
-        setModalKey((prev) => prev + 1);
+        setFieldValue('fecha', getNextDays()[0].exactDate); // resetea a hoy
+        setFieldValue('horario', []); // limpia selección previa
+        setModalKey((prev) => prev + 1); // fuerza remount
         setShowModal(true);
     };
 
