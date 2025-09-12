@@ -26,10 +26,10 @@ const CajaList = () => {
                     <Link to="/"> Home </Link>
                 </li>
                 <li>
-                    <Link to="/historial"> Mi Historial </Link>
+                    <Link to="/historial"> Historial </Link>
                 </li>
                 <li>
-                    <Link to="/alquilar-cancha"> Alquilar Cancha </Link>
+                    <Link to="/alquilar-cancha"> Reservar </Link>
                 </li>
                 <li>{!user || user?.role_id === UserRole.USER ? <Link to="/contacto"> Contacto </Link> : <Link to="/dashboard"> Dashboard </Link>}</li>
             </ul>

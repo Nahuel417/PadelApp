@@ -32,7 +32,7 @@ const InputsAlquilar = ({ user }: InputsAlquilarProps) => {
                     userId: user?.id,
                 }}
                 validate={validateAlquilarCancha}
-                onSubmit={({ resetForm }) => {
+                onSubmit={(values, { resetForm }) => {
                     resetForm();
                 }}>
                 {({ errors, values, setFieldValue }) => (

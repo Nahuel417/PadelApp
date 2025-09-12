@@ -20,11 +20,16 @@ const ReserveDetail = ({ affair, setFieldValue, values, userRole, coaches, loadi
     };
 
     useEffect(() => {
-        if ((affair === 'Jugar' && values.cancha && shouldOpenModal) || (affair === 'Entrenar' && values.cancha && values.entrenador && shouldOpenModal)) {
-            openModal();
-            setShouldOpenModal(false); // resetea el flag
+        if (shouldOpenModal) {
+            if (affair === 'Jugar' && values.cancha) {
+                openModal();
+            }
+            if (affair === 'Entrenar' && values.cancha && values.entrenador) {
+                openModal();
+            }
+            setShouldOpenModal(false);
         }
-    }, [affair, values.cancha, values.entrenador, shouldOpenModal]);
+    }, [shouldOpenModal]);
 
     return (
         <>

@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react';
-import { calcularEndTime } from '../../../utils/functions/calcularEndTime';
 import { createReservation, fetchHorarios } from '../../../services/reservation';
 import { getNextDays } from '../../../utils/functions/getNextDay';
 import { motion } from 'framer-motion';
-import './ModalHorarios.css';
 import { modalVariants } from '../../Animations/modalVariants';
 import SkeletonHorario from '../../Skeletons/SkeletonHorario/SkeletonHorario';
 import ErrorMessage from '../../ErrorMessage/ErrorMessage';
-// import { calcularBloques } from '../../../utils/functions/calcularBloquesHorarios';
-import { validarHorariosConsecutivos } from '../../../utils/functions/validarHorariosConsec';
 import { calcularMaxDuracion } from '../../../utils/functions/calcularMaxDuracion';
+import './ModalHorarios.css';
 
 const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
     const [selectedHorario, setSelectedHorario] = useState<string | null>(null);
@@ -18,6 +15,12 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
     const [diaHorarios, setDiaHorarios] = useState([]);
     const [loadingHorarios, setLoadingHorarios] = useState(true);
     const days = getNextDays();
+
+    const handleDiaChange = (idx: number) => {
+        setSelectedDayIndex(idx);
+        setFieldValue('fecha', days[idx].exactDate);
+        setFieldValue('horario', []); // reseteo explícito
+    };
 
     const reservasMap = diaHorarios.reduce((acc, h) => {
         // Bloqueamos si no se puede reservar
@@ -42,6 +45,12 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
         const fetchHorariosPorDia = async () => {
             if (!values.cancha) return;
 
+            if (values.affair !== 'Entrenar' && values.entrenador) {
+                setFieldValue('entrenador', null);
+                setSelectedHorario(null);
+                setFieldValue('horario', []);
+            }
+
             setLoadingHorarios(true);
             setDiaHorarios([]);
 
@@ -49,12 +58,11 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
                 const horariosDia = await fetchHorarios({
                     affair: values.affair,
                     cancha: values.cancha,
-                    entrenador: values.entrenador,
-                    fecha: values.fecha,
+                    entrenador: values.affair === 'Entrenar' ? values.entrenador : null,
+                    fecha: days[selectedDayIndex].exactDate,
                 });
 
                 setDiaHorarios(horariosDia);
-                setFieldValue('horario', []); // reseteamos selección al cambiar de día
             } catch (error) {
                 console.error(error);
                 setDiaHorarios([]);
@@ -64,7 +72,7 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
         };
 
         fetchHorariosPorDia();
-    }, [selectedDayIndex, values.cancha]);
+    }, [selectedDayIndex, values.cancha, values.entrenador, values.affair]);
 
     const handleOverlayClick = (e) => {
         if (e.target.classList.contains('contenedor-modal')) {
@@ -129,127 +137,119 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
             console.error(error);
         }
     };
-
+    console.count('fetchHorarios ejecutado');
     return (
         <motion.div className="contenedor-modal" onClick={handleOverlayClick} variants={modalVariants} initial="hidden" animate="visible" exit="exit">
-            <div className="contenedor-modal" onClick={handleOverlayClick}>
-                <div className="contenido-modal">
-                    <div className="header-modal">
-                        <div className="caja-titulo-modal">
-                            <span className="titulo-modal">Selecciona un día y horario</span>
+            <div className="contenido-modal">
+                <div className="header-modal">
+                    <div className="caja-titulo-modal">
+                        <span className="titulo-modal">Selecciona un día y horario</span>
 
-                            <button className="btn-cerrar-modal" onClick={() => setShowModal(false)} title="Cerrar">
-                                <i className="bi bi-x-circle"></i>
-                            </button>
-                        </div>
-                        <div className="caja-info-cancha">
-                            <p className="text-cancha">
-                                Cancha {values.cancha} - {values.surface_type}
-                            </p>
-                        </div>
+                        <button className="btn-cerrar-modal" onClick={() => setShowModal(false)} title="Cerrar">
+                            <i className="bi bi-x-circle"></i>
+                        </button>
                     </div>
-
-                    <div className="caja-dias-semana">
-                        {days.map((day, idx) => (
-                            <button
-                                key={idx}
-                                type="button"
-                                className={`dia-btn ${selectedDayIndex === idx ? 'selected' : ''}`}
-                                onClick={() => {
-                                    setSelectedDayIndex(idx);
-                                    setFieldValue('fecha', day.exactDate); // Guardamos la fecha exacta
-                                }}>
-                                {day.label}
-                            </button>
-                        ))}
+                    <div className="caja-info-cancha">
+                        <p className="text-cancha">
+                            Cancha {values.cancha} - {values.surface_type}
+                        </p>
                     </div>
+                </div>
 
-                    <div className="horarios-tabla-container">
-                        {loadingHorarios ? (
-                            <table className="horarios-tabla">
-                                <tbody>
-                                    {Array.from({ length: 3 }).map((_, rowIdx) => (
-                                        <tr key={rowIdx}>
-                                            {Array.from({ length: 6 }).map((_, colIdx) => (
-                                                <td key={colIdx}>
-                                                    <SkeletonHorario />
-                                                </td>
-                                            ))}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : diaHorarios.length > 0 ? (
-                            <table className="horarios-tabla">
-                                <tbody>
-                                    {Array.from({ length: 3 }).map((_, rowIdx) => (
-                                        <tr key={rowIdx}>
-                                            {diaHorarios
-                                                .slice(rowIdx * Math.ceil(diaHorarios.length / 3), rowIdx * Math.ceil(diaHorarios.length / 3) + Math.ceil(diaHorarios.length / 3))
-                                                .map((h, colIdx) => {
-                                                    const isSelected = values.horario.includes(h.hora);
-                                                    return (
-                                                        <td key={colIdx}>
-                                                            <button
-                                                                type="button"
-                                                                className={`horario-btn 
+                <div className="caja-dias-semana">
+                    {days.map((day, idx) => (
+                        <button
+                            key={idx}
+                            type="button"
+                            className={`dia-btn ${selectedDayIndex === idx ? 'selected' : ''}`}
+                            onClick={() => {
+                                handleDiaChange(idx); // Guardamos la fecha exacta
+                            }}>
+                            {day.label}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="horarios-tabla-container">
+                    {loadingHorarios ? (
+                        <table className="horarios-tabla">
+                            <tbody>
+                                {Array.from({ length: 3 }).map((_, rowIdx) => (
+                                    <tr key={rowIdx}>
+                                        {Array.from({ length: 6 }).map((_, colIdx) => (
+                                            <td key={colIdx}>
+                                                <SkeletonHorario />
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : diaHorarios.length > 0 ? (
+                        <table className="horarios-tabla">
+                            <tbody>
+                                {Array.from({ length: 3 }).map((_, rowIdx) => (
+                                    <tr key={rowIdx}>
+                                        {diaHorarios
+                                            .slice(rowIdx * Math.ceil(diaHorarios.length / 3), rowIdx * Math.ceil(diaHorarios.length / 3) + Math.ceil(diaHorarios.length / 3))
+                                            .map((h, colIdx) => {
+                                                const isSelected = values.horario.includes(h.hora);
+                                                return (
+                                                    <td key={colIdx}>
+                                                        <button
+                                                            type="button"
+                                                            className={`horario-btn 
                                                                     ${h.estado === 'no_disponible' ? 'disabled' : ''} 
                                                                     ${h.estado === 'pendiente' ? 'pending' : ''} 
                                                                     ${selectedHorario === h.hora ? 'selected' : ''}`}
-                                                                disabled={h.estado === 'no_disponible'}
-                                                                onClick={() => {
-                                                                    if (selectedHorario === h.hora) {
-                                                                        setSelectedHorario(null);
-                                                                        setDuracion(1);
-                                                                    } else {
-                                                                        const maxDisponible = calcularMaxDuracion(h.hora, reservasMap);
-                                                                        setSelectedHorario(h.hora);
-                                                                        setDuracion(Math.min(duracion, maxDisponible)); // ajusta si la duración actual supera lo disponible
-                                                                    }
-                                                                }}>
-                                                                {h.hora}
-                                                            </button>
-                                                        </td>
-                                                    );
-                                                })}
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <ErrorMessage message={'No se pudieron cargar los horarios. Intenta nuevamente.'} />
-                        )}
-                    </div>
-
-                    <div className="duracion-selector">
-                        <span>Duración/Hora: </span>
-                        <div className="duracion-buttons">
-                            {[1, 2, 3, 4].map((dur) => (
-                                <button
-                                    key={dur}
-                                    type="button"
-                                    className={`duracion-btn ${duracion === dur ? 'selected' : ''}`}
-                                    // onClick={() => setDuracion(h)}
-                                    // onClick={() => {
-                                    //     const maxDisponible = calcularMaxDuracion(selectedHorario!, reservasMap);
-                                    //     setDuracion(Math.min(h, maxDisponible));
-                                    // }}
-                                    onClick={() => {
-                                        if (!selectedHorario) return;
-                                        const maxDisponible = calcularMaxDuracion(selectedHorario, reservasMap);
-                                        setDuracion(Math.min(dur, maxDisponible));
-                                    }}
-                                    disabled={selectedHorario ? calcularMaxDuracion(selectedHorario, reservasMap) < dur : true}>
-                                    {dur}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <button className="btn-alquilar" type="submit" onClick={guardarReservas} disabled={!selectedHorario}>
-                        Alquilar Cancha
-                    </button>
+                                                            disabled={h.estado === 'no_disponible'}
+                                                            onClick={() => {
+                                                                if (selectedHorario === h.hora) {
+                                                                    setSelectedHorario(null);
+                                                                    setDuracion(1);
+                                                                } else {
+                                                                    const maxDisponible = calcularMaxDuracion(h.hora, reservasMap);
+                                                                    setSelectedHorario(h.hora);
+                                                                    setDuracion(Math.min(duracion, maxDisponible)); // ajusta si la duración actual supera lo disponible
+                                                                }
+                                                            }}>
+                                                            {h.hora}
+                                                        </button>
+                                                    </td>
+                                                );
+                                            })}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <ErrorMessage message={'No se pudieron cargar los horarios. Intenta nuevamente.'} />
+                    )}
                 </div>
+
+                <div className="duracion-selector">
+                    <span>Duración/Hora: </span>
+                    <div className="duracion-buttons">
+                        {[1, 2, 3, 4].map((dur) => (
+                            <button
+                                key={dur}
+                                type="button"
+                                className={`duracion-btn ${duracion === dur ? 'selected' : ''}`}
+                                onClick={() => {
+                                    if (!selectedHorario) return;
+                                    const maxDisponible = calcularMaxDuracion(selectedHorario, reservasMap);
+                                    setDuracion(Math.min(dur, maxDisponible));
+                                }}
+                                disabled={selectedHorario ? calcularMaxDuracion(selectedHorario, reservasMap) < dur : true}>
+                                {dur}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <button className="btn-alquilar" type="submit" onClick={guardarReservas} disabled={!selectedHorario}>
+                    Alquilar Cancha
+                </button>
             </div>
         </motion.div>
     );

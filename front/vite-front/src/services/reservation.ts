@@ -1,4 +1,3 @@
-import { getHorasBloque } from '../utils/functions/calcularBloquesHorarios';
 import { generarHorarios } from '../utils/functions/generarHorarios';
 import { supabase } from './supabaseClient';
 
@@ -107,21 +106,18 @@ export const fetchHorarios = async ({ affair, cancha, entrenador, fecha }) => {
     const marcarHorariosPasados = (horarios: { hora: string; estado: string }[], openingTime: string) => {
         const now = new Date();
 
-        // Convertimos openingTime a número de hora (ej: '08:00' -> 8)
         const openingHour = Number(openingTime.split(':')[0]);
 
         return horarios.map((h) => {
             const [hora, min] = h.hora.split(':').map(Number);
-            const fechaHorario = new Date(fecha + 'T00:00:00');
-            fechaHorario.setHours(hora, min, 0, 0);
 
-            // Solo marcar como no_disponible si es hoy, el horario ya pasó y es mayor o igual a la hora de apertura
-            if (
-                fecha === now.toISOString().slice(0, 10) && // es hoy
-                fechaHorario.getTime() <= now.getTime() && // ya pasó
-                h.estado === 'disponible' &&
-                hora >= openingHour
-            ) {
+            // Creamos la fecha completa en local
+            const [year, month, day] = fecha.split('-').map(Number);
+            const fechaHorario = new Date(year, month - 1, day, hora, min, 0, 0);
+
+            const isToday = now.getFullYear() === year && now.getMonth() === month - 1 && now.getDate() === day;
+
+            if (isToday && fechaHorario.getTime() <= now.getTime() && h.estado === 'disponible' && hora >= openingHour) {
                 return { ...h, estado: 'no_disponible' };
             }
 
@@ -130,7 +126,18 @@ export const fetchHorarios = async ({ affair, cancha, entrenador, fecha }) => {
     };
 
     if (affair === 'Entrenar' && entrenador) {
-        const { data: coachData, error: coachError } = await supabase.from('coach_availability').select('start_time, end_time').eq('coach_id', entrenador).eq('is_active', true);
+        // Calcular day_of_week a partir de la fecha seleccionada
+        const fechaDate = new Date(fecha);
+        // En JS getDay() devuelve 0=Domingo, 1=Lunes... lo ajustamos a 1= Lunes, 7=Domingo
+        const jsDay = fechaDate.getDay();
+        const dayOfWeek = jsDay === 0 ? 7 : jsDay;
+
+        const { data: coachData, error: coachError } = await supabase
+            .from('coach_availability')
+            .select('start_time, end_time')
+            .eq('coach_id', entrenador)
+            .eq('day_of_week', dayOfWeek)
+            .eq('is_active', true);
 
         if (coachError) throw coachError;
 
@@ -145,7 +152,6 @@ export const fetchHorarios = async ({ affair, cancha, entrenador, fecha }) => {
             return { hora: h, estado: 'disponible' };
         });
 
-        // return marcarHorariosPasados(horariosConEstado);
         return marcarHorariosPasados(horariosConEstado, canchaData.opening_time);
     }
 
