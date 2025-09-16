@@ -25,7 +25,7 @@ export const useUserStore = create<UserState>()((set) => ({
 
     addUserReservation: (reservation) =>
         set((state) => ({
-            userReservations: [...state.userReservations, reservation],
+            userReservations: [reservation, ...state.userReservations],
         })),
 
     editUserReservation: (id, status, cancelled_at) =>

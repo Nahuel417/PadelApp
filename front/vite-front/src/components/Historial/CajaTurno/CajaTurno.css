@@ -6,8 +6,6 @@ div.caja-turno {
     padding: 10px 10px 10px 10px;
     color: black;
     border-radius: 8px;
-    /* background-color: #e1f3ea;
-    border: 2px solid #238744; */
     transition: all 0.2s ease-in-out;
 }
 
@@ -29,6 +27,7 @@ div.caja-turno.pending {
 div.caja-turno:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transform: scale(1.02);
+    cursor: default;
 }
 
 div.caja-turno span {
@@ -48,8 +47,24 @@ div.caja-turno div.col-horario,
 div.caja-turno div.col-asunto,
 div.caja-turno div.col-cancha,
 div.caja-turno div.col-estado,
+div.caja-turno div.col-precio,
 div.caja-turno div.col-entrenador {
     text-align: start;
+}
+
+.span-estado.confirmed {
+    font-weight: 700;
+    color: #238744;
+}
+
+.span-estado.pending {
+    font-weight: 700;
+    color: #3b82d9;
+}
+
+.span-estado.cancelled {
+    font-weight: 700;
+    color: #b91c1c;
 }
 
 /* Botones */
@@ -79,7 +94,7 @@ div.col-cancelar button.boton-cancelado {
     padding: 6px 14px;
     border: none;
     border-radius: 5px;
-    background-color: #555;
+    background-color: rgba(102, 102, 102, 0.6);
     color: #eee;
     cursor: not-allowed;
     font-size: 14px;

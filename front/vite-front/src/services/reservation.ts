@@ -1,8 +1,14 @@
+import { ReservationStatus } from '../utils/enums/reservationStatus.enum';
 import { generarHorarios } from '../utils/functions/generarHorarios';
 import { supabase } from './supabaseClient';
 
 export const fetchReservationsByUserId = async (userId: string) => {
-    const { data, error } = await supabase.from('reservations').select('*').eq('user_id', userId).order('reservation_date', { ascending: true });
+    // const { data, error } = await supabase.from('reservations').select('*').eq('user_id', userId).order('reservation_date', { ascending: true });
+    const { data, error } = await supabase
+        .from('reservations')
+        .select(`*, coach:coach_id (user:user_id (first_name,last_name))`)
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
     // .limit(5);
 
     if (error) throw error;
@@ -10,7 +16,7 @@ export const fetchReservationsByUserId = async (userId: string) => {
 };
 
 export const cancelReservation = async (id: string) => {
-    const { data, error } = await supabase.from('reservations').update({ status: 'cancelled', cancelled_at: new Date().toISOString() }).eq('id', id).select().single();
+    const { data, error } = await supabase.from('reservations').update({ status: ReservationStatus.CANCELLED, cancelled_at: new Date().toISOString() }).eq('id', id).select().single();
 
     if (error) throw error;
     return data;

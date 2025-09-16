@@ -7,6 +7,7 @@ import SkeletonHorario from '../../Skeletons/SkeletonHorario/SkeletonHorario';
 import ErrorMessage from '../../ErrorMessage/ErrorMessage';
 import { calcularMaxDuracion } from '../../../utils/functions/calcularMaxDuracion';
 import './ModalHorarios.css';
+import { useUserStore } from '../../../store/userStore';
 
 const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
     const [selectedHorario, setSelectedHorario] = useState<string | null>(null);
@@ -15,6 +16,7 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
     const [diaHorarios, setDiaHorarios] = useState([]);
     const [loadingHorarios, setLoadingHorarios] = useState(true);
     const days = getNextDays();
+    const addUserReservation = useUserStore((state) => state.addUserReservation);
 
     const handleDiaChange = (idx: number) => {
         setSelectedDayIndex(idx);
@@ -123,7 +125,9 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
         };
 
         try {
-            await createReservation(reserva);
+            const nuevaReserva = await createReservation(reserva);
+
+            addUserReservation(nuevaReserva);
 
             swal({
                 title: '¡Éxito!',
@@ -132,12 +136,19 @@ const ModalHorarios = ({ values, setFieldValue, setShowModal, userRole }) => {
                 //@ts-ignore
                 button: true,
             });
+
             setShowModal(false);
         } catch (error) {
-            console.error(error);
+            swal({
+                title: '¡Error!',
+                text: 'No se pudo crear la reserva. Intenta nuevamente.',
+                icon: 'error',
+                //@ts-ignore
+                button: 'Aceptar',
+            });
         }
     };
-    console.count('fetchHorarios ejecutado');
+
     return (
         <motion.div className="contenedor-modal" onClick={handleOverlayClick} variants={modalVariants} initial="hidden" animate="visible" exit="exit">
             <div className="contenido-modal">

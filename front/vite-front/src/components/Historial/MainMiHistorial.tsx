@@ -1,63 +1,82 @@
 import { useEffect, useState } from 'react';
 import CajaTurno from './CajaTurno/CajaTurno';
 import CajaThead from './CajaThead/CajaThead';
-import './MainMiHistorial.css';
 import { useUserStore } from '../../store/userStore';
-import { Reservation } from '../../interfaces/reservationInterface';
+import { motion } from 'framer-motion';
 import { fetchReservationsByUserId } from '../../services/reservation';
+import Spinner from '../Spinner/Spinner';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import './MainMiHistorial.css';
+import { listVariants } from '../Animations/listVariants';
 
 const MainMiHistorial = () => {
     const userActive = useUserStore((state) => state.userActive);
     const allUserAppointments = useUserStore((state) => state.userReservations);
     const setUserReservations = useUserStore((state) => state.setUserReservations);
 
-    const [turnos, setTurnos] = useState<Reservation[]>([]);
+    const [loading, setLoading] = useState<Boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
     // useEffect para la peticion al back
     useEffect(() => {
         const fetchData = async () => {
             if (!userActive?.id) return;
 
-            try {
-                const data = await fetchReservationsByUserId(userActive.id);
+            setLoading(true);
+            setError(null);
 
-                setTurnos(data);
-            } catch (error) {
-                console.log(error);
+            if (!allUserAppointments || allUserAppointments.length === 0) {
+                try {
+                    const data = await fetchReservationsByUserId(userActive.id);
+                    console.log(data);
+
+                    if (!data || data.length === 0) {
+                        setError('No se encontraron reservas disponibles.');
+                        setUserReservations([]);
+                    } else {
+                        setUserReservations(data);
+                    }
+                } catch (error) {
+                    setError('Ocurrió un error al cargar las reservas. Intenta nuevamente.');
+                    setUserReservations([]);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
             }
         };
 
         fetchData();
-    }, []);
-
-    // useEffect para despachar los turnos
-    useEffect(() => {
-        setUserReservations(turnos);
-    }, [turnos]);
+    }, [userActive, setUserReservations]);
 
     return (
         <>
             <main id="main">
                 <div className="contenedor-main-historial">
-                    <h3>Historial de Turnos</h3>
+                    <h3>Historial de Reservas</h3>
                     <hr className="linea-titulo" />
 
                     <p className="aviso">
-                        Historial completo con todos los turnos realizados. <b>Recuerde que para cancelar un turno deberá hacerlo como maximo con 12hs de antelación.</b>
+                        Historial completo con todos las reservas realizadas. <b>Recuerde que para cancelar la reserva deberá hacerlo como maximo con 24hs de antelación.</b>
                     </p>
 
                     <div className="contenedor-turnos" id="contenedor-turnos">
                         <CajaThead />
 
-                        <div className="contenedor-tabla">
-                            {allUserAppointments?.length ? (
-                                allUserAppointments.map((reserva) => {
-                                    return <CajaTurno key={reserva.id} reserva={reserva} />;
-                                })
-                            ) : (
-                                <p className="ningun-turno">No se encontraron turnos realizados.</p>
-                            )}
-                        </div>
+                        {loading ? (
+                            <Spinner />
+                        ) : error ? (
+                            <ErrorMessage message={error} width="100%" />
+                        ) : allUserAppointments?.length ? (
+                            <motion.div className="contenedor-tabla" variants={listVariants} initial="hidden" animate="visible" exit="exit">
+                                {allUserAppointments.map((reserva) => (
+                                    <CajaTurno key={reserva.id} reserva={reserva} />
+                                ))}
+                            </motion.div>
+                        ) : (
+                            <ErrorMessage message={error} width="100%" />
+                        )}
                     </div>
                 </div>
             </main>

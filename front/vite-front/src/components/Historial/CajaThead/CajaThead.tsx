@@ -18,6 +18,9 @@ const CajaThead = () => {
             <div className="col-estado-thead">
                 <span>Estado</span>
             </div>
+            <div className="col-precio-thead">
+                <span>Precio</span>
+            </div>
             <div className="col-entrenador-thead">
                 <span>Entrenador</span>
             </div>
