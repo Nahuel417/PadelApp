@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Reservation } from '../../../interfaces/reservationInterface';
 import { cancelReservation } from '../../../services/reservation';
-import { useUserStore } from '../../../store/userStore';
 import { ReservationStatus } from '../../../utils/enums/reservationStatus.enum';
 import './CajaTurno.css';
 
 interface ReservaProps {
     reserva: Reservation;
+    onCancel?: (id: string) => void;
 }
 
-const CajaTurno = ({ reserva }: ReservaProps) => {
+const CajaTurno = ({ reserva, onCancel }: ReservaProps) => {
     const { id, affair, court_id, coach, reservation_date, start_time, end_time, total_amount, status, payment_status } = reserva;
-    const editUserReservation = useUserStore((state) => state.editUserReservation);
     const [estado, setEstado] = useState(status);
 
     const reservationStatus = ReservationStatus;
@@ -28,10 +27,10 @@ const CajaTurno = ({ reserva }: ReservaProps) => {
 
     const postFunctionLogin = async () => {
         try {
-            const appointmentData: Reservation = await cancelReservation(id);
+            await cancelReservation(id);
 
             setEstado(reservationStatus.CANCELLED);
-            editUserReservation(appointmentData.id, reservationStatus.CANCELLED, appointmentData.cancelled_at);
+            if (onCancel) onCancel(id);
         } catch (error) {
             swal({
                 title: '¡Error!',
@@ -110,4 +109,4 @@ const CajaTurno = ({ reserva }: ReservaProps) => {
     );
 };
 
-export default CajaTurno;
+export default React.memo(CajaTurno);
