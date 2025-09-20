@@ -13,13 +13,17 @@ import { ReservationStatus } from '../../utils/enums/reservationStatus.enum';
 import { Reservation } from '../../interfaces/reservationInterface';
 
 interface ReservationsCache {
-    [page: number]: Reservation[];
+    [page: number]: {
+        data: Reservation[];
+        hasNextPage: boolean;
+    };
 }
 
 const MainMiHistorial = () => {
     const userActive = useUserStore((state) => state.userActive);
-    const userReservations = useUserStore((state) => state.userReservations);
-    const setUserReservations = useUserStore((state) => state.setUserReservations);
+    // const userReservations = useUserStore((state) => state.userReservations);
+    // const setUserReservations = useUserStore((state) => state.setUserReservations);
+    // const editUserReservation = useUserStore((state) => state.editUserReservation);
 
     const [loading, setLoading] = useState<Boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -31,24 +35,25 @@ const MainMiHistorial = () => {
     const [reservationsCache, setReservationsCache] = useState<ReservationsCache>({});
 
     const handleCancelReservation = (id: string) => {
-        // actualiza estado local
-        setReservations((prev) => prev.map((r) => (r.id === id ? { ...r, status: ReservationStatus.CANCELLED } : r)));
-
-        // actualizar estado global
-        setUserReservations(
-            Object.values(reservationsCache)
-                .flat()
-                .map((r) => (r.id === id ? { ...r, status: ReservationStatus.CANCELLED } : r))
-        );
-
-        // actualizar cache local
+        // Actualizar cache local
         setReservationsCache((prev) => {
             const newCache = { ...prev };
             Object.keys(newCache).forEach((page) => {
-                newCache[Number(page)] = newCache[Number(page)].map((r) => (r.id === id ? { ...r, status: ReservationStatus.CANCELLED } : r));
+                newCache[Number(page)] = {
+                    ...newCache[Number(page)],
+                    data: newCache[Number(page)].data.map((r) => (r.id === id ? { ...r, status: ReservationStatus.CANCELLED } : r)),
+                };
             });
             return newCache;
         });
+
+        // Actualizar estado local (solo página visible)
+        setReservations((prev) => prev.map((r) => (r.id === id ? { ...r, status: ReservationStatus.CANCELLED } : r)));
+
+        // Actualizar estado global solo si es la primera página
+        // if (currentPage === 1) {
+        //     editUserReservation(id, ReservationStatus.CANCELLED, new Date().toISOString());
+        // }
     };
 
     useEffect(() => {
@@ -58,14 +63,18 @@ const MainMiHistorial = () => {
             setLoading(true);
             setError(null);
 
-            // // Verificar si ya tenemos reservas en el store para esta página
-            // const start = (currentPage - 1) * limit;
-            // const end = currentPage * limit;
+            // // Si es la primera página y ya hay reservas en el store, usarlas directamente
+            // if (currentPage === 1 && userReservations.length > 0) {
+            //     setReservations(userReservations);
+            //     setHasNextPage(userReservations.length === limit);
+            //     setLoading(false);
+            //     return;
+            // }
 
             // revisar si ya tenemos la página en cache
             if (reservationsCache[currentPage]) {
-                setReservations(reservationsCache[currentPage]);
-                setHasNextPage(reservationsCache[currentPage].length === limit); // asumimos que si llena el límite, hay siguiente
+                setReservations(reservationsCache[currentPage].data);
+                setHasNextPage(reservationsCache[currentPage].hasNextPage);
                 setLoading(false);
                 return;
             }
@@ -76,20 +85,27 @@ const MainMiHistorial = () => {
                 if (!data || data.length === 0) {
                     setError('No se encontraron reservas disponibles.');
                     setReservations([]);
+                    setHasNextPage(false);
                 } else {
                     setReservations(data);
 
-                    // actualizar cache local
-                    setReservationsCache((prev) => ({ ...prev, [currentPage]: data }));
+                    // Guardar en cache local con hasNextPage
+                    setReservationsCache((prev) => ({
+                        ...prev,
+                        [currentPage]: { data, hasNextPage },
+                    }));
 
-                    // actualizar estado global
-                    if (currentPage === 1) setUserReservations(data);
+                    // // Guardar primera página en Zustand
+                    // if (currentPage === 1) setUserReservations(data);
+
+                    setHasNextPage(hasNextPage);
                 }
 
                 setHasNextPage(hasNextPage);
             } catch (error) {
                 setError('Ocurrió un error al cargar las reservas. Intenta nuevamente.');
                 setReservations([]);
+                setHasNextPage(false);
             } finally {
                 setLoading(false);
             }
