@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Reservation } from '../../../interfaces/reservationInterface';
 import { cancelReservation } from '../../../services/reservation';
 import { ReservationStatus } from '../../../utils/enums/reservationStatus.enum';
@@ -9,21 +9,24 @@ interface ReservaProps {
     onCancel?: (id: string) => void;
 }
 
+const ESTADO_MAP = {
+    confirmed: 'Confirmada',
+    pending: 'Pago Pendiente',
+    cancelled: 'Cancelada',
+};
+
 const CajaTurno = ({ reserva, onCancel }: ReservaProps) => {
     const { id, affair, court_id, coach, reservation_date, start_time, end_time, total_amount, status, payment_status } = reserva;
     const [estado, setEstado] = useState(status);
 
     const reservationStatus = ReservationStatus;
-    const nombreCoach = coach?.user ? `${coach.user.first_name} ${coach.user.last_name}` : '-- --';
-    const horario = `${start_time.slice(0, 5)} - ${end_time.slice(0, 5)}`;
 
-    const estadoMap = {
-        confirmed: 'Confirmada',
-        pending: 'Pago Pendiente',
-        cancelled: 'Cancelada',
-    };
+    const nombreCoach = useMemo(() => (coach?.user ? `${coach.user.first_name} ${coach.user.last_name}` : '-- --'), [coach]);
+
+    const horario = useMemo(() => `${start_time.slice(0, 5)} - ${end_time.slice(0, 5)}`, [start_time, end_time]);
+
     // Obtener el estado traducido y color
-    const estadoInfo = estadoMap[estado];
+    const estadoInfo = ESTADO_MAP[estado];
 
     const postFunctionLogin = async () => {
         try {

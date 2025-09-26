@@ -7,7 +7,7 @@ const CajaCopyright = () => {
                 <p>Copyright©</p>
             </li>
             <li>
-                <p>Henry - Curso Full Stack</p>
+                <p>Padel Sport - Nahuel Banco</p>
             </li>
         </div>
     );

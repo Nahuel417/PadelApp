@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import CajaTurno from './CajaTurno/CajaTurno';
 import CajaThead from './CajaThead/CajaThead';
 import { useUserStore } from '../../store/userStore';
@@ -11,9 +11,10 @@ import Pagination from '../Pagination/Pagination';
 import './MainMiHistorial.css';
 import { ReservationStatus } from '../../utils/enums/reservationStatus.enum';
 import { Reservation } from '../../interfaces/reservationInterface';
+import FiltroReserva from '../Filtros/FiltroReservas/FiltroReserva';
 
 interface ReservationsCache {
-    [page: number]: {
+    [key: string]: {
         data: Reservation[];
         hasNextPage: boolean;
     };
@@ -21,9 +22,6 @@ interface ReservationsCache {
 
 const MainMiHistorial = () => {
     const userActive = useUserStore((state) => state.userActive);
-    // const userReservations = useUserStore((state) => state.userReservations);
-    // const setUserReservations = useUserStore((state) => state.setUserReservations);
-    // const editUserReservation = useUserStore((state) => state.editUserReservation);
 
     const [loading, setLoading] = useState<Boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -33,8 +31,16 @@ const MainMiHistorial = () => {
     const limit = 5;
 
     const [reservationsCache, setReservationsCache] = useState<ReservationsCache>({});
+    const [filtroEstado, setFiltroEstado] = useState<string>('');
+    const [filtroAplicado, setFiltroAplicado] = useState<string>('');
 
-    const handleCancelReservation = (id: string) => {
+    const reservasFiltradas = useMemo(() => {
+        if (!filtroEstado) return reservations;
+
+        return reservations.filter((r) => r.status === filtroEstado);
+    }, [reservations, filtroEstado]);
+
+    const handleCancelReservation = useCallback((id: string) => {
         // Actualizar cache local
         setReservationsCache((prev) => {
             const newCache = { ...prev };
@@ -49,12 +55,13 @@ const MainMiHistorial = () => {
 
         // Actualizar estado local (solo página visible)
         setReservations((prev) => prev.map((r) => (r.id === id ? { ...r, status: ReservationStatus.CANCELLED } : r)));
+    }, []);
 
-        // Actualizar estado global solo si es la primera página
-        // if (currentPage === 1) {
-        //     editUserReservation(id, ReservationStatus.CANCELLED, new Date().toISOString());
-        // }
-    };
+    useEffect(() => {
+        setCurrentPage(1);
+        setReservationsCache({});
+        setFiltroAplicado(filtroEstado);
+    }, [filtroEstado]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -63,24 +70,17 @@ const MainMiHistorial = () => {
             setLoading(true);
             setError(null);
 
-            // // Si es la primera página y ya hay reservas en el store, usarlas directamente
-            // if (currentPage === 1 && userReservations.length > 0) {
-            //     setReservations(userReservations);
-            //     setHasNextPage(userReservations.length === limit);
-            //     setLoading(false);
-            //     return;
-            // }
+            const cacheKey = `${currentPage}-${filtroEstado || 'all'}`;
 
-            // revisar si ya tenemos la página en cache
-            if (reservationsCache[currentPage]) {
-                setReservations(reservationsCache[currentPage].data);
-                setHasNextPage(reservationsCache[currentPage].hasNextPage);
+            if (reservationsCache[cacheKey]) {
+                setReservations(reservationsCache[cacheKey].data);
+                setHasNextPage(reservationsCache[cacheKey].hasNextPage);
                 setLoading(false);
                 return;
             }
 
             try {
-                const { data, hasNextPage } = await fetchReservationsByUserId(userActive.id, currentPage, limit);
+                const { data, hasNextPage } = await fetchReservationsByUserId(userActive.id, currentPage, limit, filtroAplicado || undefined);
 
                 if (!data || data.length === 0) {
                     setError('No se encontraron reservas disponibles.');
@@ -92,11 +92,8 @@ const MainMiHistorial = () => {
                     // Guardar en cache local con hasNextPage
                     setReservationsCache((prev) => ({
                         ...prev,
-                        [currentPage]: { data, hasNextPage },
+                        [cacheKey]: { data, hasNextPage },
                     }));
-
-                    // // Guardar primera página en Zustand
-                    // if (currentPage === 1) setUserReservations(data);
 
                     setHasNextPage(hasNextPage);
                 }
@@ -112,7 +109,7 @@ const MainMiHistorial = () => {
         };
 
         fetchData();
-    }, [userActive, currentPage]);
+    }, [userActive, currentPage, filtroAplicado]);
 
     return (
         <>
@@ -126,18 +123,20 @@ const MainMiHistorial = () => {
                     </p>
 
                     <div className="contenedor-turnos" id="contenedor-turnos">
+                        <FiltroReserva estadoSeleccionado={filtroEstado} onChange={setFiltroEstado} />
+
                         <CajaThead />
 
                         {loading ? (
                             <Spinner />
                         ) : error ? (
                             <ErrorMessage message={error} width="100%" />
-                        ) : reservations?.length ? (
+                        ) : reservasFiltradas?.length ? (
                             <motion.div className="contenedor-tabla" variants={listVariants} initial="hidden" animate="visible" exit="exit" layout>
                                 <AnimatePresence mode="wait">
-                                    {reservations.map((reserva) => (
+                                    {reservasFiltradas.map((reserva) => (
                                         <motion.div key={reserva.id} variants={itemVariants} initial="hidden" animate="visible" exit="exit" transition={{ duration: 0.3 }}>
-                                            <CajaTurno reserva={reserva} key={reserva.id} onCancel={handleCancelReservation} />
+                                            <CajaTurno reserva={reserva} onCancel={handleCancelReservation} />
                                         </motion.div>
                                     ))}
                                 </AnimatePresence>

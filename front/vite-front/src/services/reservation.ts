@@ -2,16 +2,17 @@ import { ReservationStatus } from '../utils/enums/reservationStatus.enum';
 import { generarHorarios } from '../utils/functions/generarHorarios';
 import { supabase } from './supabaseClient';
 
-export const fetchReservationsByUserId = async (userId: string, page = 1, limit = 10) => {
+export const fetchReservationsByUserId = async (userId: string, page = 1, limit = 10, status?: string) => {
     const from = (page - 1) * limit;
     const to = page * limit - 1;
 
-    const { data, error } = await supabase
-        .from('reservations')
-        .select(`*, coach:coach_id ( user:user_id ( first_name, last_name ) )`)
-        .eq('user_id', userId)
-        .order('reservation_date', { ascending: false })
-        .range(from, to + 1); // pedimos uno más
+    let query = supabase.from('reservations').select(`*, coach:coach_id ( user:user_id ( first_name, last_name ) )`).eq('user_id', userId).order('reservation_date', { ascending: false });
+
+    if (status) {
+        query = query.eq('status', status);
+    }
+
+    const { data, error } = await query.range(from, to + 1);
 
     if (error) throw error;
 
