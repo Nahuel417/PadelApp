@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import MainDashboard from '../components/Dashboard/MainDashboard';
+import MainDashboard from '../modules/Dashboard/MainDashboard';
 import { useUserStore } from '../store/userStore';
 import { UserRole } from '../utils/enums/roles.enum';
-import CoachDashboard from '../components/Dashboard/CoachDashboard/CoachDashboard';
 import Header from '../components/Header/Header';
+import CoachDashboard from '../modules/Dashboard/components/CoachDashboard/CoachDashboard';
 
 const Dashboard = () => {
     const user = useUserStore((state) => state.userActive);

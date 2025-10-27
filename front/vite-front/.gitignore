@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+bun.lockb
+.env
+.env.develop
+.env.production
+STYLE_GUIDE.md
