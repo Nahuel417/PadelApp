@@ -1,0 +1,112 @@
+/* CoachDashboard Styles */
+
+.coach-dashboard-container {
+    width: 100%;
+}
+
+/* Page Header */
+.coach-page-header {
+    margin-bottom: 2rem;
+}
+
+.coach-page-title {
+    color: #092747;
+    font-weight: 700;
+    font-size: 1.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.coach-title-underline {
+    border: 2px solid #238744;
+    width: 4rem;
+    height: 4px;
+    background-color: #238744;
+    border-radius: 4px;
+}
+
+/* Stats Grid */
+.coach-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 1024px) {
+    .coach-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Stat Card */
+.coach-stat-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.coach-stat-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.coach-stat-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.coach-stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.coach-stat-label {
+    color: #092747;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.coach-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #092747;
+}
+
+.coach-stat-icon {
+    width: 3rem;
+    height: 3rem;
+    background-color: rgba(35, 135, 68, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.coach-stat-icon-emoji {
+    color: #238744;
+    font-size: 1.25rem;
+}
+
+/* Info Card */
+.coach-info-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+}
+
+.coach-info-title {
+    color: #092747;
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+}
+
+.coach-info-text {
+    color: #092747;
+    line-height: 1.625;
+}

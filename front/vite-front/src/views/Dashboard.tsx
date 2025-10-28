@@ -20,7 +20,7 @@ const Dashboard = () => {
 
     return (
         <>
-            <Header />
+            {/* <Header /> */}
             {user.role_id === UserRole.COACH ? <CoachDashboard /> : <MainDashboard />}
         </>
     );
