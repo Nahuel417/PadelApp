@@ -1,0 +1,174 @@
+/* ReserveRow Component Styles */
+
+.reserve-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 10px 10px 10px 10px;
+    color: black;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid;
+}
+
+.reserve-row.pending {
+    background-color: #dbeafe;
+    border-color: #60a5fa;
+}
+
+.reserve-row.confirmed {
+    background-color: #e1f3ea;
+    border-color: #238744;
+}
+
+.reserve-row.completed {
+    background-color: #dbeafe;
+    border-color: #60a5fa;
+}
+
+.reserve-row.cancelled {
+    background-color: #fdeaea;
+    border-color: #b91c1c;
+}
+
+.reserve-row:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02);
+}
+
+/* Reserve Columns */
+.reserve-col {
+    flex: 1;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: black;
+}
+
+.reserve-col-date,
+.reserve-col-time,
+.reserve-col-court,
+.reserve-col-user,
+.reserve-col-trainer,
+.reserve-col-price,
+.reserve-col-status {
+    text-align: start;
+}
+
+.reserve-col span {
+    display: block;
+    word-break: break-word;
+}
+
+.reserve-col-date {
+    flex: 0.9;
+}
+
+.reserve-col-time {
+    flex: 0.9;
+}
+
+.reserve-col-court {
+    flex: 0.8;
+}
+
+.reserve-col-user {
+    flex: 1;
+}
+
+.reserve-col-trainer {
+    flex: 1;
+}
+
+.reserve-col-price {
+    flex: 0.7;
+    font-weight: 600;
+    color: #238744;
+}
+
+.reserve-col-status {
+    flex: 0.9;
+}
+
+.reserve-col-actions {
+    flex: 0.8;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+/* Status Badge */
+.status-badge {
+    font-weight: 700;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.status-badge.pending {
+    color: #3b82d9;
+}
+
+.status-badge.confirmed {
+    color: #238744;
+}
+
+.status-badge.completed {
+    color: #3b82d9;
+}
+
+.status-badge.cancelled {
+    color: #b91c1c;
+}
+
+/* Action Buttons */
+.reserve-col-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.reserve-action-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.reserve-action-btn i {
+    font-size: 1rem;
+}
+
+.reserve-action-btn.approve {
+    background-color: #238744;
+    color: #fff;
+}
+
+.reserve-action-btn.approve:hover {
+    background-color: #196033;
+}
+
+.reserve-action-btn.reject {
+    background-color: #b91c1c;
+    color: #fff;
+}
+
+.reserve-action-btn.reject:hover {
+    background-color: #991b1b;
+}
+
+.reserve-action-btn.cancel {
+    background-color: #238744;
+    color: #fff;
+}
+
+.reserve-action-btn.cancel:hover {
+    background-color: #196033;
+}

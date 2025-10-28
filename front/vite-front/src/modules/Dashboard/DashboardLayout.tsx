@@ -7,15 +7,17 @@ interface DashboardLayoutProps {
     children: React.ReactNode;
     userRole?: 'admin' | 'coach' | 'superadmin';
     userName?: string;
+    activeSection?: string;
+    onSectionChange?: (section: string) => void;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, userRole = 'admin', userName = 'Usuario' }) => {
-    const [activeMenuItem, setActiveMenuItem] = useState('dashboard');
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, userRole = 'admin', userName = 'Usuario', activeSection = 'dashboard', onSectionChange }) => {
+    const [activeMenuItem, setActiveMenuItem] = useState(activeSection);
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const handleMenuClick = (item: string) => {
         setActiveMenuItem(item);
-        // TODO: Implement navigation logic
+        onSectionChange?.(item);
     };
 
     const handleToggleSidebar = () => {

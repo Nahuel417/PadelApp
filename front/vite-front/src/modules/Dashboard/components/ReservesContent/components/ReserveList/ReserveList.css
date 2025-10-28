@@ -1,0 +1,43 @@
+/* ReserveList Component Styles */
+
+.reserve-table-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background-color: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.reserve-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.reserve-list-loading,
+.reserve-list-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    border: 2px dashed #e5e7eb;
+}
+
+.reserve-list-empty i {
+    font-size: 3rem;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.reserve-list-loading p,
+.reserve-list-empty p {
+    color: #6b7280;
+    font-size: 1rem;
+    margin: 0;
+}
