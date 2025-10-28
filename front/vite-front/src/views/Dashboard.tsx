@@ -2,7 +2,6 @@ import { Navigate } from 'react-router-dom';
 import MainDashboard from '../modules/Dashboard/MainDashboard';
 import { useUserStore } from '../store/userStore';
 import { UserRole } from '../utils/enums/roles.enum';
-import Header from '../components/Header/Header';
 import CoachDashboard from '../modules/Dashboard/components/CoachDashboard/CoachDashboard';
 
 const Dashboard = () => {
@@ -18,12 +17,7 @@ const Dashboard = () => {
         return <Navigate to="/" replace />;
     }
 
-    return (
-        <>
-            {/* <Header /> */}
-            {user.role_id === UserRole.COACH ? <CoachDashboard /> : <MainDashboard />}
-        </>
-    );
+    return <>{user.role_id === UserRole.COACH ? <CoachDashboard /> : <MainDashboard />}</>;
 };
 
 export default Dashboard;
