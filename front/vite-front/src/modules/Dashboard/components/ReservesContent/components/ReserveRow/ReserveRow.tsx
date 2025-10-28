@@ -8,7 +8,7 @@ export const ReserveRow: React.FC<ReserveRowProps> = ({ reserve, onApprove, onRe
         pending: { bg: '#dbeafe', text: '#3b82d9' },
         confirmed: { bg: '#e1f3ea', text: '#238744' },
         completed: { bg: '#dbeafe', text: '#3b82d9' },
-        cancelled: { bg: '#fdeaea', text: '#b91c1c' }
+        cancelled: { bg: '#fdeaea', text: '#b91c1c' },
     };
     const statusInfo = colors[reserve.status];
     const isPending = reserve.status === 'pending';
