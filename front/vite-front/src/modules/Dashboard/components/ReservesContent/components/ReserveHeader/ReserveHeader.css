@@ -1,0 +1,47 @@
+/* ReserveHeader Component Styles */
+
+.reserve-header {
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.reserve-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.reserve-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #092747;
+    margin: 0;
+}
+
+.reserve-stats {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.reserve-stat {
+    color: #6b7280;
+}
+
+.reserve-stat strong {
+    color: #092747;
+    font-weight: 600;
+}
+
+.reserve-stat.pending {
+    color: #92400e;
+}
+
+.reserve-stat.pending strong {
+    color: #b45309;
+}
+
+.reserve-stat.separator {
+    color: #d1d5db;
+}

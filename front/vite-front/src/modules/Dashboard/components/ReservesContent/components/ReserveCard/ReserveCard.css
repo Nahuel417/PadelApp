@@ -1,0 +1,157 @@
+/* ReserveCard Component Styles */
+
+.reserve-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.reserve-card:hover {
+    border-color: #238744;
+    box-shadow: 0 4px 12px rgba(35, 135, 68, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Reserve Card Header */
+.reserve-card-header {
+    padding: 1rem;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.reserve-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.reserve-court-name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #092747;
+    margin: 0;
+    flex: 1;
+}
+
+/* Reserve Card Body */
+.reserve-card-body {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.reserve-info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.reserve-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.reserve-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reserve-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #092747;
+}
+
+.reserve-price {
+    color: #238744;
+    font-weight: 600;
+}
+
+/* Reserve Card Actions */
+.reserve-card-actions {
+    padding: 1rem;
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.reserve-btn {
+    flex: 1;
+    min-width: 100px;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.reserve-btn i {
+    font-size: 1rem;
+}
+
+.reserve-btn-approve {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.reserve-btn-approve:hover {
+    background-color: #a7f3d0;
+    border-color: #34d399;
+    transform: translateY(-1px);
+}
+
+.reserve-btn-approve:active {
+    transform: translateY(0);
+}
+
+.reserve-btn-reject {
+    background-color: #fee2e2;
+    color: #7f1d1d;
+    border: 1px solid #fca5a5;
+}
+
+.reserve-btn-reject:hover {
+    background-color: #fecaca;
+    border-color: #f87171;
+    transform: translateY(-1px);
+}
+
+.reserve-btn-reject:active {
+    transform: translateY(0);
+}
+
+.reserve-btn-cancel {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.reserve-btn-cancel:hover {
+    background-color: #fde68a;
+    border-color: #fbbf24;
+    transform: translateY(-1px);
+}
+
+.reserve-btn-cancel:active {
+    transform: translateY(0);
+}

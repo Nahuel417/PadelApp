@@ -1,0 +1,55 @@
+.reserve-table-header {
+    display: flex;
+    padding: 1rem 1.625rem;
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.reserve-col {
+    flex: 1;
+}
+
+.reserve-col span {
+    display: block;
+    word-break: break-word;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #092747;
+    text-align: left;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+}
+
+.reserve-col-date {
+    flex: 0.9;
+}
+
+.reserve-col-time {
+    flex: 0.9;
+}
+
+.reserve-col-court {
+    flex: 0.8;
+}
+
+.reserve-col-user {
+    flex: 1;
+}
+
+.reserve-col-trainer {
+    flex: 1;
+}
+
+.reserve-col-price {
+    flex: 0.8;
+}
+
+.reserve-col-status {
+    flex: 0.9;
+}
+
+.reserve-col-actions {
+    flex: 0.8;
+    display: flex;
+    justify-content: flex-end;
+}

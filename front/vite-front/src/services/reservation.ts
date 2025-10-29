@@ -32,6 +32,49 @@ export const cancelReservation = async (id: string) => {
     return data;
 };
 
+export const fetchAllReservations = async (page = 1, limit = 10, status?: string) => {
+    const from = (page - 1) * limit;
+    const to = page * limit - 1;
+
+    let query = supabase.from('reservations').select(`
+        *,
+        court:court_id (
+            id,
+            name,
+            surface_type
+        ),
+        coach:coach_id (
+            id,
+            user:user_id (
+                first_name,
+                last_name
+            )
+        ),
+        user:user_id (
+            id,
+            first_name,
+            last_name,
+            email
+        )
+    `).order('reservation_date', { ascending: false }).order('start_time', { ascending: false });
+
+    if (status && status !== 'all') {
+        query = query.eq('status', status);
+    }
+
+    const { data, error } = await query.range(from, to + 1);
+
+    if (error) throw error;
+
+    // chequeamos si hay siguiente
+    const hasNextPage = data && data.length > limit;
+
+    return {
+        data: data?.slice(0, limit) ?? [],
+        hasNextPage,
+    };
+};
+
 export const createReservation = async (reserva) => {
     const { data, error } = await supabase.from('reservations').insert([reserva]).select().single();
 

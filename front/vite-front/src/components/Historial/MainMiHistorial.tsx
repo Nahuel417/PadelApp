@@ -4,14 +4,14 @@ import CajaThead from './CajaThead/CajaThead';
 import { useUserStore } from '../../store/userStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import { fetchReservationsByUserId } from '../../services/reservation';
-import Spinner from '../Spinner/Spinner';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import { itemVariants, listVariants } from '../Animations/listVariants';
-import Pagination from '../Pagination/Pagination';
+import Pagination from '../../shared/components/Pagination/Pagination';
 import './MainMiHistorial.css';
 import { ReservationStatus } from '../../utils/enums/reservationStatus.enum';
 import { Reservation } from '../../interfaces/reservationInterface';
 import FiltroReserva from '../Filtros/FiltroReservas/FiltroReserva';
+import Spinner from '../../shared/components/Spinner/Spinner';
 
 interface ReservationsCache {
     [key: string]: {
