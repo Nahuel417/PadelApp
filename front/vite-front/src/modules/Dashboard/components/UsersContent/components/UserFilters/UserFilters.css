@@ -1,0 +1,28 @@
+.user-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.user-filter-btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(9, 39, 71, 0.2);
+    background-color: white;
+    color: #092747;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.user-filter-btn:hover {
+    background-color: rgba(35, 135, 68, 0.1);
+    border-color: rgba(35, 135, 68, 0.3);
+}
+
+.user-filter-btn.active {
+    background-color: #238744;
+    color: white;
+    border-color: #238744;
+}

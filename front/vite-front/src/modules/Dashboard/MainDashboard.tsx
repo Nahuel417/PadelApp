@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DashboardLayout from './DashboardLayout';
 import ReservesContent from './components/ReservesContent/ReservesContent';
+import UsersContent from './components/UsersContent/UsersContent';
 import './MainDashboard.css';
 
 const MainDashboard: React.FC = () => {
@@ -13,6 +14,8 @@ const MainDashboard: React.FC = () => {
         switch (activeSection) {
             case 'reservas':
                 return <ReservesContent userRole={userRole} />;
+            case 'usuarios':
+                return <UsersContent userRole={userRole} />;
             case 'dashboard':
             default:
                 return (
