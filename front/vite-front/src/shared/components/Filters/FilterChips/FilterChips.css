@@ -1,11 +1,12 @@
-.contenedor-filtro-reservas {
+.filter-chips {
     display: flex;
     align-items: center;
     gap: 5px;
     margin-bottom: 15px;
+    flex-wrap: wrap;
 }
 
-.filtro-boton {
+.filter-chip {
     padding: 6px 10px;
     border-radius: 6px;
     border: 2px solid rgba(128, 128, 128, 0.4);
@@ -17,12 +18,12 @@
     transition: all 0.2s ease-in-out;
 }
 
-.filtro-boton:hover {
+.filter-chip:hover {
     border-color: #092747;
     background-color: #f0f0f0;
 }
 
-.filtro-boton.activo {
+.filter-chip.active {
     background-color: #092747;
     color: #fff;
     border-color: transparent;

@@ -82,6 +82,11 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
         await fetchUsers(1);
     }, [fetchUsers]);
 
+    const safeSetRoleFilter = useCallback((nextRole: DashboardUserRole) => {
+        setRoleFilter(nextRole);
+        setCurrentPage(1);
+    }, []);
+
     return useMemo(
         () => ({
             users,
@@ -91,11 +96,11 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
             hasNextPage,
             roleFilter,
             searchTerm: searchInput,
-            setRoleFilter,
+            setRoleFilter: safeSetRoleFilter,
             setSearchTerm: setSearchInput,
             onPageChange,
             refetch,
         }),
-        [users, isLoading, error, currentPage, hasNextPage, roleFilter, searchInput, onPageChange, refetch]
+        [users, isLoading, error, currentPage, hasNextPage, roleFilter, searchInput, onPageChange, refetch, safeSetRoleFilter]
     );
 };

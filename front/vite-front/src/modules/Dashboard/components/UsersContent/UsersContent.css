@@ -15,8 +15,8 @@
 .users-control-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
+    gap: 1.5rem;
+    align-items: flex-start;
 }
 
 .users-error {
