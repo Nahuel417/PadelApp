@@ -3,12 +3,13 @@ import './ReserveList.css';
 import { ReserveListProps } from '../../types/types';
 import { ReserveTableHeader } from '../ReserveTableHeader/ReserveTableHeader';
 import { ReserveRow } from '../ReserveRow/ReserveRow';
+import { Pagination, Spinner } from '../../../../../../shared';
 
-export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, onReject, onCancel, isLoading }) => {
-    if (isLoading) {
+export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, onReject, onCancel, isLoading, currentPage = 1, hasNextPage, onPageChange }) => {
+    if (isLoading && reserves.length === 0) {
         return (
             <div className="reserve-list-loading">
-                <p>Cargando reservas...</p>
+                <Spinner />
             </div>
         );
     }
@@ -27,15 +28,12 @@ export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, o
             <ReserveTableHeader />
             <div className="reserve-table">
                 {reserves.map((reserve) => (
-                    <ReserveRow
-                        key={reserve.id}
-                        reserve={reserve}
-                        onApprove={onApprove}
-                        onReject={onReject}
-                        onCancel={onCancel}
-                    />
+                    <ReserveRow key={reserve.id} reserve={reserve} onApprove={onApprove} onReject={onReject} onCancel={onCancel} />
                 ))}
             </div>
+
+            {/* Paginación */}
+            {onPageChange && <Pagination currentPage={currentPage} hasNextPage={hasNextPage || false} onPageChange={onPageChange} />}
         </div>
     );
 };

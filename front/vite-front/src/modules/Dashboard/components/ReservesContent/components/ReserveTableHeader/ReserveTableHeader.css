@@ -1,6 +1,6 @@
 .reserve-table-header {
     display: flex;
-    padding: 1rem 1.25rem;
+    padding: 1rem 1.625rem;
     background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
     border-bottom: 2px solid #e5e7eb;
 }
@@ -41,7 +41,7 @@
 }
 
 .reserve-col-price {
-    flex: 0.7;
+    flex: 0.8;
 }
 
 .reserve-col-status {

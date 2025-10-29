@@ -8,7 +8,7 @@ export interface Reserve {
     endTime: string;
     userName: string;
     status: ReserveStatus;
-    price: number;
+    total_amount: number;
     trainerName?: string;
 }
 
@@ -33,6 +33,9 @@ export interface ReserveListProps {
     onReject?: (id: string) => void;
     onCancel?: (id: string) => void;
     isLoading?: boolean;
+    currentPage?: number;
+    hasNextPage?: boolean;
+    onPageChange?: (page: number) => void;
 }
 
 export interface ReserveRowProps {

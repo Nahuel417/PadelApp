@@ -34,7 +34,7 @@ export const ReserveRow: React.FC<ReserveRowProps> = ({ reserve, onApprove, onRe
                 <span>{reserve.trainerName || '—'}</span>
             </div>
             <div className="reserve-col reserve-col-price">
-                <span>${reserve.price}.00</span>
+                <span>${reserve.total_amount ? reserve.total_amount.toFixed(2) : '0.00'}</span>
             </div>
             <div className="reserve-col reserve-col-status">
                 <span className={`status-badge ${reserve.status}`} style={{ color: statusInfo.text }}>

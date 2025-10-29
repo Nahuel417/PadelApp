@@ -82,7 +82,7 @@
 }
 
 .reserve-col-price {
-    flex: 0.7;
+    flex: 0.8;
     font-weight: 600;
     color: #238744;
 }
@@ -128,7 +128,6 @@
 }
 
 .reserve-action-btn {
-    padding: 6px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
