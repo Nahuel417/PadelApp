@@ -1,4 +1,4 @@
-import { DashboardUserRole } from '../types/types';
+import { DashboardManageableRole, DashboardUserRole } from '../types/types';
 
 export const DEFAULT_USERS_PAGE_SIZE = 10;
 
@@ -16,6 +16,8 @@ export const ROLE_LABELS: Record<Exclude<DashboardUserRole, 'all'>, string> = {
     admin: 'Administrador',
     superadmin: 'Superadmin',
 };
+
+export const MANAGEABLE_ROLES: DashboardManageableRole[] = ['user', 'coach', 'admin'];
 
 export const STATUS_LABELS: Record<'active' | 'inactive' | 'pending', string> = {
     active: 'Activo',

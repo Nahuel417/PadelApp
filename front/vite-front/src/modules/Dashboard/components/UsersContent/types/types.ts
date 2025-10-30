@@ -16,6 +16,17 @@ export interface DashboardUser {
     createdAt: string;
 }
 
+export type DashboardManageableRole = 'user' | 'coach' | 'admin';
+
+export interface UserReservationSummary {
+    id: string;
+    dateLabel: string;
+    timeRange: string;
+    status: string;
+    courtName?: string;
+    counterpartName?: string;
+}
+
 export interface UsersContentProps {
     userRole?: 'admin' | 'coach' | 'superadmin';
 }
@@ -24,6 +35,7 @@ export interface UserHeaderStats {
     totalUsers: number;
     activeUsers: number;
     coaches: number;
+    admins: number;
 }
 
 export interface UserHeaderProps {
@@ -48,6 +60,31 @@ export interface UserListProps {
     hasNextPage?: boolean;
     onPageChange?: (page: number) => void;
     onSelectUser?: (id: string) => void;
+}
+
+export interface UserManagementModalProps {
+    isOpen: boolean;
+    user: DashboardUser | null;
+    availableRoles: DashboardManageableRole[];
+    onClose: () => void;
+    onChangeRole: (role: DashboardManageableRole) => Promise<void> | void;
+    isUpdatingRole: boolean;
+    updateError?: string | null;
+    reservations: UserReservationSummary[];
+    isLoadingReservations: boolean;
+    reservationsError?: string | null;
+    onReloadReservations: () => Promise<void> | void;
+}
+
+export interface UserManagementState {
+    selectedUserId: string | null;
+    selectedUser: DashboardUser | null;
+    isModalOpen: boolean;
+    isUpdatingRole: boolean;
+    updateError: string | null;
+    reservations: UserReservationSummary[];
+    isLoadingReservations: boolean;
+    reservationsError: string | null;
 }
 
 export interface UserRowProps {

@@ -8,9 +8,34 @@ import { UserList } from './components/UserList/UserList';
 import { useDashboardUsers } from '../../hooks/useDashboardUsers';
 import { getUserHeaderStats } from './utils/userUtils';
 import { ROLE_FILTERS } from './constants/constants';
+import UserManagementModal from './components/UserManagementModal/UserManagementModal';
 
 const UsersContent: React.FC<UsersContentProps> = ({ userRole = 'admin' }) => {
-    const { users, isLoading, error, currentPage, hasNextPage, roleFilter, searchTerm, setRoleFilter: setRoleFilterValue, setSearchTerm, onPageChange, refetch } = useDashboardUsers();
+    const {
+        users,
+        isLoading,
+        error,
+        currentPage,
+        hasNextPage,
+        roleFilter,
+        searchTerm,
+        setRoleFilter: setRoleFilterValue,
+        setSearchTerm,
+        onPageChange,
+        refetch,
+        managementRoles,
+        selectedUser,
+        isManagementOpen,
+        openManagement,
+        closeManagement,
+        changeUserRole,
+        isUpdatingRole,
+        updateRoleError,
+        reservations,
+        isLoadingReservations,
+        reservationsError,
+        reloadReservations,
+    } = useDashboardUsers();
 
     const headerStats = useMemo(() => getUserHeaderStats(users), [users]);
 
@@ -33,7 +58,7 @@ const UsersContent: React.FC<UsersContentProps> = ({ userRole = 'admin' }) => {
 
     return (
         <div className="users-content">
-            <UserHeader title="Gestión de Usuarios" stats={headerStats} />
+            <UserHeader title="Panel de Gestión de Usuarios" stats={headerStats} />
 
             <div className="users-controls">
                 <div className="users-control-group">
@@ -51,8 +76,29 @@ const UsersContent: React.FC<UsersContentProps> = ({ userRole = 'admin' }) => {
                     </button>
                 </div>
             ) : (
-                <UserList users={users} isLoading={isLoading} currentPage={currentPage} hasNextPage={hasNextPage} onPageChange={onPageChange} />
+                <UserList
+                    users={users}
+                    isLoading={isLoading}
+                    currentPage={currentPage}
+                    hasNextPage={hasNextPage}
+                    onPageChange={onPageChange}
+                    onSelectUser={openManagement}
+                />
             )}
+
+            <UserManagementModal
+                isOpen={isManagementOpen}
+                user={selectedUser}
+                availableRoles={managementRoles}
+                onClose={closeManagement}
+                onChangeRole={changeUserRole}
+                isUpdatingRole={isUpdatingRole}
+                updateError={updateRoleError}
+                reservations={reservations}
+                isLoadingReservations={isLoadingReservations}
+                reservationsError={reservationsError}
+                onReloadReservations={reloadReservations}
+            />
         </div>
     );
 };
