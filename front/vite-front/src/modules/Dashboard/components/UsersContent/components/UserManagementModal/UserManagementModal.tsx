@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './UserManagementModal.css';
-import { Modal, FilterChips, Spinner } from '../../../../../../shared';
+import { Modal, FilterChips, Spinner, Pagination, InfoNote } from '../../../../../../shared';
 import { UserManagementModalProps, DashboardManageableRole } from '../../types/types';
 import { getRoleLabel } from '../../utils/userUtils';
 
-const buildRoleOptions = (roles: DashboardManageableRole[]) =>
-    roles.map((role) => ({ value: role, label: getRoleLabel(role) }));
+const buildRoleOptions = (roles: DashboardManageableRole[]) => roles.map((role) => ({ value: role, label: getRoleLabel(role) }));
 
 export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     isOpen,
@@ -19,6 +18,11 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
     isLoadingReservations,
     reservationsError,
     onReloadReservations,
+    reservationsPage,
+    reservationsHasNextPage,
+    onReservationsPageChange,
+    hasLoadedReservations,
+    onLoadReservations,
 }) => {
     const [selectedRole, setSelectedRole] = useState<DashboardManageableRole | null>(null);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -70,8 +74,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                 type="button"
                 className="user-management-confirm"
                 onClick={handleUpdateRole}
-                disabled={!selectedRole || selectedRole === (user.role as DashboardManageableRole) || isSubmitting || isUpdatingRole}
-            >
+                disabled={!selectedRole || selectedRole === (user.role as DashboardManageableRole) || isSubmitting || isUpdatingRole}>
                 {isUpdatingRole ? 'Actualizando...' : 'Actualizar rol'}
             </button>
         </div>
@@ -81,7 +84,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
         <Modal isOpen={isOpen} onClose={onClose} title={`Gestionar ${user.fullName}`} description={`Rol actual: ${currentRoleLabel}`} size="lg" footer={footer}>
             <div className="user-management-modal">
                 <section className="user-management-section">
-                    <h3>Resumen del perfil</h3>
+                    <h3 className="user-management-section-title">Resumen del perfil</h3>
                     <div className="user-management-profile">
                         <div>
                             <span className="profile-label">Nombre completo</span>
@@ -97,9 +100,7 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                         </div>
                     </div>
                     {user.role === 'superadmin' && (
-                        <p className="user-management-alert">
-                            Este usuario es Superadmin. Podrás asignar únicamente roles de Usuario, Entrenador o Administrador.
-                        </p>
+                        <p className="user-management-alert">Este usuario es Superadmin. Podrás asignar únicamente roles de Usuario, Entrenador o Administrador.</p>
                     )}
                 </section>
 
@@ -115,12 +116,28 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     <div className="section-header">
                         <h3>Historial reciente</h3>
                         <div className="section-actions">
-                            <button type="button" className="link-button" onClick={onReloadReservations} disabled={isLoadingReservations}>
+                            <button type="button" className="link-button" onClick={onReloadReservations} disabled={isLoadingReservations || !hasLoadedReservations}>
                                 {isLoadingReservations ? 'Actualizando…' : 'Refrescar'}
                             </button>
                         </div>
                     </div>
-                    {isLoadingReservations ? (
+                    <InfoNote>Usá “Refrescar” para ver las reservas más recientes después de realizar cambios.</InfoNote>
+                    {!hasLoadedReservations ? (
+                        <div className="user-management-reservations-placeholder">
+                            {isLoadingReservations ? (
+                                <div className="user-management-spinner">
+                                    <Spinner />
+                                </div>
+                            ) : (
+                                <>
+                                    <p className="user-management-placeholder-text">Haz click en el boton para cargar el historial.</p>
+                                    <button type="button" className="user-management-trigger" onClick={onLoadReservations}>
+                                        Ver historial
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    ) : isLoadingReservations ? (
                         <div className="user-management-spinner">
                             <Spinner />
                         </div>
@@ -129,23 +146,29 @@ export const UserManagementModal: React.FC<UserManagementModalProps> = ({
                     ) : reservations.length === 0 ? (
                         <div className="user-management-empty">No hay reservas registradas.</div>
                     ) : (
-                        <ul className="user-management-reservations">
-                            {reservations.map((reservation) => (
-                                <li key={reservation.id} className="user-management-reservation">
-                                    <div>
-                                        <span className="reservation-date">{reservation.dateLabel}</span>
-                                        <span className="reservation-time">{reservation.timeRange}</span>
-                                    </div>
-                                    <div className="reservation-meta">
-                                        <span className="reservation-court">{reservation.courtName}</span>
-                                        {reservation.counterpartName && <span className="reservation-counterpart">Con: {reservation.counterpartName}</span>}
-                                    </div>
-                                    <span className={`reservation-status reservation-status--${reservation.status.toLowerCase()}`}>
-                                        {reservation.status}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
+                        <>
+                            <ul className="user-management-reservations">
+                                {reservations.map((reservation) => (
+                                    <li key={reservation.id} className="user-management-reservation">
+                                        <div>
+                                            <span className="reservation-date">{reservation.dateLabel}</span>
+                                            <span className="reservation-time">{reservation.timeRange}</span>
+                                        </div>
+                                        <div className="reservation-meta">
+                                            <span className="reservation-court">{reservation.courtName}</span>
+                                            {reservation.counterpartName && <span className="reservation-counterpart">Con: {reservation.counterpartName}</span>}
+                                        </div>
+                                        <span className={`reservation-status reservation-status--${reservation.status.toLowerCase()}`}>{reservation.status}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            {(reservationsHasNextPage || reservationsPage > 1) && (
+                                <div className="user-management-pagination">
+                                    <Pagination currentPage={reservationsPage} hasNextPage={reservationsHasNextPage} onPageChange={onReservationsPageChange} />
+                                </div>
+                            )}
+                        </>
                     )}
                 </section>
             </div>

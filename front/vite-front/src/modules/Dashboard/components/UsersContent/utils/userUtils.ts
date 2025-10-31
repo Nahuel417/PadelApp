@@ -79,6 +79,14 @@ export const getUserHeaderStats = (users: DashboardUser[]): UserHeaderStats => {
     };
 };
 
+export const getRoleChipClass = (role: DashboardUserRole): string => {
+    if (role === 'all') {
+        return 'user-role-chip--default';
+    }
+
+    return `user-role-chip--${role}`;
+};
+
 const formatReservationDate = (isoDate?: string | null): string => {
     if (!isoDate) return '—';
 

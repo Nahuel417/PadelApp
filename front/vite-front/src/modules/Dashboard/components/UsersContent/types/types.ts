@@ -60,6 +60,8 @@ export interface UserListProps {
     hasNextPage?: boolean;
     onPageChange?: (page: number) => void;
     onSelectUser?: (id: string) => void;
+    onDeleteUser?: (user: DashboardUser) => void;
+    isDeletingUser?: boolean;
 }
 
 export interface UserManagementModalProps {
@@ -74,6 +76,11 @@ export interface UserManagementModalProps {
     isLoadingReservations: boolean;
     reservationsError?: string | null;
     onReloadReservations: () => Promise<void> | void;
+    reservationsPage: number;
+    reservationsHasNextPage: boolean;
+    onReservationsPageChange: (page: number) => Promise<void> | void;
+    hasLoadedReservations: boolean;
+    onLoadReservations: () => Promise<void> | void;
 }
 
 export interface UserManagementState {
@@ -90,6 +97,8 @@ export interface UserManagementState {
 export interface UserRowProps {
     user: DashboardUser;
     onSelectUser?: (id: string) => void;
+    onDeleteUser?: (user: DashboardUser) => void;
+    isDeletingUser?: boolean;
 }
 
 export interface UserStatusBadgeProps {

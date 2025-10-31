@@ -6,11 +6,11 @@
     border-bottom: 2px solid #e5e7eb;
 }
 
-.user-col {
+.user-col-h {
     flex: 1;
 }
 
-.user-col span {
+.user-col-h span {
     display: block;
     word-break: break-word;
     font-size: 0.875rem;

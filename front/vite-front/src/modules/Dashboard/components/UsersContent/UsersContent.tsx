@@ -35,6 +35,13 @@ const UsersContent: React.FC<UsersContentProps> = ({ userRole = 'admin' }) => {
         isLoadingReservations,
         reservationsError,
         reloadReservations,
+        reservationsPage,
+        reservationsHasNextPage,
+        changeReservationsPage,
+        hasLoadedReservations,
+        loadReservations,
+        deleteUser,
+        isDeletingUser,
     } = useDashboardUsers();
 
     const headerStats = useMemo(() => getUserHeaderStats(users), [users]);
@@ -83,6 +90,8 @@ const UsersContent: React.FC<UsersContentProps> = ({ userRole = 'admin' }) => {
                     hasNextPage={hasNextPage}
                     onPageChange={onPageChange}
                     onSelectUser={openManagement}
+                    onDeleteUser={deleteUser}
+                    isDeletingUser={isDeletingUser}
                 />
             )}
 
@@ -98,6 +107,11 @@ const UsersContent: React.FC<UsersContentProps> = ({ userRole = 'admin' }) => {
                 isLoadingReservations={isLoadingReservations}
                 reservationsError={reservationsError}
                 onReloadReservations={reloadReservations}
+                reservationsPage={reservationsPage}
+                reservationsHasNextPage={reservationsHasNextPage}
+                onReservationsPageChange={changeReservationsPage}
+                hasLoadedReservations={hasLoadedReservations}
+                onLoadReservations={loadReservations}
             />
         </div>
     );

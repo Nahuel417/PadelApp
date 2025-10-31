@@ -27,18 +27,18 @@ export const STATUS_LABELS: Record<'active' | 'inactive' | 'pending', string> = 
 
 export const STATUS_COLORS: Record<'active' | 'inactive' | 'pending', { bg: string; text: string; border: string }> = {
     active: {
-        bg: '#e1f3ea',
-        text: '#238744',
-        border: '#a3d9c3',
+        bg: '#238744',
+        text: '#ffffff',
+        border: '#238744',
     },
     inactive: {
-        bg: '#fdeaea',
-        text: '#b91c1c',
-        border: '#f5b5b5',
+        bg: '#b91c1c',
+        text: '#ffffff',
+        border: '#b91c1c',
     },
     pending: {
-        bg: '#fff4d6',
-        text: '#d48806',
-        border: '#f3c969',
+        bg: '#d48806',
+        text: '#ffffff',
+        border: '#d48806',
     },
 };

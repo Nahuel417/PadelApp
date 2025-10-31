@@ -2,11 +2,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem 0.65rem;
-    border-radius: 9999px;
+    padding: 4px 8px;
+    border-radius: 8px;
     font-size: 0.75rem;
     font-weight: 600;
-    border: 1px solid transparent;
+    border: 1px solid #238744;
+    background-color: transparent;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.06em;
 }

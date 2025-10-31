@@ -67,9 +67,7 @@ export const Modal: React.FC<ModalProps> = ({
         const previousOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
 
-        const focusable = dialogRef.current?.querySelector<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
+        const focusable = dialogRef.current?.querySelector<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
         focusable?.focus();
 
         return () => {
@@ -101,8 +99,7 @@ export const Modal: React.FC<ModalProps> = ({
                 aria-modal="true"
                 aria-labelledby={title ? 'modal-title' : undefined}
                 aria-describedby={description ? 'modal-description' : undefined}
-                onClick={handleDialogClick}
-            >
+                onClick={handleDialogClick}>
                 {(title || showCloseButton) && (
                     <header className="modal-header">
                         {title && (
@@ -118,11 +115,11 @@ export const Modal: React.FC<ModalProps> = ({
                     </header>
                 )}
 
-                {description && (
+                {/* {description && (
                     <p id="modal-description" className="modal-description">
                         {description}
                     </p>
-                )}
+                )} */}
 
                 <div className="modal-body">{children}</div>
 

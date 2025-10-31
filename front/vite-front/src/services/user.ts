@@ -11,10 +11,23 @@ type FetchUsersParams = {
     search?: string;
 };
 
+type FetchManagementReservationsResponse = {
+    data: any[];
+    hasNextPage: boolean;
+};
+
+const ROLE_ID_MAP: Record<ManageableRole, UserRole> = {
+    user: UserRole.USER,
+    coach: UserRole.COACH,
+    admin: UserRole.ADMIN,
+};
+
 export const updateDashboardUserRole = async (userId: string, nextRole: ManageableRole) => {
+    const targetRoleId = ROLE_ID_MAP[nextRole];
+
     const { data, error } = await supabase
         .from('users')
-        .update({ role_id: ROLE_UPDATE_MAP[nextRole], updated_at: new Date().toISOString() })
+        .update({ role_id: targetRoleId })
         .eq('id', userId)
         .select('id, role_id')
         .single();
@@ -24,13 +37,20 @@ export const updateDashboardUserRole = async (userId: string, nextRole: Manageab
     return data;
 };
 
+export const deleteDashboardUser = async (userId: string) => {
+    const { error } = await supabase.from('users').delete().eq('id', userId);
+
+    if (error) throw error;
+};
+
 type FetchManagementReservationsParams = {
     userId: string;
     role: Exclude<DashboardUserRoleFilter, 'all'>;
+    page?: number;
     limit?: number;
 };
 
-export const fetchManagementReservations = async ({ userId, role, limit = 10 }: FetchManagementReservationsParams) => {
+export const fetchManagementReservations = async ({ userId, role, page = 1, limit = 5 }: FetchManagementReservationsParams): Promise<FetchManagementReservationsResponse> => {
     const baseSelect = `
         id,
         reservation_date,
@@ -55,6 +75,9 @@ export const fetchManagementReservations = async ({ userId, role, limit = 10 }: 
         )
     `;
 
+    const from = (page - 1) * limit;
+    const to = from + limit;
+
     let query;
 
     if (role === 'coach') {
@@ -67,7 +90,7 @@ export const fetchManagementReservations = async ({ userId, role, limit = 10 }: 
         if (coachError) throw coachError;
 
         if (!coachRecord?.id) {
-            return [];
+            return { data: [], hasNextPage: false };
         }
 
         query = supabase.from('reservations').select(baseSelect).eq('coach_id', coachRecord.id);
@@ -78,11 +101,17 @@ export const fetchManagementReservations = async ({ userId, role, limit = 10 }: 
     const { data, error } = await query
         .order('reservation_date', { ascending: false })
         .order('start_time', { ascending: false })
-        .limit(limit);
+        .range(from, to);
 
     if (error) throw error;
 
-    return data ?? [];
+    const reservations = data ?? [];
+    const hasNextPage = reservations.length > limit;
+
+    return {
+        data: reservations.slice(0, limit),
+        hasNextPage,
+    };
 };
 
 const ROLE_FILTER_MAP: Record<Exclude<DashboardUserRoleFilter, 'all'>, UserRole> = {
@@ -90,12 +119,6 @@ const ROLE_FILTER_MAP: Record<Exclude<DashboardUserRoleFilter, 'all'>, UserRole>
     coach: UserRole.COACH,
     admin: UserRole.ADMIN,
     superadmin: UserRole.SUPERADMIN,
-};
-
-const ROLE_UPDATE_MAP: Record<ManageableRole, UserRole> = {
-    user: UserRole.USER,
-    coach: UserRole.COACH,
-    admin: UserRole.ADMIN,
 };
 
 const sanitizeSearchTerm = (term: string): string => {

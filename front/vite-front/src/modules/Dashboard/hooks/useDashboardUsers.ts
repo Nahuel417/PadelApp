@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { fetchDashboardUsers, updateDashboardUserRole, fetchManagementReservations } from '../../../services/user';
+import swal from 'sweetalert';
+import { fetchDashboardUsers, updateDashboardUserRole, fetchManagementReservations, deleteDashboardUser } from '../../../services/user';
 import { DashboardManageableRole, DashboardUser, DashboardUserRole, UserReservationSummary } from '../components/UsersContent/types/types';
-import { DEFAULT_USERS_PAGE_SIZE, MANAGEABLE_ROLES } from '../components/UsersContent/constants/constants';
+import { DEFAULT_USERS_PAGE_SIZE, MANAGEABLE_ROLES, ROLE_LABELS } from '../components/UsersContent/constants/constants';
 import { buildDashboardUser, buildReservationSummary } from '../components/UsersContent/utils/userUtils';
 
 interface UseDashboardUsersState {
@@ -28,7 +29,16 @@ interface UseDashboardUsersState {
     isLoadingReservations: boolean;
     reservationsError: string | null;
     reloadReservations: () => Promise<void>;
+    reservationsPage: number;
+    reservationsHasNextPage: boolean;
+    changeReservationsPage: (page: number) => Promise<void>;
+    hasLoadedReservations: boolean;
+    loadReservations: () => Promise<void>;
+    deleteUser: (user: DashboardUser) => Promise<void>;
+    isDeletingUser: boolean;
 }
+
+const RESERVATIONS_PAGE_SIZE = 5;
 
 export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDashboardUsersState => {
     const [users, setUsers] = useState<DashboardUser[]>([]);
@@ -47,6 +57,10 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
     const [reservations, setReservations] = useState<UserReservationSummary[]>([]);
     const [isLoadingReservations, setIsLoadingReservations] = useState<boolean>(false);
     const [reservationsError, setReservationsError] = useState<string | null>(null);
+    const [reservationsPage, setReservationsPage] = useState<number>(1);
+    const [reservationsHasNextPage, setReservationsHasNextPage] = useState<boolean>(false);
+    const [hasLoadedReservations, setHasLoadedReservations] = useState<boolean>(false);
+    const [isDeletingUser, setIsDeletingUser] = useState<boolean>(false);
 
     useEffect(() => {
         const handler = window.setTimeout(() => {
@@ -113,21 +127,32 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
     );
 
     const fetchReservationsForUser = useCallback(
-        async (user: DashboardUser | null) => {
+        async (user: DashboardUser | null, page = 1) => {
             if (!user) {
                 setReservations([]);
+                setReservationsPage(1);
+                setReservationsHasNextPage(false);
+                setHasLoadedReservations(false);
                 return;
             }
 
             try {
                 setIsLoadingReservations(true);
                 setReservationsError(null);
+                setReservationsPage(page);
 
                 const roleForQuery = user.role === 'all' ? 'user' : user.role;
-                const data = await fetchManagementReservations({ userId: user.id, role: roleForQuery });
+                const { data, hasNextPage } = await fetchManagementReservations({
+                    userId: user.id,
+                    role: roleForQuery,
+                    page,
+                    limit: RESERVATIONS_PAGE_SIZE,
+                });
                 const context = user.role === 'coach' ? 'coach' : 'user';
                 const summaries = data.map((record) => buildReservationSummary(record, context));
                 setReservations(summaries);
+                setReservationsHasNextPage(hasNextPage);
+                setHasLoadedReservations(true);
             } catch (err) {
                 const message = err instanceof Error ? err.message : 'Error al obtener el historial de reservas';
                 setReservationsError(message);
@@ -144,11 +169,13 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
             setSelectedUserId(userId);
             setIsManagementOpen(true);
             setUpdateRoleError(null);
-
-            const user = users.find((item) => item.id === userId) ?? null;
-            await fetchReservationsForUser(user);
+            setReservations([]);
+            setReservationsError(null);
+            setReservationsPage(1);
+            setReservationsHasNextPage(false);
+            setHasLoadedReservations(false);
         },
-        [fetchReservationsForUser, users]
+        [users]
     );
 
     const closeManagement = useCallback(() => {
@@ -157,17 +184,45 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
         setReservations([]);
         setReservationsError(null);
         setUpdateRoleError(null);
+        setReservationsPage(1);
+        setReservationsHasNextPage(false);
+        setHasLoadedReservations(false);
     }, []);
 
     const reloadReservations = useCallback(async () => {
-        await fetchReservationsForUser(selectedUser);
-    }, [fetchReservationsForUser, selectedUser]);
+        if (!selectedUser || !hasLoadedReservations) return;
+        await fetchReservationsForUser(selectedUser, reservationsPage);
+    }, [fetchReservationsForUser, hasLoadedReservations, reservationsPage, selectedUser]);
+
+    const changeReservationsPage = useCallback(
+        async (page: number) => {
+            if (!selectedUser || page < 1 || !hasLoadedReservations) return;
+            await fetchReservationsForUser(selectedUser, page);
+        },
+        [fetchReservationsForUser, hasLoadedReservations, selectedUser]
+    );
+
+    const loadReservations = useCallback(async () => {
+        if (!selectedUser || hasLoadedReservations || isLoadingReservations) return;
+        await fetchReservationsForUser(selectedUser, 1);
+    }, [fetchReservationsForUser, hasLoadedReservations, isLoadingReservations, selectedUser]);
 
     const changeUserRole = useCallback(
         async (role: DashboardManageableRole) => {
             if (!selectedUser) return;
 
             try {
+                const nextRoleLabel = ROLE_LABELS[role];
+                const confirmed = await swal({
+                    title: 'Confirmar cambio de rol',
+                    text: `¿Deseás cambiar el rol de ${selectedUser.fullName} a ${nextRoleLabel}?`,
+                    icon: 'warning',
+                    buttons: ['Cancelar', 'Confirmar'],
+                    dangerMode: true,
+                });
+
+                if (!confirmed) return;
+
                 setIsUpdatingRole(true);
                 setUpdateRoleError(null);
 
@@ -175,18 +230,86 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
                 await refetch();
 
                 const updatedUser = users.find((item) => item.id === selectedUser.id);
-                if (updatedUser) {
-                    await fetchReservationsForUser(updatedUser);
+                const refreshedUser = updatedUser ?? {
+                    ...selectedUser,
+                    role,
+                    roleLabel: ROLE_LABELS[role],
+                };
+
+                if (hasLoadedReservations) {
+                    await fetchReservationsForUser(refreshedUser, 1);
                 }
+
+                await swal({
+                    title: 'Rol actualizado',
+                    icon: 'success',
+                    buttons: {
+                        confirm: {
+                            text: 'Aceptar',
+                            value: true,
+                        },
+                    },
+                });
             } catch (err) {
-                const message = err instanceof Error ? err.message : 'No se pudo actualizar el rol del usuario';
-                setUpdateRoleError(message);
+                setUpdateRoleError('No se pudo actualizar el rol del usuario');
                 console.error('Error updating dashboard user role:', err);
             } finally {
                 setIsUpdatingRole(false);
             }
         },
-        [fetchReservationsForUser, refetch, selectedUser, users]
+        [fetchReservationsForUser, hasLoadedReservations, refetch, selectedUser, users]
+    );
+
+    const deleteUser = useCallback(
+        async (user: DashboardUser) => {
+            const confirmed = await swal({
+                title: '¿Eliminar usuario?',
+                text: `Esta acción eliminará permanentemente a ${user.fullName}.`,
+                icon: 'warning',
+                buttons: ['Cancelar', 'Eliminar'],
+                dangerMode: true,
+            });
+
+            if (!confirmed) return;
+
+            try {
+                setIsDeletingUser(true);
+                await deleteDashboardUser(user.id);
+
+                if (selectedUserId === user.id) {
+                    closeManagement();
+                }
+
+                await refetch();
+
+                await swal({
+                    title: 'Usuario eliminado',
+                    icon: 'success',
+                    buttons: {
+                        confirm: {
+                            text: 'Aceptar',
+                            value: true,
+                        },
+                    },
+                });
+            } catch (err) {
+                console.error('Error deleting dashboard user:', err);
+                await swal({
+                    title: 'No se pudo eliminar el usuario',
+                    text: err instanceof Error ? err.message : 'Intentalo nuevamente más tarde.',
+                    icon: 'error',
+                    buttons: {
+                        confirm: {
+                            text: 'Aceptar',
+                            value: true,
+                        },
+                    },
+                });
+            } finally {
+                setIsDeletingUser(false);
+            }
+        },
+        [closeManagement, refetch, selectedUserId]
     );
 
     return useMemo(
@@ -214,6 +337,13 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
             isLoadingReservations,
             reservationsError,
             reloadReservations,
+            reservationsPage,
+            reservationsHasNextPage,
+            changeReservationsPage,
+            hasLoadedReservations,
+            loadReservations,
+            deleteUser,
+            isDeletingUser,
         }),
         [
             users,
@@ -237,6 +367,13 @@ export const useDashboardUsers = (initialRole: DashboardUserRole = 'all'): UseDa
             isLoadingReservations,
             reservationsError,
             reloadReservations,
+            reservationsPage,
+            reservationsHasNextPage,
+            changeReservationsPage,
+            hasLoadedReservations,
+            loadReservations,
+            deleteUser,
+            isDeletingUser,
         ]
     );
 };

@@ -5,7 +5,7 @@ import { UserTableHeader } from '../UserTableHeader/UserTableHeader';
 import { UserRow } from '../UserRow/UserRow';
 import { Pagination, Spinner } from '../../../../../../shared';
 
-export const UserList: React.FC<UserListProps> = ({ users, isLoading, currentPage = 1, hasNextPage, onPageChange, onSelectUser }) => {
+export const UserList: React.FC<UserListProps> = ({ users, isLoading, currentPage = 1, hasNextPage, onPageChange, onSelectUser, onDeleteUser, isDeletingUser }) => {
     if (isLoading && users.length === 0) {
         return (
             <div className="user-list-loading">
@@ -28,7 +28,7 @@ export const UserList: React.FC<UserListProps> = ({ users, isLoading, currentPag
             <UserTableHeader />
             <div className="user-table" role="table" aria-label="Listado de usuarios">
                 {users.map((user) => (
-                    <UserRow key={user.id} user={user} onSelectUser={onSelectUser} />
+                    <UserRow key={user.id} user={user} onSelectUser={onSelectUser} onDeleteUser={onDeleteUser} isDeletingUser={isDeletingUser} />
                 ))}
             </div>
 

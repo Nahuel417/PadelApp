@@ -7,7 +7,7 @@ export const UserStatusBadge: React.FC<UserStatusBadgeProps> = ({ status }) => {
     const colors = STATUS_COLORS[status];
 
     return (
-        <span className="user-status-badge" style={{ backgroundColor: colors.bg, color: colors.text, borderColor: colors.border }}>
+        <span className="user-status-badge" style={{ color: '#238744' }}>
             {STATUS_LABELS[status]}
         </span>
     );
