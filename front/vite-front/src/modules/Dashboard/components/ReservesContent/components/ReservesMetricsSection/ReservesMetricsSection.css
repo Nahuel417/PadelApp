@@ -1,0 +1,184 @@
+.reserves-metrics {
+    margin-top: 2.5rem;
+    padding: 0;
+}
+
+.reserves-metrics__header {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.reserves-metrics__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #092747;
+    margin: 0 0 0.25rem 0;
+    line-height: 1.2;
+}
+
+.reserves-metrics__subtitle {
+    font-size: 0.9rem;
+    color: rgba(9, 39, 71, 0.6);
+    margin: 0;
+    font-weight: 500;
+}
+
+.reserves-metrics__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.reserves-metrics__loading {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.metric-skeleton {
+    height: 320px;
+    background: linear-gradient(90deg, rgba(9, 39, 71, 0.05) 25%, rgba(9, 39, 71, 0.1) 50%, rgba(9, 39, 71, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: reserves-metric-loading 1.5s infinite;
+    border-radius: 12px;
+}
+
+@keyframes reserves-metric-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.metric-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    box-shadow: 0 4px 12px rgba(9, 39, 71, 0.06);
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-card:hover {
+    box-shadow: 0 8px 24px rgba(9, 39, 71, 0.12);
+    transform: translateY(-2px);
+}
+
+.metric-card__header {
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.metric-card__title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #092747;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    opacity: 0.8;
+}
+
+.metric-card__value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #092747;
+    margin: 0 0 0.25rem 0;
+    line-height: 1;
+    display: block;
+}
+
+.metric-card__subtitle {
+    font-size: 0.8rem;
+    color: rgba(9, 39, 71, 0.6);
+    margin: 0;
+    font-weight: 500;
+}
+
+.metric-card__chart {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    background-color: #cccccc63;
+    border-radius: 6px;
+}
+
+.metric-card .apexcharts-canvas {
+    margin: 0 auto;
+}
+
+.metric-card .apexcharts-legend {
+    justify-content: center !important;
+}
+
+.metric-card .apexcharts-legend-text {
+    color: #092747 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+.metric-card .apexcharts-datalabel-label {
+    fill: #092747 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+.metric-card .apexcharts-datalabel-value {
+    fill: #092747 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+@media (max-width: 1024px) {
+    .reserves-metrics__grid,
+    .reserves-metrics__loading {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .metric-card {
+        min-height: 300px;
+        padding: 1.25rem;
+    }
+
+    .metric-card__value {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .reserves-metrics {
+        margin-top: 2rem;
+    }
+
+    .reserves-metrics__header {
+        margin-bottom: 1.25rem;
+    }
+
+    .reserves-metrics__title {
+        font-size: 1.25rem;
+    }
+
+    .reserves-metrics__grid,
+    .reserves-metrics__loading {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .metric-card {
+        min-height: 280px;
+        padding: 1rem;
+    }
+
+    .metric-card__value {
+        font-size: 1.5rem;
+    }
+}

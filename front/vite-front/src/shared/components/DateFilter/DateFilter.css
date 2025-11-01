@@ -21,8 +21,8 @@
 
 .date-filter-input {
     width: 100% !important;
-    padding: 0.5rem 1rem !important;
-    border: 2px solid #e5e7eb !important;
+    padding: 0.375rem 1rem !important;
+    border: 2px solid rgba(128, 128, 128, 0.4) !important;
     border-radius: 8px !important;
     font-size: 0.875rem !important;
     color: #6b7280 !important;
@@ -35,19 +35,27 @@
     text-align: left !important;
     font-weight: 500 !important;
     gap: 0.5rem !important;
-    min-height: 2.5rem !important;
     box-sizing: border-box !important;
 }
 
 .date-filter-input:hover {
-    border-color: #238744 !important;
-    color: #238744 !important;
+    border-color: #092747 !important;
+    background-color: #f0f0f0 !important;
 }
 
 .date-filter-input:focus {
     outline: none !important;
-    border-color: #238744 !important;
-    color: #238744 !important;
+    border-color: #092747 !important;
+    color: #092747 !important;
+}
+
+.date-filter-input:active {
+    background-color: #092747 !important;
+    border-color: transparent !important;
+}
+
+.date-filter-input:active .date-filter-value {
+    color: #fff !important;
 }
 
 .date-filter-input:disabled {
@@ -66,7 +74,7 @@
     text-align: left;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
-    color: inherit !important;
+    color: #092747 !important;
 }
 
 .date-filter-icon-container {
@@ -118,12 +126,12 @@
 }
 
 .date-filter-icon i {
-    color: #6b7280 !important;
+    color: #092747 !important;
 }
 
 .date-filter-input:hover .date-filter-icon,
 .date-filter-input:focus .date-filter-icon {
-    color: #238744 !important;
+    color: #092747 !important;
 }
 
 .date-filter-input:disabled .date-filter-icon {
@@ -180,13 +188,13 @@
     transition: all 0.2s ease;
 }
 .date-filter-calendar-nav:hover i {
-    color: #238744;
+    color: #092747;
     transform: scale(1.05);
 }
 
 .date-filter-calendar-nav:hover:not(:disabled) {
-    background: #e1f3ea;
-    color: #238744;
+    background: rgba(9, 39, 71, 0.1);
+    color: #092747;
     transform: scale(1.05);
 }
 
@@ -250,8 +258,8 @@
 }
 
 .date-filter-calendar-day:hover:not(:disabled) {
-    background: #e1f3ea;
-    color: #238744;
+    background: rgba(9, 39, 71, 0.1);
+    color: #092747;
     transform: scale(1.08);
     box-shadow: 0 2px 8px rgba(35, 135, 68, 0.2);
 }
@@ -270,17 +278,18 @@
 }
 
 .date-filter-calendar-day.selected {
-    background: linear-gradient(135deg, #238744 0%, #1a5c32 100%);
-    color: white;
+    background: #092747;
+    color: #fff;
     font-weight: 700;
-    box-shadow: 0 2px 8px rgba(35, 135, 68, 0.3);
+    box-shadow: 0 2px 8px rgba(9, 39, 71, 0.3);
+    border: 2px solid transparent;
 }
 
 .date-filter-calendar-day.selected:hover:not(:disabled) {
-    background: linear-gradient(135deg, #1a5c32 0%, #14532d 100%);
-    color: white;
+    background: #071c33;
+    color: #fff;
     transform: scale(1.08);
-    box-shadow: 0 4px 12px rgba(35, 135, 68, 0.4);
+    box-shadow: 0 4px 12px rgba(9, 39, 71, 0.4);
 }
 
 .date-filter-calendar-day.disabled {

@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import './ReservesContent.css';
 import { ReservesContentProps, ReserveStatus } from './types/types';
 import { filterReservesByStatus, countPendingReserves, sortReservesByDate } from './utils/reserveUtils';
-import { ReserveHeader, ReserveFilters, ReserveList } from './components';
+import { ReserveHeader, ReserveFilters, ReserveList, ReservesMetricsSection } from './components';
 import { DateFilter } from '../../../../shared';
 import { useDashboardReserves } from '../../hooks/useDashboardReserves';
 
@@ -35,6 +35,9 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
 
     // Contar reservas pendientes
     const pendingCount = useMemo(() => countPendingReserves(sortedReserves), [sortedReserves]);
+
+    // Preparar métricas con reservas filtradas
+    const metricsReserves = useMemo(() => filteredReserves.slice(0, 60), [filteredReserves]);
 
     // Handler para cambio de filtro de estado
     const handleStatusChange = useCallback(
@@ -106,7 +109,12 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
 
             <div className="reserves-filters-container">
                 <ReserveFilters selectedStatus={selectedStatus} onStatusChange={handleStatusChange} />
-                <DateFilter selectedDate={selectedDate} onDateChange={setSelectedDate} placeholder="Filtrar por fecha" className="reserves-date-filter" />
+                <DateFilter
+                    selectedDate={selectedDate || undefined}
+                    onDateChange={setSelectedDate}
+                    placeholder="Filtrar por fecha"
+                    className="reserves-date-filter"
+                />
             </div>
 
             <ReserveList
@@ -119,6 +127,8 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
                 hasNextPage={hasNextPage}
                 onPageChange={onPageChange}
             />
+
+            <ReservesMetricsSection reserves={metricsReserves} isLoading={isLoading} />
         </div>
     );
 };
