@@ -17,8 +17,13 @@ export const UserList: React.FC<UserListProps> = ({ users, isLoading, currentPag
     if (users.length === 0) {
         return (
             <div className="user-list-empty">
-                <i className="bi bi-people"></i>
-                <p>No se encontraron usuarios para mostrar.</p>
+                <div className="user-empty-icon">
+                    <i className="bi bi-people"></i>
+                </div>
+                <div className="user-empty-content">
+                    <h3>No encontramos usuarios</h3>
+                    <p>Probá ajustando el rol o buscá con otro término.</p>
+                </div>
             </div>
         );
     }

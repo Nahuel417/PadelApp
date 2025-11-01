@@ -17,8 +17,13 @@ export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, o
     if (reserves.length === 0) {
         return (
             <div className="reserve-list-empty">
-                <i className="bi bi-inbox"></i>
-                <p>No hay reservas para mostrar</p>
+                <div className="reserve-empty-icon">
+                    <i className="bi bi-inbox"></i>
+                </div>
+                <div className="reserve-empty-content">
+                    <h3>No se registran reservas</h3>
+                    <p>Ajustá los filtros o revisá más tarde para ver nuevas solicitudes.</p>
+                </div>
             </div>
         );
     }

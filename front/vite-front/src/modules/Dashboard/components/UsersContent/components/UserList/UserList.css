@@ -6,7 +6,6 @@
     border-radius: 12px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .user-table {
@@ -29,18 +28,40 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 3rem;
+    gap: 1.25rem;
+    padding: 3rem 2.5rem;
     text-align: center;
-    color: #6b7280;
+    border-radius: 16px;
+    border: 1px dashed rgba(9, 39, 71, 0.2);
+    color: rgba(9, 39, 71, 0.7);
 }
 
-.user-list-empty i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
+.user-empty-icon {
+    width: 72px;
+    height: 72px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(35, 135, 68, 0.12);
+    backdrop-filter: blur(4px);
 }
 
-.user-list-empty p {
-    font-size: 1.1rem;
+.user-empty-icon i {
+    font-size: 2rem;
+    color: #238744;
+}
+
+.user-empty-content h3 {
     margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #092747;
+}
+
+.user-empty-content p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: rgba(9, 39, 71, 0.65);
+    max-width: 26rem;
 }

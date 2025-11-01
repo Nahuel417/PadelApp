@@ -9,6 +9,7 @@ import { useDashboardUsers } from '../../hooks/useDashboardUsers';
 import { getUserHeaderStats } from './utils/userUtils';
 import { ROLE_FILTERS } from './constants/constants';
 import UserManagementModal from './components/UserManagementModal/UserManagementModal';
+import UsersMetricsSection from './components/UsersMetricsSection/UsersMetricsSection';
 
 const UsersContent: React.FC<UsersContentProps> = ({ userRole = 'admin' }) => {
     const {
@@ -83,16 +84,20 @@ const UsersContent: React.FC<UsersContentProps> = ({ userRole = 'admin' }) => {
                     </button>
                 </div>
             ) : (
-                <UserList
-                    users={users}
-                    isLoading={isLoading}
-                    currentPage={currentPage}
-                    hasNextPage={hasNextPage}
-                    onPageChange={onPageChange}
-                    onSelectUser={openManagement}
-                    onDeleteUser={deleteUser}
-                    isDeletingUser={isDeletingUser}
-                />
+                <>
+                    <UserList
+                        users={users}
+                        isLoading={isLoading}
+                        currentPage={currentPage}
+                        hasNextPage={hasNextPage}
+                        onPageChange={onPageChange}
+                        onSelectUser={openManagement}
+                        onDeleteUser={deleteUser}
+                        isDeletingUser={isDeletingUser}
+                    />
+
+                    <UsersMetricsSection users={users} isLoading={isLoading} />
+                </>
             )}
 
             <UserManagementModal

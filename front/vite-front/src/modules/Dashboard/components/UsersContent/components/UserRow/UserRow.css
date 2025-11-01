@@ -33,6 +33,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    min-width: 0;
+    position: relative;
 }
 
 .user-col-r span {
@@ -183,32 +185,81 @@
     flex: 1.4;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 960px) {
     .user-row {
         flex-wrap: wrap;
-        gap: 0.75rem;
+        padding: 0.75rem 1rem;
     }
 
-    .user-col {
-        flex: 1 1 45%;
+    .user-col-r {
+        flex: 1 1 48%;
     }
 
     .user-col-actions {
         flex: 1 1 100%;
         justify-content: flex-start;
+        margin-top: 0.5rem;
     }
 }
 
-@media (max-width: 640px) {
-    .user-row {
-        padding: 0.75rem 0.8rem;
+@media (max-width: 720px) {
+    .user-table-header {
+        display: none;
     }
 
-    .user-col {
+    .user-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+        padding: 0.85rem 1rem;
+    }
+
+    .user-col-r {
         flex: 1 1 100%;
     }
 
-    .user-col-actions {
+    .user-col-r::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: rgba(9, 39, 71, 0.6);
+        letter-spacing: 0.08em;
+    }
+
+    .user-col-role span,
+    .user-col-status span,
+    .user-col-created span {
+        font-size: 0.85rem;
+    }
+
+    .user-actions {
+        width: 100%;
         justify-content: flex-start;
+    }
+
+    .user-manage-button,
+    .user-delete-button {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-row {
+        padding: 0.75rem 0.85rem;
+    }
+
+    .user-col-r::before {
+        font-size: 0.65rem;
+    }
+
+    .user-col-email span {
+        word-break: break-word;
+    }
+
+    .user-actions {
+        gap: 0.6rem;
     }
 }

@@ -19,24 +19,24 @@ export const UserRow: React.FC<UserRowProps> = ({ user, onSelectUser, onDeleteUs
 
     return (
         <div className={rowClassName} role="row">
-            <div className="user-col-r user-col-name" role="cell" aria-label="Nombre">
+            <div className="user-col-r user-col-name" role="cell" aria-label="Nombre" data-label="Nombre">
                 <span className="user-name">{user.fullName}</span>
             </div>
-            <div className="user-col-r user-col-email" role="cell" aria-label="Email">
+            <div className="user-col-r user-col-email" role="cell" aria-label="Email" data-label="Email">
                 <span className="user-email">{user.email || 'Sin email'}</span>
             </div>
-            <div className="user-col-r user-col-role" role="cell" aria-label="Rol">
+            <div className="user-col-r user-col-role" role="cell" aria-label="Rol" data-label="Rol">
                 <span className={roleChipClassName} style={{ color: '#ffffff', fontSize: '0.75rem', fontWeight: '600' }}>
                     {user.roleLabel}
                 </span>
             </div>
-            <div className="user-col-r user-col-status" role="cell" aria-label="Estado">
+            <div className="user-col-r user-col-status" role="cell" aria-label="Estado" data-label="Estado">
                 <UserStatusBadge status={user.status} />
             </div>
-            <div className="user-col-r user-col-created" role="cell" aria-label="Fecha de alta">
+            <div className="user-col-r user-col-created" role="cell" aria-label="Fecha de alta" data-label="Alta">
                 <span>{formatUserDate(user.createdAt)}</span>
             </div>
-            <div className="user-col-r user-col-actions" role="cell" aria-label="Acciones">
+            <div className="user-col-r user-col-actions" role="cell" aria-label="Acciones" data-label="Acciones">
                 <div className="user-actions">
                     <button type="button" className="user-manage-button" onClick={handleManageClick} aria-label={`Gestionar ${user.fullName}`}>
                         <i className="bi bi-pencil"></i>
