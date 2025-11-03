@@ -13,6 +13,18 @@ export const formatDate = (dateString: string): string => {
     });
 };
 
+export const formatTime = (timeString: string): string => {
+    if (!timeString) return '--:--';
+    const [hours = '', minutes = ''] = timeString.split(':');
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+};
+
+export const extractCourtNumber = (courtName: string): string => {
+    if (!courtName) return '—';
+    const match = courtName.match(/\d+/);
+    return match ? match[0] : courtName.trim();
+};
+
 /**
  * Obtiene la etiqueta del estado
  */

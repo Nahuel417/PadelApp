@@ -1,9 +1,9 @@
 import React from 'react';
 import './ReserveRow.css';
 import { ReserveRowProps } from '../../types/types';
-import { formatDate } from '../../utils/reserveUtils';
+import { formatDate, formatTime, extractCourtNumber } from '../../utils/reserveUtils';
 
-export const ReserveRow: React.FC<ReserveRowProps> = ({ reserve, onApprove, onReject, onCancel }) => {
+export const ReserveRow: React.FC<ReserveRowProps> = ({ reserve, onApprove, onReject, onCancel, onViewDetails }) => {
     const colors = {
         pending: { bg: '#dbeafe', text: '#3b82d9' },
         confirmed: { bg: '#e1f3ea', text: '#238744' },
@@ -13,6 +13,10 @@ export const ReserveRow: React.FC<ReserveRowProps> = ({ reserve, onApprove, onRe
     const statusInfo = colors[reserve.status];
     const isPending = reserve.status === 'pending';
     const isCancellable = reserve.status === 'pending' || reserve.status === 'confirmed';
+    const startTime = formatTime(reserve.startTime);
+    const endTime = formatTime(reserve.endTime);
+    const courtNumber = extractCourtNumber(reserve.courtName);
+    const displayCourt = courtNumber === '—' ? '—' : `# ${courtNumber}`;
 
     return (
         <div className={`reserve-row ${reserve.status}`} style={{ borderColor: statusInfo.text }}>
@@ -21,11 +25,13 @@ export const ReserveRow: React.FC<ReserveRowProps> = ({ reserve, onApprove, onRe
             </div>
             <div className="reserve-col reserve-col-time">
                 <span>
-                    {reserve.startTime} - {reserve.endTime}
+                    {startTime} - {endTime}
                 </span>
             </div>
             <div className="reserve-col reserve-col-court">
-                <span>{reserve.courtName}</span>
+                <span className="reserve-court-tag" aria-label={`Cancha ${courtNumber}`}>
+                    {displayCourt}
+                </span>
             </div>
             <div className="reserve-col reserve-col-user">
                 <span>{reserve.userName}</span>
@@ -45,6 +51,9 @@ export const ReserveRow: React.FC<ReserveRowProps> = ({ reserve, onApprove, onRe
                 </span>
             </div>
             <div className="reserve-col reserve-col-actions">
+                <button className="reserve-action-btn details" onClick={() => onViewDetails?.(reserve)} title="Ver detalles">
+                    <i className="bi bi-eye"></i>
+                </button>
                 {isPending && (
                     <>
                         <button className="reserve-action-btn approve" onClick={() => onApprove?.(reserve.id)} title="Aprobar">
@@ -57,7 +66,7 @@ export const ReserveRow: React.FC<ReserveRowProps> = ({ reserve, onApprove, onRe
                 )}
                 {isCancellable && (
                     <button className="reserve-action-btn cancel" onClick={() => onCancel?.(reserve.id)} title="Cancelar">
-                        <i className="bi bi-trash"></i>
+                        <i className="bi bi-calendar2-x"></i>
                     </button>
                 )}
             </div>

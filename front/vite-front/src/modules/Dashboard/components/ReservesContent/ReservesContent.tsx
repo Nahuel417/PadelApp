@@ -1,14 +1,16 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import './ReservesContent.css';
-import { ReservesContentProps, ReserveStatus } from './types/types';
+import { ReservesContentProps, ReserveStatus, Reserve } from './types/types';
 import { filterReservesByStatus, countPendingReserves, sortReservesByDate } from './utils/reserveUtils';
-import { ReserveHeader, ReserveFilters, ReserveList, ReservesMetricsSection } from './components';
+import { ReserveHeader, ReserveFilters, ReserveList, ReservesMetricsSection, ReserveDetailsModal } from './components';
 import { DateFilter } from '../../../../shared';
 import { useDashboardReserves } from '../../hooks/useDashboardReserves';
 
 const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' }) => {
     const [selectedStatus, setSelectedStatus] = useState<ReserveStatus | 'all'>('all');
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedReserve, setSelectedReserve] = useState<Reserve | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Hook personalizado para manejar estado de reservas del dashboard
     const { reserves: rawReserves, isLoading, error, hasNextPage, currentPage, onPageChange, refetch, setStatusFilter } = useDashboardReserves();
@@ -88,6 +90,16 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
         [refetch]
     );
 
+    const handleViewDetails = useCallback((reserve: Reserve) => {
+        setSelectedReserve(reserve);
+        setIsModalOpen(true);
+    }, []);
+
+    const handleCloseModal = useCallback(() => {
+        setIsModalOpen(false);
+        setSelectedReserve(null);
+    }, []);
+
     // Mostrar error si existe
     if (error) {
         return (
@@ -122,6 +134,7 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
                 onApprove={handleApprove}
                 onReject={handleReject}
                 onCancel={handleCancel}
+                onViewDetails={handleViewDetails}
                 isLoading={isLoading}
                 currentPage={currentPage}
                 hasNextPage={hasNextPage}
@@ -129,6 +142,12 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
             />
 
             <ReservesMetricsSection reserves={metricsReserves} isLoading={isLoading} />
+
+            <ReserveDetailsModal
+                isOpen={isModalOpen}
+                reserve={selectedReserve}
+                onClose={handleCloseModal}
+            />
         </div>
     );
 };

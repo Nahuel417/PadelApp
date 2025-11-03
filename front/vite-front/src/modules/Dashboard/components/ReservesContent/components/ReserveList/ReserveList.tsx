@@ -5,7 +5,7 @@ import { ReserveTableHeader } from '../ReserveTableHeader/ReserveTableHeader';
 import { ReserveRow } from '../ReserveRow/ReserveRow';
 import { Pagination, Spinner } from '../../../../../../shared';
 
-export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, onReject, onCancel, isLoading, currentPage = 1, hasNextPage, onPageChange }) => {
+export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, onReject, onCancel, onViewDetails, isLoading, currentPage = 1, hasNextPage, onPageChange }) => {
     if (isLoading && reserves.length === 0) {
         return (
             <div className="reserve-list-loading">
@@ -33,7 +33,7 @@ export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, o
             <ReserveTableHeader />
             <div className="reserve-table">
                 {reserves.map((reserve) => (
-                    <ReserveRow key={reserve.id} reserve={reserve} onApprove={onApprove} onReject={onReject} onCancel={onCancel} />
+                    <ReserveRow key={reserve.id} reserve={reserve} onApprove={onApprove} onReject={onReject} onCancel={onCancel} onViewDetails={onViewDetails} />
                 ))}
             </div>
 
