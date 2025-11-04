@@ -34,13 +34,16 @@ const STATUS_LABELS = {
 
 const formatDateTime = (dateString: string): string => {
     const date = new Date(dateString);
-    return date.toLocaleString('es-ES', {
+    const formattedDate = date.toLocaleDateString('es-ES', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
+    });
+    const formattedTime = date.toLocaleTimeString('es-ES', {
         hour: '2-digit',
         minute: '2-digit',
     });
+    return `${formattedDate} - ${formattedTime}`;
 };
 
 export const ReserveDetailsModal: React.FC<ReserveDetailsModalProps> = ({ isOpen, reserve, onClose }) => {
@@ -69,6 +72,12 @@ export const ReserveDetailsModal: React.FC<ReserveDetailsModalProps> = ({ isOpen
                         <div className={`ticket-status-badge ${reserve.status}`}>{STATUS_LABELS[reserve.status]}</div>
                         <div className={`ticket-payment-badge ${reserve.payment_status || 'pending'}`}>
                             Pago: {PAYMENT_STATUS_LABELS[reserve.payment_status as keyof typeof PAYMENT_STATUS_LABELS] || 'Pendiente'}
+                        </div>
+                        <div className="ticket-status-actions">
+                            <button className="ticket-download-btn" type="button" title="Descargar PDF">
+                                <i className="bi bi-file-pdf"></i>
+                                <span>Descargar PDF</span>
+                            </button>
                         </div>
                     </div>
 
@@ -134,8 +143,8 @@ export const ReserveDetailsModal: React.FC<ReserveDetailsModalProps> = ({ isOpen
                                     <span className="ticket-value">{reserve.payment_method ? PAYMENT_METHOD_LABELS[reserve.payment_method] : PAYMENT_METHOD_LABELS.cash}</span>
                                 </div>
                                 <div className="ticket-info-item">
-                                    <span className="ticket-label">ID de Reserva:</span>
-                                    <span className="ticket-value">{reserve.id.slice(-12).toUpperCase()}</span>
+                                    <span className="ticket-label">Referencia de Pago:</span>
+                                    <span className="ticket-value">{reserve.payment_reference || 'No disponible'}</span>
                                 </div>
                             </div>
                         </div>
@@ -153,6 +162,18 @@ export const ReserveDetailsModal: React.FC<ReserveDetailsModalProps> = ({ isOpen
                                         <span className="timeline-value">{reserve.created_at ? formatDateTime(reserve.created_at) : 'No disponible'}</span>
                                     </div>
                                 </div>
+
+                                {reserve.payment_status === 'approved' && (
+                                    <div className="timeline-item">
+                                        <div className="timeline-icon paid">
+                                            <i className="bi bi-receipt"></i>
+                                        </div>
+                                        <div className="timeline-content">
+                                            <span className="timeline-label">Pago aprobado:</span>
+                                            <span className="timeline-value">{reserve.paid_at ? formatDateTime(reserve.paid_at) : 'Sin fecha registrada'}</span>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {reserve.status === 'cancelled' && reserve.cancelled_at && (
                                     <div className="timeline-item">
@@ -173,7 +194,19 @@ export const ReserveDetailsModal: React.FC<ReserveDetailsModalProps> = ({ isOpen
                                         </div>
                                         <div className="timeline-content">
                                             <span className="timeline-label">Confirmada:</span>
-                                            <span className="timeline-value">{reserve.payment_status === 'approved' ? 'Pago aprobado' : 'Pendiente de pago'}</span>
+                                            <span className="timeline-value">{reserve.paid_at ? formatDateTime(reserve.paid_at) : 'Sin fecha registrada'}</span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {reserve.status === 'completed' && reserve.paid_at && (
+                                    <div className="timeline-item">
+                                        <div className="timeline-icon confirmed">
+                                            <i className="bi bi-flag"></i>
+                                        </div>
+                                        <div className="timeline-content">
+                                            <span className="timeline-label">Finalizada:</span>
+                                            <span className="timeline-value">{formatDateTime(reserve.paid_at)}</span>
                                         </div>
                                     </div>
                                 )}
@@ -191,10 +224,6 @@ export const ReserveDetailsModal: React.FC<ReserveDetailsModalProps> = ({ isOpen
 
                     {/* Footer del ticket */}
                     <div className="ticket-footer">
-                        <button className="ticket-print-button" type="button">
-                            <i className="bi bi-printer"></i>
-                            Imprimir comprobante
-                        </button>
                         <div className="ticket-footer-info">
                             <small>PadelApp - Sistema de Gestión de Reservas</small>
                         </div>

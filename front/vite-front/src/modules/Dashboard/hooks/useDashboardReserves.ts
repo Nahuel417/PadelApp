@@ -92,6 +92,8 @@ export const useDashboardReserves = (): UseDashboardReservesState => {
                     trainerName: reserve.coach?.user ? `${reserve.coach.user.first_name} ${reserve.coach.user.last_name}` : undefined,
                     payment_status: reserve.payment_status as Reserve['payment_status'],
                     payment_method: reserve.payment_method as Reserve['payment_method'],
+                    payment_reference: reserve.payment_reference,
+                    paid_at: reserve.paid_at,
                     created_at: reserve.created_at,
                     cancelled_at: reserve.cancelled_at,
                     notes: reserve.notes,

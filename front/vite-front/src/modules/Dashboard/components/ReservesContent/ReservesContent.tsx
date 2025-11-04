@@ -1,10 +1,12 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import './ReservesContent.css';
+import Swal from 'sweetalert';
 import { ReservesContentProps, ReserveStatus, Reserve } from './types/types';
 import { filterReservesByStatus, countPendingReserves, sortReservesByDate } from './utils/reserveUtils';
 import { ReserveHeader, ReserveFilters, ReserveList, ReservesMetricsSection, ReserveDetailsModal } from './components';
 import { DateFilter } from '../../../../shared';
 import { useDashboardReserves } from '../../hooks/useDashboardReserves';
+import { cancelReservation } from '../../../../services/reservation';
 
 const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' }) => {
     const [selectedStatus, setSelectedStatus] = useState<ReserveStatus | 'all'>('all');
@@ -79,15 +81,51 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
 
     const handleCancel = useCallback(
         async (id: string) => {
-            try {
-                console.log('Cancelar reserva:', id);
-                // TODO: Implementar lógica de cancelación con servicio
-                await refetch(); // Recargar datos después de la acción
-            } catch (error) {
-                console.error('Error al cancelar reserva:', error);
-            }
+            const reserve = rawReserves.find((r) => r.id === id);
+            if (!reserve) return;
+
+            Swal({
+                title: '¿Cancelar reserva?',
+                text: `¿Estás seguro de que deseas cancelar esta reserva? ${
+                    reserve.status === 'confirmed' ? `Se restará $${reserve.total_amount?.toFixed(2) || '0.00'} del ingreso.` : ''
+                }`,
+                icon: 'warning',
+                buttons: {
+                    cancel: {
+                        text: 'No, mantener',
+                        value: false,
+                        visible: true,
+                    },
+                    confirm: {
+                        text: 'Sí, cancelar',
+                        value: true,
+                        visible: true,
+                    },
+                },
+                dangerMode: true,
+            }).then(async (willCancel: boolean) => {
+                if (willCancel) {
+                    try {
+                        await cancelReservation(id);
+                        await refetch();
+                        Swal({
+                            title: 'Cancelada',
+                            text: 'La reserva ha sido cancelada exitosamente.',
+                            icon: 'success',
+                            timer: 2000,
+                        });
+                    } catch (error) {
+                        console.error('Error al cancelar reserva:', error);
+                        Swal({
+                            title: 'Error',
+                            text: 'No se pudo cancelar la reserva. Intenta de nuevo.',
+                            icon: 'error',
+                        });
+                    }
+                }
+            });
         },
-        [refetch]
+        [rawReserves, refetch]
     );
 
     const handleViewDetails = useCallback((reserve: Reserve) => {

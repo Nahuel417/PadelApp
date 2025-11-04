@@ -26,6 +26,24 @@ export const fetchReservationsByUserId = async (userId: string, page = 1, limit 
 };
 
 export const cancelReservation = async (id: string) => {
+    // Obtener la reserva para verificar su estado y monto
+    const { data: reservation, error: fetchError } = await supabase.from('reservations').select('status, total_amount').eq('id', id).single();
+
+    if (fetchError) throw fetchError;
+
+    // Si la reserva está confirmada, restar del ingreso
+    if (reservation?.status === 'confirmed' && reservation?.total_amount) {
+        const { error: updateError } = await supabase.rpc('subtract_revenue', {
+            amount: reservation.total_amount,
+        });
+
+        if (updateError) {
+            console.warn('Advertencia: No se pudo registrar la pérdida de ingreso:', updateError);
+            // Continuar con la cancelación aunque falle el registro de pérdida
+        }
+    }
+
+    // Actualizar el estado de la reserva
     const { data, error } = await supabase.from('reservations').update({ status: ReservationStatus.CANCELLED, cancelled_at: new Date().toISOString() }).eq('id', id).select().single();
 
     if (error) throw error;
@@ -36,7 +54,10 @@ export const fetchAllReservations = async (page = 1, limit = 10, status?: string
     const from = (page - 1) * limit;
     const to = page * limit - 1;
 
-    let query = supabase.from('reservations').select(`
+    let query = supabase
+        .from('reservations')
+        .select(
+            `
         *,
         court:court_id (
             id,
@@ -56,7 +77,10 @@ export const fetchAllReservations = async (page = 1, limit = 10, status?: string
             last_name,
             email
         )
-    `).order('reservation_date', { ascending: false }).order('start_time', { ascending: false });
+    `
+        )
+        .order('reservation_date', { ascending: false })
+        .order('start_time', { ascending: false });
 
     if (status && status !== 'all') {
         query = query.eq('status', status);

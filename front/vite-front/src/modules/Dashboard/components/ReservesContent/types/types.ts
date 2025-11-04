@@ -14,6 +14,8 @@ export interface Reserve {
     trainerName?: string;
     payment_status?: PaymentStatus;
     payment_method?: PaymentMethod;
+    payment_reference?: string;
+    paid_at?: string;
     created_at?: string;
     cancelled_at?: string;
     notes?: string;
