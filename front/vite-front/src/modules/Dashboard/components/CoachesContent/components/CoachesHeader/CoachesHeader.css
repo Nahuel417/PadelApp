@@ -1,0 +1,128 @@
+/* Coaches Header Styles */
+.coaches-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.coaches-header__info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.coaches-header__title {
+    color: #092747;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.coaches-header__stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #092747;
+}
+
+.stat-value.active {
+    color: #238744;
+}
+
+.stat-value.inactive {
+    color: #b91c1c;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.coaches-header__note {
+    display: flex;
+    align-items: center;
+}
+
+.info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(35, 135, 68, 0.1) 0%, rgba(9, 39, 71, 0.05) 100%);
+    border: 1px solid rgba(35, 135, 68, 0.2);
+    border-radius: 8px;
+    max-width: 500px;
+}
+
+.info-card i {
+    font-size: 1.25rem;
+    color: #238744;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.info-title {
+    margin: 0;
+    font-weight: 700;
+    color: #092747;
+    font-size: 0.95rem;
+}
+
+.info-text {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+.info-text strong {
+    color: #238744;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .coaches-header {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .coaches-header__stats {
+        justify-content: space-around;
+    }
+
+    .coaches-header__note {
+        justify-content: center;
+    }
+
+    .info-card {
+        max-width: none;
+        width: 100%;
+    }
+}

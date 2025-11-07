@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import DashboardLayout from './DashboardLayout';
 import ReservesContent from './components/ReservesContent/ReservesContent';
 import UsersContent from './components/UsersContent/UsersContent';
+import CourtsContent from './components/CourtsContent/CourtsContent';
+import CoachesContent from './components/CoachesContent/CoachesContent';
 import './MainDashboard.css';
 
 const MainDashboard: React.FC = () => {
@@ -16,6 +18,10 @@ const MainDashboard: React.FC = () => {
                 return <ReservesContent userRole={userRole} />;
             case 'usuarios':
                 return <UsersContent userRole={userRole} />;
+            case 'canchas':
+                return <CourtsContent userRole={userRole} />;
+            case 'entrenadores':
+                return <CoachesContent userRole={userRole} />;
             case 'dashboard':
             default:
                 return (

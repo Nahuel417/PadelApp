@@ -1,0 +1,110 @@
+/* Courts Header Styles */
+.courts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.courts-header__info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.courts-header__title {
+    color: #092747;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.courts-header__stats {
+    display: flex;
+    gap: 2rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #092747;
+}
+
+.stat-value.active {
+    color: #238744;
+}
+
+.stat-value.inactive {
+    color: #b91c1c;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.courts-header__actions {
+    display: flex;
+    align-items: center;
+}
+
+.add-court-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: #238744;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-court-btn:hover {
+    background: #1f7a3a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(35, 135, 68, 0.3);
+}
+
+.add-court-btn i {
+    font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .courts-header {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+    }
+
+    .courts-header__stats {
+        justify-content: space-around;
+    }
+
+    .courts-header__actions {
+        justify-content: center;
+    }
+
+    .add-court-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
