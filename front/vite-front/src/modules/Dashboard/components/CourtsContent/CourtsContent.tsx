@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './CourtsContent.css';
 import Swal from 'sweetalert';
-import { Court, getAllCourts, toggleCourtStatus } from '../../../../services/courts';
+import { Court, getAllCourts, toggleCourtStatus, deleteCourt } from '../../../../services/courts';
 import { CourtsHeader } from './components/CourtsHeader/CourtsHeader';
 import { CourtsList } from './components/CourtsList/CourtsList';
 import { CourtFormModal } from './components/CourtFormModal/CourtFormModal';
@@ -92,6 +92,57 @@ const CourtsContent: React.FC<CourtsContentProps> = ({ userRole = 'admin' }) => 
         });
     }, [fetchCourts]);
 
+    const handleDeleteCourt = useCallback(async (court: Court) => {
+        Swal({
+            title: '¿Eliminar cancha?',
+            text: `¿Estás seguro de que deseas eliminar la cancha "${court.name}"? Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            buttons: {
+                cancel: {
+                    text: 'Cancelar',
+                    value: false,
+                    visible: true,
+                },
+                confirm: {
+                    text: 'Sí, eliminar',
+                    value: true,
+                    visible: true,
+                },
+            },
+            dangerMode: true,
+        }).then(async (willDelete: boolean) => {
+            if (willDelete) {
+                try {
+                    await deleteCourt(court.id);
+                    await fetchCourts();
+                    Swal({
+                        title: 'Eliminada',
+                        text: 'La cancha ha sido eliminada exitosamente.',
+                        icon: 'success',
+                        timer: 2000,
+                    });
+                } catch (error: any) {
+                    console.error('Error deleting court:', error);
+                    
+                    // Verificar si es error de clave foránea
+                    if (error.code === '23503') {
+                        Swal({
+                            title: 'No se puede eliminar',
+                            text: 'Esta cancha tiene reservas asociadas. Primero debes eliminar o cancelar las reservas vinculadas a esta cancha.',
+                            icon: 'warning',
+                        });
+                    } else {
+                        Swal({
+                            title: 'Error',
+                            text: 'No se pudo eliminar la cancha. Intenta de nuevo.',
+                            icon: 'error',
+                        });
+                    }
+                }
+            }
+        });
+    }, [fetchCourts]);
+
     const handleCloseModal = useCallback(() => {
         setIsModalOpen(false);
         setSelectedCourt(null);
@@ -134,6 +185,7 @@ const CourtsContent: React.FC<CourtsContentProps> = ({ userRole = 'admin' }) => 
                 isLoading={isLoading}
                 onEditCourt={handleEditCourt}
                 onToggleStatus={handleToggleStatus}
+                onDeleteCourt={handleDeleteCourt}
             />
 
             <CourtFormModal

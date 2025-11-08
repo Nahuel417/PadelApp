@@ -4,7 +4,7 @@
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(35, 135, 68, 0.2);
+    border: 2px solid rgba(35, 135, 68, 0.3);
     transition: all 0.3s ease;
 }
 
@@ -15,7 +15,7 @@
 
 .coach-card.unavailable {
     opacity: 0.7;
-    border-color: rgba(185, 28, 28, 0.2);
+    border-color: rgba(185, 28, 28, 0.3);
 }
 
 .coach-card__header {
@@ -183,7 +183,7 @@
 }
 
 .coach-action-btn:hover i {
-    transform: translateY(-2px) scale(1.05);
+    transform: translateX(-2px) scale(1.2);
 }
 
 .coach-action-btn.details {

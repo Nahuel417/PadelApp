@@ -6,12 +6,14 @@ export interface CourtCardProps {
     court: Court;
     onEdit: () => void;
     onToggleStatus: () => void;
+    onDelete: () => void;
 }
 
 export const CourtCard: React.FC<CourtCardProps> = ({
     court,
     onEdit,
-    onToggleStatus
+    onToggleStatus,
+    onDelete
 }) => {
     const formatTime = (time: string) => {
         return time.slice(0, 5); // Remove seconds from HH:MM:SS
@@ -70,6 +72,15 @@ export const CourtCard: React.FC<CourtCardProps> = ({
                 >
                     <i className={`bi ${court.is_active ? 'bi-pause-circle' : 'bi-play-circle'}`}></i>
                     {court.is_active ? 'Desactivar' : 'Activar'}
+                </button>
+
+                <button 
+                    className="court-action-btn delete"
+                    onClick={onDelete}
+                    title="Eliminar cancha"
+                    aria-label="Eliminar cancha"
+                >
+                    <i className="bi bi-trash"></i>
                 </button>
             </div>
         </div>

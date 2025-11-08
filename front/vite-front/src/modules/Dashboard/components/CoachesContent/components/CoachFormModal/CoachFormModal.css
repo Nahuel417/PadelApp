@@ -235,6 +235,12 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 20px rgba(9, 39, 71, 0.08);
 }
 
 .section-title {
@@ -551,22 +557,6 @@
     position: relative;
 }
 
-.slot-number {
-    position: absolute;
-    top: -12px;
-    left: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    background: #238744;
-    color: white;
-    border-radius: 50%;
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
 .slot-controls-enhanced {
     display: flex;
     align-items: center;
@@ -658,10 +648,9 @@
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    padding: 2rem;
-    border-top: 1px solid rgba(9, 39, 71, 0.1);
-    background: rgba(9, 39, 71, 0.02);
+    padding: 1.75rem;
     border-radius: 0 0 16px 16px;
+    display: flex;
 }
 
 .btn-cancel-enhanced,

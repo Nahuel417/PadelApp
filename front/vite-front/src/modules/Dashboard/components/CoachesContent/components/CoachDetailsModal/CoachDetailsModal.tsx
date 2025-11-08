@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './CoachDetailsModal.css';
-import { Coach } from '../../../../../../services/coaches';
+import { Coach, getCoachStats } from '../../../../../../services/coaches';
 import { getCoachAvailability } from '../../../../../../services/coachAvailability';
 
 interface CoachDetailsModalProps {
@@ -18,22 +18,24 @@ interface AvailabilitySlot {
 }
 
 const DAYS_OF_WEEK = [
-    { value: 0, label: 'Domingo' },
     { value: 1, label: 'Lunes' },
     { value: 2, label: 'Martes' },
     { value: 3, label: 'Miércoles' },
     { value: 4, label: 'Jueves' },
     { value: 5, label: 'Viernes' },
     { value: 6, label: 'Sábado' },
+    { value: 7, label: 'Domingo' },
 ];
 
 export const CoachDetailsModal: React.FC<CoachDetailsModalProps> = ({ isOpen, coach, onClose }) => {
     const [availability, setAvailability] = useState<AvailabilitySlot[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [coachStats, setCoachStats] = useState({ totalClasses: 0, completedClasses: 0, confirmedClasses: 0 });
 
     useEffect(() => {
         if (isOpen && coach) {
             loadAvailability();
+            loadCoachStats();
         }
     }, [isOpen, coach]);
 
@@ -51,6 +53,17 @@ export const CoachDetailsModal: React.FC<CoachDetailsModalProps> = ({ isOpen, co
         }
     };
 
+    const loadCoachStats = async () => {
+        if (!coach) return;
+
+        try {
+            const stats = await getCoachStats(coach.id);
+            setCoachStats(stats);
+        } catch (error) {
+            console.error('Error loading coach stats:', error);
+        }
+    };
+
     const formatRate = (rate: number) => {
         return new Intl.NumberFormat('es-AR', {
             style: 'currency',
@@ -58,9 +71,20 @@ export const CoachDetailsModal: React.FC<CoachDetailsModalProps> = ({ isOpen, co
         }).format(rate);
     };
 
-    const getExperienceText = (years?: number) => {
-        if (!years) return 'Sin especificar años';
-        return years === 1 ? '1 año' : `${years} años`;
+
+    const formatDate = (dateString?: string) => {
+        if (!dateString) return 'No especificado';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-AR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+    };
+
+    const getGenreText = (genre?: string) => {
+        if (!genre) return 'No especificado';
+        return genre.charAt(0).toUpperCase() + genre.slice(1);
     };
 
     const getDayLabel = (dayValue: number) => {
@@ -135,18 +159,12 @@ export const CoachDetailsModal: React.FC<CoachDetailsModalProps> = ({ isOpen, co
                                 {coach.user.first_name} {coach.user.last_name}
                             </h3>
                             <p>{coach.user.email}</p>
-                            <div className="summary-meta">
-                                <span className="summary-meta-item">
-                                    <i className="bi bi-calendar-event"></i>
-                                    {getExperienceText(coach.experience_years)} de experiencia
-                                </span>
-                                {coach.specialties && (
-                                    <span className="summary-meta-item">
-                                        <i className="bi bi-star"></i>
-                                        {coach.specialties}
-                                    </span>
-                                )}
-                            </div>
+                            {coach.phone && (
+                                <p className="summary-phone">
+                                    <i className="bi bi-telephone"></i>
+                                    {coach.phone}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -168,11 +186,27 @@ export const CoachDetailsModal: React.FC<CoachDetailsModalProps> = ({ isOpen, co
                                 <span className="detail-value">{coach.user.email}</span>
                             </div>
                             <div className="detail-item">
+                                <span className="detail-label">Teléfono</span>
+                                <span className="detail-value">{coach.phone || 'No especificado'}</span>
+                            </div>
+                            <div className="detail-item">
+                                <span className="detail-label">Fecha de nacimiento</span>
+                                <span className="detail-value">{formatDate(coach.user.birthday)}</span>
+                            </div>
+                            <div className="detail-item">
+                                <span className="detail-label">Género</span>
+                                <span className="detail-value">{getGenreText(coach.user.genre)}</span>
+                            </div>
+                            <div className="detail-item">
                                 <span className="detail-label">Estado</span>
                                 <span className={`detail-value status ${statusClass}`}>
                                     <i className={`bi ${statusIcon}`}></i>
                                     {statusText}
                                 </span>
+                            </div>
+                            <div className="detail-item full-width">
+                                <span className="detail-label">Biografía</span>
+                                <span className="detail-value">{coach.bio || 'No especificada'}</span>
                             </div>
                         </div>
                     </div>
@@ -189,21 +223,19 @@ export const CoachDetailsModal: React.FC<CoachDetailsModalProps> = ({ isOpen, co
                                 <span className="detail-value price">{formatRate(coach.hourly_rate)}</span>
                             </div>
                             <div className="detail-item">
-                                <span className="detail-label">Experiencia</span>
-                                <span className="detail-value">{getExperienceText(coach.experience_years)}</span>
+                                <span className="detail-label">Fecha de alta</span>
+                                <span className="detail-value">{formatDate(coach.created_at)}</span>
                             </div>
-                            {coach.specialties && (
-                                <div className="detail-item full-width">
-                                    <span className="detail-label">Especialidades</span>
-                                    <span className="detail-value">{coach.specialties}</span>
-                                </div>
-                            )}
+                            <div className="detail-item">
+                                <span className="detail-label">Clases totales</span>
+                                <span className="detail-value stats">{coachStats.totalClasses} clases</span>
+                            </div>
                         </div>
 
-                        {coach.description && (
+                        {coach.bio && (
                             <div className="description-section">
-                                <span className="detail-label">Descripción</span>
-                                <p className="description-text">{coach.description}</p>
+                                <span className="detail-label">Biografía</span>
+                                <p className="description-text">{coach.bio}</p>
                             </div>
                         )}
                     </div>

@@ -13,6 +13,21 @@
     padding: 1rem;
 }
 
+@keyframes coachButtonPulse {
+    0% {
+        opacity: 0.18;
+        transform: scale(0.85);
+    }
+    60% {
+        opacity: 0.12;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.45);
+    }
+}
+
 .court-modal-content {
     background: white;
     border-radius: 12px;
@@ -85,6 +100,7 @@
     font-size: 1rem;
     transition: border-color 0.2s ease;
     background: white;
+    color: #092747;
 }
 
 .form-group input:focus,
@@ -124,10 +140,32 @@
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-cancel::after,
+.btn-save::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.btn-cancel:active::after,
+.btn-save:active::after {
+    animation: coachButtonPulse 0.45s ease;
+}
+
+.btn-cancel > *,
+.btn-save > * {
+    position: relative;
+    z-index: 1;
 }
 
 .btn-cancel {
@@ -142,6 +180,16 @@
 .btn-save {
     background: #238744;
     color: white;
+}
+
+.btn-save i {
+    color: white;
+    margin-right: 5px;
+}
+
+.btn-save .spin {
+    display: inline-block;
+    animation: spin 1s linear infinite;
 }
 
 .btn-save:hover:not(:disabled) {

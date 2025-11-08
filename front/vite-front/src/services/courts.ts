@@ -107,3 +107,15 @@ export const getActiveCourts = async (): Promise<Court[]> => {
     if (error) throw error;
     return data || [];
 };
+
+/**
+ * Eliminar una cancha
+ */
+export const deleteCourt = async (id: number): Promise<void> => {
+    const { error } = await supabase
+        .from('courts')
+        .delete()
+        .eq('id', id);
+
+    if (error) throw error;
+};

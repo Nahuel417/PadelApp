@@ -33,6 +33,7 @@ export const CourtFormModal: React.FC<CourtFormModalProps> = ({
     });
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<FormErrors>({});
+    const [priceInput, setPriceInput] = useState('');
 
     // Reset form when modal opens/closes or court changes
     useEffect(() => {
@@ -46,6 +47,11 @@ export const CourtFormModal: React.FC<CourtFormModalProps> = ({
                     opening_time: court.opening_time.slice(0, 5), // Remove seconds
                     closing_time: court.closing_time.slice(0, 5)
                 });
+                setPriceInput(
+                    court.price_per_hour !== undefined && court.price_per_hour !== null
+                        ? `${court.price_per_hour}`
+                        : ''
+                );
             } else {
                 // Add mode
                 setFormData({
@@ -55,6 +61,7 @@ export const CourtFormModal: React.FC<CourtFormModalProps> = ({
                     opening_time: '08:00',
                     closing_time: '22:00'
                 });
+                setPriceInput('');
             }
             setErrors({});
         }
@@ -75,27 +82,89 @@ export const CourtFormModal: React.FC<CourtFormModalProps> = ({
             newErrors.price_per_hour = 'El precio debe ser mayor a 0';
         }
 
-        // Validate time logic
-        const openingTime = new Date(`2000-01-01T${formData.opening_time}:00`);
-        const closingTime = new Date(`2000-01-01T${formData.closing_time}:00`);
-        
-        if (closingTime <= openingTime) {
-            newErrors.closing_time = 'La hora de cierre debe ser posterior a la de apertura';
-        }
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleInputChange = (field: keyof CreateCourtData, value: string | number) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
             [field]: value
         }));
-        
+
         // Clear error for this field
         if (errors[field]) {
             setErrors(prev => ({
+                ...prev,
+                [field]: undefined
+            }));
+        }
+    };
+
+    const handlePriceChange = (value: string) => {
+        const sanitizedValue = value.replace(',', '.');
+        if (/^\d*(\.\d{0,2})?$/.test(sanitizedValue)) {
+            setPriceInput(sanitizedValue);
+            const numericValue = sanitizedValue === '' ? 0 : parseFloat(sanitizedValue);
+            handleInputChange('price_per_hour', numericValue);
+        }
+    };
+
+    const adjustPrice = (delta: number) => {
+        const currentValue = parseFloat(priceInput || '0');
+        const baseValue = Number.isNaN(currentValue) ? 0 : currentValue;
+        const nextValue = Math.max(0, baseValue + delta);
+        const normalized = nextValue.toFixed(2);
+        const trimmedValue = normalized.replace(/\.00$/, '').replace(/\.([1-9])0$/, '.$1');
+        setPriceInput(trimmedValue);
+        handleInputChange('price_per_hour', parseFloat(normalized));
+    };
+
+    const handlePriceKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            adjustPrice(1);
+        } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            adjustPrice(-1);
+        }
+    };
+
+    const handlePriceBlur = () => {
+        if (priceInput === '') {
+            return;
+        }
+
+        const normalized = priceInput.endsWith('.') ? priceInput.slice(0, -1) : priceInput;
+        setPriceInput(normalized);
+        handleInputChange('price_per_hour', normalized === '' ? 0 : parseFloat(normalized));
+    };
+
+    const triggerTimePicker = (
+        event: React.FocusEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>
+    ) => {
+        const inputElement = event.currentTarget as HTMLInputElement & {
+            showPicker?: () => void;
+        };
+        if (typeof inputElement.showPicker === 'function') {
+            inputElement.showPicker();
+        }
+    };
+
+    const ensureTimeValue = (field: 'opening_time' | 'closing_time', fallback: string) => {
+        setFormData((prev) => {
+            const currentValue = prev[field];
+            if (currentValue && currentValue.trim() !== '') {
+                return prev;
+            }
+            return {
+                ...prev,
+                [field]: fallback
+            };
+        });
+
+        if (errors[field]) {
+            setErrors((prev) => ({
                 ...prev,
                 [field]: undefined
             }));
@@ -190,16 +259,20 @@ export const CourtFormModal: React.FC<CourtFormModalProps> = ({
 
                     <div className="form-group">
                         <label htmlFor="price_per_hour">Precio por hora *</label>
-                        <input
-                            type="number"
-                            id="price_per_hour"
-                            min="0"
-                            step="0.01"
-                            value={formData.price_per_hour}
-                            onChange={(e) => handleInputChange('price_per_hour', parseFloat(e.target.value) || 0)}
-                            className={errors.price_per_hour ? 'error' : ''}
-                            placeholder="0.00"
-                        />
+                        <div className="input-with-icon">
+                            <span className="currency-symbol">$</span>
+                            <input
+                                type="text"
+                                id="price_per_hour"
+                                inputMode="decimal"
+                                value={priceInput}
+                                onChange={(e) => handlePriceChange(e.target.value)}
+                                onBlur={handlePriceBlur}
+                                onKeyDown={handlePriceKeyDown}
+                                className={errors.price_per_hour ? 'error' : ''}
+                                placeholder="0.00"
+                            />
+                        </div>
                         {errors.price_per_hour && <span className="error-message">{errors.price_per_hour}</span>}
                     </div>
 
@@ -211,6 +284,9 @@ export const CourtFormModal: React.FC<CourtFormModalProps> = ({
                                 id="opening_time"
                                 value={formData.opening_time}
                                 onChange={(e) => handleInputChange('opening_time', e.target.value)}
+                                onBlur={() => ensureTimeValue('opening_time', '08:00')}
+                                onFocus={triggerTimePicker}
+                                onClick={triggerTimePicker}
                             />
                         </div>
 
@@ -221,6 +297,9 @@ export const CourtFormModal: React.FC<CourtFormModalProps> = ({
                                 id="closing_time"
                                 value={formData.closing_time}
                                 onChange={(e) => handleInputChange('closing_time', e.target.value)}
+                                onBlur={() => ensureTimeValue('closing_time', '22:00')}
+                                onFocus={triggerTimePicker}
+                                onClick={triggerTimePicker}
                                 className={errors.closing_time ? 'error' : ''}
                             />
                             {errors.closing_time && <span className="error-message">{errors.closing_time}</span>}

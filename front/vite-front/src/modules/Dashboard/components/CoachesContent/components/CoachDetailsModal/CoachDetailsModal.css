@@ -181,9 +181,22 @@
 }
 
 .summary-info p {
-    margin: 0.35rem 0;
+    margin: 0.25rem 0;
     color: #666;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+}
+
+.summary-phone {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #238744 !important;
+    font-weight: 500;
+}
+
+.summary-phone i {
+    font-size: 0.875rem;
+    color: inherit;
 }
 
 .summary-meta {
@@ -288,6 +301,16 @@
     color: #238744;
     font-weight: 700;
     font-size: 1.1rem;
+}
+
+.detail-value.stats {
+    color: #092747;
+    font-weight: 600;
+    background: rgba(35, 135, 68, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    width: fit-content;
 }
 
 .detail-value.status {

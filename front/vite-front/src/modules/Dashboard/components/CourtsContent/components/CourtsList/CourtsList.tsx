@@ -8,13 +8,15 @@ export interface CourtsListProps {
     isLoading: boolean;
     onEditCourt: (court: Court) => void;
     onToggleStatus: (court: Court) => void;
+    onDeleteCourt: (court: Court) => void;
 }
 
 export const CourtsList: React.FC<CourtsListProps> = ({
     courts,
     isLoading,
     onEditCourt,
-    onToggleStatus
+    onToggleStatus,
+    onDeleteCourt
 }) => {
     if (isLoading) {
         return (
@@ -59,6 +61,7 @@ export const CourtsList: React.FC<CourtsListProps> = ({
                         court={court}
                         onEdit={() => onEditCourt(court)}
                         onToggleStatus={() => onToggleStatus(court)}
+                        onDelete={() => onDeleteCourt(court)}
                     />
                 ))}
             </div>

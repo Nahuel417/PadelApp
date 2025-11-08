@@ -8,9 +8,8 @@ import { getCoachAvailability, createCoachAvailability, deleteCoachAvailability 
 interface FormErrors {
     email?: string;
     hourly_rate?: string;
-    specialties?: string;
-    experience_years?: string;
-    description?: string;
+    phone?: string;
+    bio?: string;
 }
 
 interface AvailabilitySlot {
@@ -27,7 +26,7 @@ const DAYS_OF_WEEK = [
     { value: 4, label: 'Jueves' },
     { value: 5, label: 'Viernes' },
     { value: 6, label: 'Sábado' },
-    { value: 0, label: 'Domingo' },
+    { value: 7, label: 'Domingo' },
 ];
 
 export interface CoachFormModalProps {
@@ -41,9 +40,8 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
     const [formData, setFormData] = useState<CreateCoachData>({
         user_id: '',
         hourly_rate: 0,
-        specialties: '',
-        experience_years: 0,
-        description: '',
+        phone: '',
+        bio: '',
     });
     const [email, setEmail] = useState('');
     const [foundUser, setFoundUser] = useState<User | null>(null);
@@ -52,6 +50,7 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
     const [activeTab, setActiveTab] = useState<'basic' | 'schedule'>('basic');
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<FormErrors>({});
+    const [hourlyRateInput, setHourlyRateInput] = useState('');
 
     // Load coach availability when editing
     const loadCoachAvailability = useCallback(async (coachId: string) => {
@@ -78,10 +77,10 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
                 setFormData({
                     user_id: coach.user_id,
                     hourly_rate: coach.hourly_rate,
-                    specialties: coach.specialties || '',
-                    experience_years: coach.experience_years || 0,
-                    description: coach.description || '',
+                    phone: coach.phone || '',
+                    bio: coach.bio || '',
                 });
+                setHourlyRateInput(coach.hourly_rate !== undefined ? `${coach.hourly_rate}` : '');
                 setEmail(coach.user.email);
                 setFoundUser({ ...coach.user, created_at: '' });
                 loadCoachAvailability(coach.id.toString());
@@ -90,10 +89,10 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
                 setFormData({
                     user_id: '',
                     hourly_rate: 0,
-                    specialties: '',
-                    experience_years: 0,
-                    description: '',
+                    phone: '',
+                    bio: '',
                 });
+                setHourlyRateInput('');
                 setEmail('');
                 setFoundUser(null);
                 setAvailabilitySlots([]);
@@ -114,9 +113,6 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
             newErrors.hourly_rate = 'La tarifa debe ser mayor a 0';
         }
 
-        if (formData.experience_years && formData.experience_years < 0) {
-            newErrors.experience_years = 'Los años de experiencia no pueden ser negativos';
-        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -194,6 +190,69 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
         }
     };
 
+    const handleHourlyRateChange = (value: string) => {
+        const sanitizedValue = value.replace(',', '.');
+        if (/^\d*(\.\d{0,2})?$/.test(sanitizedValue)) {
+            setHourlyRateInput(sanitizedValue);
+            const numericValue = sanitizedValue === '' ? 0 : parseFloat(sanitizedValue);
+            handleInputChange('hourly_rate', numericValue);
+        }
+    };
+
+    const adjustHourlyRate = (delta: number) => {
+        const currentValue = parseFloat(hourlyRateInput || '0');
+        const baseValue = Number.isNaN(currentValue) ? 0 : currentValue;
+        const nextValue = Math.max(0, baseValue + delta);
+        const normalized = nextValue.toFixed(2);
+        const trimmedValue = normalized.replace(/\.00$/, '').replace(/\.([1-9])0$/, '.$1');
+        setHourlyRateInput(trimmedValue);
+        handleInputChange('hourly_rate', parseFloat(normalized));
+    };
+
+    const handleHourlyRateKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            adjustHourlyRate(1);
+        } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            adjustHourlyRate(-1);
+        }
+    };
+
+    const handleHourlyRateBlur = () => {
+        if (hourlyRateInput === '') {
+            return;
+        }
+
+        const normalized = hourlyRateInput.endsWith('.') ? hourlyRateInput.slice(0, -1) : hourlyRateInput;
+        setHourlyRateInput(normalized);
+        handleInputChange('hourly_rate', normalized === '' ? 0 : parseFloat(normalized));
+    };
+
+    const triggerTimePicker = (
+        event: React.FocusEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement>
+    ) => {
+        const inputElement = event.currentTarget as HTMLInputElement & {
+            showPicker?: () => void;
+        };
+        if (typeof inputElement.showPicker === 'function') {
+            inputElement.showPicker();
+        }
+    };
+
+    const ensureStartTimeDefault = (index: number) => {
+        setAvailabilitySlots((prev) =>
+            prev.map((slot, i) => {
+                if (i !== index) return slot;
+                const hasValue = slot.start_time && slot.start_time.trim() !== '';
+                return {
+                    ...slot,
+                    start_time: hasValue ? slot.start_time : '08:00',
+                };
+            })
+        );
+    };
+
     const saveAvailability = async (coachId: string) => {
         // Delete existing availability if editing
         if (coach) {
@@ -203,8 +262,19 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
             }
         }
 
+        const slotsToSave = availabilitySlots.map((slot) => ({
+            ...slot,
+            start_time: slot.start_time && slot.start_time.trim() !== '' ? slot.start_time : '08:00',
+        }));
+
         // Create new availability slots
-        for (const slot of availabilitySlots) {
+        for (const slot of slotsToSave) {
+            console.log('Debug saveAvailability:', { 
+                coach_id: coachId, 
+                day_of_week: slot.day_of_week, 
+                start_time: slot.start_time, 
+                end_time: slot.end_time 
+            });
             await createCoachAvailability({
                 coach_id: coachId,
                 day_of_week: slot.day_of_week,
@@ -377,12 +447,13 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
                                                 <div className="input-with-icon">
                                                     <span className="currency-symbol">$</span>
                                                     <input
-                                                        type="number"
+                                                        type="text"
                                                         id="hourly_rate"
-                                                        min="0"
-                                                        step="0.01"
-                                                        value={formData.hourly_rate}
-                                                        onChange={(e) => handleInputChange('hourly_rate', parseFloat(e.target.value) || 0)}
+                                                        inputMode="decimal"
+                                                        value={hourlyRateInput}
+                                                        onChange={(e) => handleHourlyRateChange(e.target.value)}
+                                                        onBlur={handleHourlyRateBlur}
+                                                        onKeyDown={handleHourlyRateKeyDown}
                                                         className={errors.hourly_rate ? 'error' : ''}
                                                         placeholder="0.00"
                                                     />
@@ -391,56 +462,37 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
                                             </div>
 
                                             <div className="form-group-enhanced">
-                                                <label htmlFor="experience_years">Años de experiencia</label>
+                                                <label htmlFor="phone">Teléfono *</label>
                                                 <div className="input-with-icon">
                                                     <span className="input-icon">
-                                                        <i className="bi bi-calendar-event"></i>
+                                                        <i className="bi bi-telephone"></i>
                                                     </span>
                                                     <input
-                                                        type="number"
-                                                        id="experience_years"
-                                                        min="0"
-                                                        value={formData.experience_years}
-                                                        onChange={(e) => handleInputChange('experience_years', parseInt(e.target.value) || 0)}
-                                                        className={errors.experience_years ? 'error' : ''}
-                                                        placeholder="0"
+                                                        type="tel"
+                                                        id="phone"
+                                                        value={formData.phone}
+                                                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                                                        className={errors.phone ? 'error' : ''}
+                                                        placeholder="Ej: +54 9 11 1234-5678"
                                                     />
                                                 </div>
-                                                {errors.experience_years && <span className="error-message-enhanced">{errors.experience_years}</span>}
+                                                {errors.phone && <span className="error-message-enhanced">{errors.phone}</span>}
                                             </div>
                                         </div>
 
                                         <div className="form-group-enhanced">
-                                            <label htmlFor="specialties">Especialidades</label>
-                                            <input
-                                                type="text"
-                                                id="specialties"
-                                                value={formData.specialties}
-                                                onChange={(e) => handleInputChange('specialties', e.target.value)}
-                                                placeholder="Ej: Técnica, Táctica, Preparación física"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Descripción */}
-                                    <div className="form-section">
-                                        <h3 className="section-title">
-                                            <i className="bi bi-file-text"></i>
-                                            Descripción
-                                        </h3>
-
-                                        <div className="form-group-enhanced">
-                                            <label htmlFor="description">Información adicional</label>
+                                            <label htmlFor="bio">Biografía</label>
                                             <textarea
-                                                id="description"
-                                                rows={4}
-                                                value={formData.description}
-                                                onChange={(e) => handleInputChange('description', e.target.value)}
-                                                placeholder="Descripción del entrenador, logros, metodología, certificaciones..."
+                                                id="bio"
+                                                rows={3}
+                                                value={formData.bio}
+                                                onChange={(e) => handleInputChange('bio', e.target.value)}
+                                                placeholder="Información sobre el entrenador, experiencia, logros, certificaciones..."
                                                 className="textarea-enhanced"
                                             />
                                         </div>
                                     </div>
+
                                 </>
                             )}
                         </div>
@@ -472,7 +524,6 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
                                 ) : (
                                     availabilitySlots.map((slot, index) => (
                                         <div key={index} className="availability-slot-enhanced">
-                                            <div className="slot-number">{index + 1}</div>
                                             <div className="slot-controls-enhanced">
                                                 <select
                                                     value={slot.day_of_week}
@@ -489,12 +540,22 @@ export const CoachFormModal: React.FC<CoachFormModalProps> = ({ isOpen, coach, o
                                                     type="time"
                                                     value={slot.start_time}
                                                     onChange={(e) => updateAvailabilitySlot(index, 'start_time', e.target.value)}
+                                                    onBlur={() => ensureStartTimeDefault(index)}
+                                                    onFocus={triggerTimePicker}
+                                                    onClick={triggerTimePicker}
                                                     className="time-input"
                                                 />
 
                                                 <span className="time-separator">→</span>
 
-                                                <input type="time" value={slot.end_time} onChange={(e) => updateAvailabilitySlot(index, 'end_time', e.target.value)} className="time-input" />
+                                                <input
+                                                    type="time"
+                                                    value={slot.end_time}
+                                                    onChange={(e) => updateAvailabilitySlot(index, 'end_time', e.target.value)}
+                                                    onFocus={triggerTimePicker}
+                                                    onClick={triggerTimePicker}
+                                                    className="time-input"
+                                                />
 
                                                 <button type="button" className="remove-slot-btn-enhanced" onClick={() => removeAvailabilitySlot(index)} title="Eliminar horario">
                                                     <i className="bi bi-trash"></i>

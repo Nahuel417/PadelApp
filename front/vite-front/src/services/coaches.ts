@@ -5,24 +5,24 @@ export interface Coach {
     user_id: string;
     hourly_rate: number;
     is_available: boolean;
-    specialties?: string;
-    experience_years?: number;
-    description?: string;
+    bio?: string;
+    phone: string;
     created_at: string;
     user: {
         id: string;
         first_name: string;
         last_name: string;
         email: string;
+        birthday: string;
+        genre: string;
     };
 }
 
 export interface CreateCoachData {
     user_id: string;
     hourly_rate: number;
-    specialties?: string;
-    experience_years?: number;
-    description?: string;
+    bio?: string;
+    phone: string;
 }
 
 export interface UpdateCoachData extends Partial<CreateCoachData> {
@@ -41,7 +41,9 @@ export const getAllCoaches = async (): Promise<Coach[]> => {
                 id,
                 first_name,
                 last_name,
-                email
+                email,
+                birthday,
+                genre
             )
         `)
         .order('created_at', { ascending: false });
@@ -62,7 +64,9 @@ export const getAvailableCoaches = async (): Promise<Coach[]> => {
                 id,
                 first_name,
                 last_name,
-                email
+                email,
+                birthday,
+                genre
             )
         `)
         .eq('is_available', true)
@@ -84,7 +88,9 @@ export const getCoachById = async (id: number): Promise<Coach> => {
                 id,
                 first_name,
                 last_name,
-                email
+                email,
+                birthday,
+                genre
             )
         `)
         .eq('id', id)
@@ -106,7 +112,9 @@ export const getCoachByUserId = async (userId: string): Promise<Coach> => {
                 id,
                 first_name,
                 last_name,
-                email
+                email,
+                birthday,
+                genre
             )
         `)
         .eq('user_id', userId)
@@ -129,7 +137,9 @@ export const createCoach = async (coachData: CreateCoachData): Promise<Coach> =>
                 id,
                 first_name,
                 last_name,
-                email
+                email,
+                birthday,
+                genre
             )
         `)
         .single();
@@ -152,7 +162,9 @@ export const updateCoach = async (id: number, coachData: UpdateCoachData): Promi
                 id,
                 first_name,
                 last_name,
-                email
+                email,
+                birthday,
+                genre
             )
         `)
         .single();
@@ -175,7 +187,9 @@ export const toggleCoachAvailability = async (id: number, isAvailable: boolean):
                 id,
                 first_name,
                 last_name,
-                email
+                email,
+                birthday,
+                genre
             )
         `)
         .single();
@@ -218,6 +232,25 @@ export const getCoachReservations = async (coachId: number, page = 1, limit = 10
     return {
         data: data?.slice(0, limit) ?? [],
         hasNextPage,
+    };
+};
+
+/**
+ * Obtener estadísticas del entrenador
+ */
+export const getCoachStats = async (coachId: number) => {
+    const { data, error } = await supabase
+        .from('reservations')
+        .select('id, status')
+        .eq('coach_id', coachId)
+        .in('status', ['confirmed', 'completed']);
+
+    if (error) throw error;
+
+    return {
+        totalClasses: data?.length || 0,
+        completedClasses: data?.filter(r => r.status === 'completed').length || 0,
+        confirmedClasses: data?.filter(r => r.status === 'confirmed').length || 0
     };
 };
 
