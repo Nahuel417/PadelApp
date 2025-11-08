@@ -1,0 +1,228 @@
+/* Class Details Modal Styles */
+.class-details-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.class-details-modal {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.class-details-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(9, 39, 71, 0.1);
+}
+
+.class-details-modal__title {
+    color: #092747;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.class-details-modal__close {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.class-details-modal__close:hover {
+    background: rgba(185, 28, 28, 0.1);
+    color: #b91c1c;
+}
+
+.class-details-modal__content {
+    padding: 2rem;
+}
+
+.detail-section {
+    margin-bottom: 2rem;
+}
+
+.detail-section:last-child {
+    margin-bottom: 0;
+}
+
+.detail-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #092747;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(35, 135, 68, 0.2);
+}
+
+.detail-section-title i {
+    color: #238744;
+    font-size: 1rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(9, 39, 71, 0.05);
+    border-radius: 8px;
+    border-left: 3px solid #238744;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+.detail-value {
+    font-weight: 600;
+    color: #092747;
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+.detail-value.price {
+    color: #238744;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.detail-value.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid currentColor;
+}
+
+.detail-value.payment-paid {
+    color: #238744;
+}
+
+.detail-value.payment-pending {
+    color: #856404;
+}
+
+.detail-value.payment-failed {
+    color: #b91c1c;
+}
+
+.notes-content {
+    background: rgba(9, 39, 71, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 3px solid #238744;
+}
+
+.notes-content p {
+    margin: 0;
+    color: #092747;
+    line-height: 1.5;
+}
+
+.class-details-modal__footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid rgba(9, 39, 71, 0.1);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-btn.secondary {
+    background: rgba(9, 39, 71, 0.1);
+    color: #092747;
+    border: 2px solid transparent;
+}
+
+.modal-btn.secondary:hover {
+    background: rgba(9, 39, 71, 0.2);
+    border-color: #092747;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .class-details-modal {
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+    }
+
+    .class-details-modal__header,
+    .class-details-modal__content,
+    .class-details-modal__footer {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .detail-value {
+        text-align: left;
+    }
+}

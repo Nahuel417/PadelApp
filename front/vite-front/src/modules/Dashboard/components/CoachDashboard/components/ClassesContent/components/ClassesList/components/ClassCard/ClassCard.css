@@ -1,0 +1,194 @@
+/* Class Card Styles */
+.class-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(35, 135, 68, 0.3);
+    transition: all 0.3s ease;
+}
+
+.class-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.class-card.past {
+    opacity: 0.8;
+    border-color: rgba(128, 128, 128, 0.3);
+}
+
+.class-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.class-card__date-time {
+    flex: 1;
+}
+
+.class-card__date {
+    color: #092747;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    text-transform: capitalize;
+}
+
+.class-card__time {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.class-card__status {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.class-card__status.confirmed {
+    background: rgba(35, 135, 68, 0.1);
+    color: #238744;
+}
+
+.class-card__status.completed {
+    background: rgba(35, 135, 68, 0.1);
+    color: #238744;
+}
+
+.class-card__status.cancelled {
+    background: rgba(185, 28, 28, 0.1);
+    color: #b91c1c;
+}
+
+.class-card__status.pending {
+    background: rgba(255, 193, 7, 0.1);
+    color: #856404;
+}
+
+.class-card__status i {
+    font-size: 0.9rem;
+    color: inherit;
+}
+
+.class-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.class-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.class-info-item.full-width {
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.class-info-label {
+    color: #666;
+    font-size: 0.875rem;
+    font-weight: 500;
+    min-width: 80px;
+}
+
+.class-info-value {
+    color: #092747;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-align: right;
+    flex: 1;
+}
+
+.class-info-item.full-width .class-info-value {
+    text-align: left;
+}
+
+.class-info-value.price {
+    color: #238744;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.class-info-value.payment-paid {
+    color: #238744;
+}
+
+.class-info-value.payment-pending {
+    color: #856404;
+}
+
+.class-info-value.payment-failed {
+    color: #b91c1c;
+}
+
+.class-card__actions {
+    display: flex;
+    justify-content: center;
+}
+
+.class-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(9, 39, 71, 0.1);
+    color: #092747;
+    border: 2px solid transparent;
+}
+
+.class-action-btn:hover {
+    background: rgba(9, 39, 71, 0.2);
+    transform: translateY(-1px);
+    border-color: #092747;
+}
+
+.class-action-btn i {
+    font-size: 1rem;
+    color: inherit;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .class-card {
+        padding: 1.25rem;
+    }
+
+    .class-card__header {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .class-info-item {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+    }
+
+    .class-info-value {
+        text-align: left;
+    }
+}
