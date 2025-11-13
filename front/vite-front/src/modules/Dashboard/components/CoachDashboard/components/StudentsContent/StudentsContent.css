@@ -46,8 +46,6 @@
 }
 
 .search-input {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
     border: 2px solid #ddd;
     border-radius: 25px;
     background: white;
@@ -86,8 +84,12 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-container p {
@@ -273,7 +275,7 @@
     .students-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .search-input-wrapper {
         max-width: none;
     }

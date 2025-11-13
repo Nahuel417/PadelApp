@@ -319,6 +319,8 @@
     font-size: 0.875rem;
     cursor: pointer;
     width: fit-content;
+    position: relative;
+    overflow: hidden;
     transition: all 0.2s ease;
 }
 
@@ -330,9 +332,11 @@
 .btn-close:hover {
     background: rgba(9, 39, 71, 0.2);
     border-color: #092747;
+    transform: translateY(-2px) scale(1.05);
 }
 
 .btn-close:active {
+    transform: scale(0.97);
     box-shadow: 0 4px 12px rgba(9, 39, 71, 0.18);
 }
 

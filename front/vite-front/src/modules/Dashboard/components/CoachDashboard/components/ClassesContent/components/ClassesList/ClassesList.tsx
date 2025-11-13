@@ -37,12 +37,14 @@ const ClassesList: React.FC<ClassesListProps> = ({
     if (classes.length === 0) {
         return (
             <div className="classes-list">
-                <div className="classes-list__empty">
-                    <div className="empty-icon">
-                        <i className="bi bi-calendar-x"></i>
+                <div className="classes-list-empty">
+                    <div className="classes-empty-icon">
+                        <i className="bi bi-inbox"></i>
                     </div>
-                    <h3>No hay clases programadas</h3>
-                    <p>Las clases aparecerán aquí cuando los alumnos hagan reservas contigo</p>
+                    <div className="classes-empty-content">
+                        <h3>No se registran clases</h3>
+                        <p>Ajustá los filtros o revisá más tarde para ver nuevas clases programadas.</p>
+                    </div>
                 </div>
             </div>
         );

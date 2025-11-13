@@ -41,6 +41,7 @@
     border-radius: 16px;
     border: 1px dashed rgba(9, 39, 71, 0.2);
     color: rgba(9, 39, 71, 0.7);
+    background-color: #ffffffe6;
 }
 
 .reserve-empty-icon {

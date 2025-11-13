@@ -17,7 +17,7 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [filters, setFilters] = useState({
         status: '',
-        dateRange: 'upcoming'
+        dateRange: 'upcoming',
     });
 
     // Cargar clases
@@ -25,10 +25,10 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
         try {
             setIsLoading(true);
             setError(null);
-            
+
             const dateFilters: any = {};
             const today = new Date().toISOString().split('T')[0];
-            
+
             switch (filters.dateRange) {
                 case 'today':
                     dateFilters.date_from = today;
@@ -50,7 +50,7 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
 
             const filterParams = {
                 ...dateFilters,
-                ...(filters.status && { status: filters.status })
+                ...(filters.status && { status: filters.status }),
             };
 
             const data = await getCoachClasses(coachId, filterParams);
@@ -89,12 +89,9 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
     }, []);
 
     // Calcular estadísticas
-    const upcomingClasses = classes.filter(c => 
-        new Date(c.reservation_date) >= new Date() && 
-        ['pending', 'confirmed'].includes(c.status)
-    ).length;
+    const upcomingClasses = classes.filter((c) => new Date(c.reservation_date) >= new Date() && ['pending', 'confirmed'].includes(c.status)).length;
 
-    const completedClasses = classes.filter(c => c.status === 'completed').length;
+    const completedClasses = classes.filter((c) => c.status === 'completed').length;
 
     if (error) {
         return (
@@ -112,8 +109,8 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
 
     return (
         <div className="classes-content">
-            <ClassesHeader 
-                title="Mis Clases"
+            <ClassesHeader
+                title="Gestion de Mis Clases"
                 totalClasses={classes.length}
                 upcomingClasses={upcomingClasses}
                 completedClasses={completedClasses}
@@ -121,17 +118,9 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
                 onFilterChange={handleFilterChange}
             />
 
-            <ClassesList
-                classes={classes}
-                isLoading={isLoading}
-                onViewClass={handleViewClass}
-            />
+            <ClassesList classes={classes} isLoading={isLoading} onViewClass={handleViewClass} />
 
-            <ClassDetailsModal
-                isOpen={isModalOpen}
-                classDetails={selectedClass}
-                onClose={handleCloseModal}
-            />
+            <ClassDetailsModal isOpen={isModalOpen} classDetails={selectedClass} onClose={handleCloseModal} />
         </div>
     );
 };

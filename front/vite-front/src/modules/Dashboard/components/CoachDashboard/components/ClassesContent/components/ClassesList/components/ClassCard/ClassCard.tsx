@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './ClassCard.css';
 import { CoachClass } from '../../../../../../../../../../services/coachServices';
 
@@ -8,6 +8,17 @@ export interface ClassCardProps {
 }
 
 const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleViewDetails = (classId: string) => {
+        setIsLoading(true);
+        onViewDetails(classId);
+        
+        // Resetear el loading después de un breve momento para permitir que el modal se abra
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 500);
+    };
     // Validación para evitar errores si classData es undefined
     if (!classData) {
         return null;
@@ -66,7 +77,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
     const isPastClass = new Date(classData.reservation_date) < new Date();
 
     return (
-        <div className={`class-card ${isPastClass ? 'past' : ''} ${classData.status === 'cancelled' ? 'unavailable' : ''}`}>
+        <div className={`class-card ${isPastClass ? 'past' : ''} ${classData.status === 'cancelled' ? 'unavailable' : ''} status-${classData.status}`}>
             <div className="class-card__header">
                 <div className="class-info">
                     <h3 className="class-card__name">
@@ -116,11 +127,21 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
             <div className="class-card__actions">
                 <button 
                     className="class-action-btn details"
-                    onClick={() => onViewDetails(classData.id)}
+                    onClick={() => handleViewDetails(classData.id)}
                     title="Ver detalles de la clase"
+                    disabled={isLoading}
                 >
-                    <i className="bi bi-eye"></i>
-                    Ver Detalles
+                    {isLoading ? (
+                        <>
+                            <i className="bi bi-arrow-clockwise spin"></i>
+                            Cargando...
+                        </>
+                    ) : (
+                        <>
+                            <i className="bi bi-eye"></i>
+                            Ver Detalles
+                        </>
+                    )}
                 </button>
             </div>
         </div>

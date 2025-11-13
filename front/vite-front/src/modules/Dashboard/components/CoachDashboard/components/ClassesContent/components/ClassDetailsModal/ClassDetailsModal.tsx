@@ -53,7 +53,7 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
                 return '#b91c1c';
             case 'pending':
             default:
-                return '#856404';
+                return '#60a5fa';
         }
     };
 
@@ -70,18 +70,43 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
         }
     };
 
+    const getPaymentDateText = () => {
+        // Si el pago está pagado, mostrar la fecha de la clase
+        // Si está pendiente, mostrar "Pendiente de pago"
+        if (classDetails.payment_status === 'paid') {
+            return formatDate(classDetails.reservation_date);
+        }
+        return 'Pendiente';
+    };
+
+    const getPaymentMethodText = () => {
+        // Método de pago por defecto (puede ser expandido según BD)
+        return 'Transferencia Bancaria';
+    };
+
     return (
         <div className="class-details-modal-overlay" onClick={onClose}>
             <div className="class-details-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="class-details-modal__header">
-                    <h3 className="class-details-modal__title">Detalles de la Clase</h3>
-                    <button 
-                        className="class-details-modal__close"
-                        onClick={onClose}
-                        aria-label="Cerrar modal"
-                    >
-                        <i className="bi bi-x-lg"></i>
-                    </button>
+                    <div className="details-header-left">
+                        <div className="details-header-icon">
+                            <i className="bi bi-calendar-event"></i>
+                        </div>
+                        <div className="details-header-text">
+                            <h2>Detalles de la Clase</h2>
+                            <p className="details-header-subtitle">
+                                {formatDate(classDetails.reservation_date)}
+                            </p>
+                        </div>
+                    </div>
+                    <div className="details-header-actions">
+                        <span className={`details-status-badge ${classDetails.status}`}>
+                            <i className={`bi ${classDetails.status === 'confirmed' ? 'bi-check-circle-fill' : 
+                                classDetails.status === 'completed' ? 'bi-check-circle-fill' :
+                                classDetails.status === 'cancelled' ? 'bi-x-circle-fill' : 'bi-clock-fill'}`}></i>
+                            {getStatusText(classDetails.status)}
+                        </span>
+                    </div>
                 </div>
 
                 <div className="class-details-modal__content">
@@ -112,8 +137,10 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
                                 </span>
                             </div>
                             <div className="detail-item">
-                                <span className="detail-label">Tipo de Clase</span>
-                                <span className="detail-value">{classDetails.affair}</span>
+                                <span className="detail-label">Cancha</span>
+                                <span className="detail-value">
+                                    {classDetails.court?.name || 'No especificada'}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -138,22 +165,6 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
                         </div>
                     </div>
 
-                    {/* Información de la cancha */}
-                    {classDetails.court && (
-                        <div className="detail-section">
-                            <h4 className="detail-section-title">
-                                <i className="bi bi-geo-alt"></i>
-                                Información de la Cancha
-                            </h4>
-                            <div className="detail-grid">
-                                <div className="detail-item">
-                                    <span className="detail-label">Cancha</span>
-                                    <span className="detail-value">{classDetails.court.name}</span>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
                     {/* Información de pago */}
                     <div className="detail-section">
                         <h4 className="detail-section-title">
@@ -171,6 +182,18 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
                                 <span className="detail-label">Estado del Pago</span>
                                 <span className={`detail-value payment-${classDetails.payment_status}`}>
                                     {getPaymentStatusText(classDetails.payment_status)}
+                                </span>
+                            </div>
+                            <div className="detail-item">
+                                <span className="detail-label">Fecha de Pago</span>
+                                <span className="detail-value">
+                                    {getPaymentDateText()}
+                                </span>
+                            </div>
+                            <div className="detail-item">
+                                <span className="detail-label">Método de Pago</span>
+                                <span className="detail-value">
+                                    {getPaymentMethodText()}
                                 </span>
                             </div>
                         </div>
@@ -191,11 +214,9 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
                 </div>
 
                 <div className="class-details-modal__footer">
-                    <button 
-                        className="modal-btn secondary"
-                        onClick={onClose}
-                    >
-                        Cerrar
+                    <button className="btn-close" onClick={onClose}>
+                        <i className="bi bi-x-circle"></i>
+                        <span>Cerrar</span>
                     </button>
                 </div>
             </div>
