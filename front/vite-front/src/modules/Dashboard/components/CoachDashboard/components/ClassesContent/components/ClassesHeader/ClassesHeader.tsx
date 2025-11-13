@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './ClassesHeader.css';
+import FilterChips, { FilterChipOption } from '../../../../../../../../shared/components/Filters/FilterChips/FilterChips';
 
 export interface ClassesHeaderProps {
     title: string;
@@ -12,6 +13,27 @@ export interface ClassesHeaderProps {
     };
     onFilterChange: (filters: { status: string; dateRange: string }) => void;
 }
+
+const formatCount = (value: number): string => new Intl.NumberFormat('es-AR').format(value);
+
+// Opciones de filtros - siguiendo el patrón de ReserveFilters
+const STATUS_OPTIONS: Array<string> = ['', 'pending', 'confirmed', 'completed', 'cancelled'];
+const STATUS_LABELS: Record<string, string> = {
+    '': 'Todas',
+    'pending': 'Pendientes',
+    'confirmed': 'Confirmadas',
+    'completed': 'Completadas',
+    'cancelled': 'Canceladas',
+};
+
+const DATE_RANGE_OPTIONS: Array<string> = ['', 'upcoming', 'today', 'week', 'past'];
+const DATE_RANGE_LABELS: Record<string, string> = {
+    '': 'Todas',
+    'upcoming': 'Próximas',
+    'today': 'Hoy',
+    'week': 'Esta Semana',
+    'past': 'Pasadas',
+};
 
 const ClassesHeader: React.FC<ClassesHeaderProps> = ({
     title,
@@ -29,60 +51,63 @@ const ClassesHeader: React.FC<ClassesHeaderProps> = ({
         onFilterChange({ ...filters, dateRange });
     };
 
+    const metrics = [
+        { id: 'total', label: 'Totales', value: totalClasses },
+        { id: 'upcoming', label: 'Próximas', value: upcomingClasses },
+        { id: 'completed', label: 'Completadas', value: completedClasses },
+    ];
+
+    // Opciones para FilterChips - siguiendo el patrón de ReserveFilters
+    const statusFilterOptions: FilterChipOption[] = useMemo(
+        () => STATUS_OPTIONS.map((status) => ({ value: status, label: STATUS_LABELS[status] })),
+        []
+    );
+
+    const dateRangeFilterOptions: FilterChipOption[] = useMemo(
+        () => DATE_RANGE_OPTIONS.map((dateRange) => ({ value: dateRange, label: DATE_RANGE_LABELS[dateRange] })),
+        []
+    );
+
     return (
-        <div className="classes-header">
-            <div className="classes-header__top">
-                <div className="classes-header__title-section">
-                    <h3 className="classes-header__title">{title}</h3>
-                    <div className="classes-header__stats">
-                        <span className="stat-item">
-                            <i className="bi bi-calendar-check"></i>
-                            Total: {totalClasses}
-                        </span>
-                        <span className="stat-item upcoming">
-                            <i className="bi bi-clock"></i>
-                            Próximas: {upcomingClasses}
-                        </span>
-                        <span className="stat-item completed">
-                            <i className="bi bi-check-circle"></i>
-                            Completadas: {completedClasses}
-                        </span>
-                    </div>
+        <>
+            <div className="classes-header">
+                <div className="classes-header-content">
+                    <h2 className="classes-header-title">{title}</h2>
+                    <span className="classes-header-caption">Resumen actualizado</span>
+                </div>
+
+                <div className="classes-header-stats" role="list">
+                    {metrics.map((metric) => (
+                        <div key={metric.id} className={`classes-header-stat classes-header-stat--${metric.id}`} role="listitem">
+                            <span className="classes-header-stat-value">{formatCount(metric.value)}</span>
+                            <span className="classes-header-stat-label">{metric.label}</span>
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            <div className="classes-header__filters">
-                <div className="filter-group">
+            <div className="classes-filters">
+                <div className="filter-section">
                     <label className="filter-label">Estado:</label>
-                    <select 
-                        className="filter-select"
-                        value={filters.status}
-                        onChange={(e) => handleStatusChange(e.target.value)}
-                    >
-                        <option value="">Todos</option>
-                        <option value="pending">Pendientes</option>
-                        <option value="confirmed">Confirmadas</option>
-                        <option value="completed">Completadas</option>
-                        <option value="cancelled">Canceladas</option>
-                    </select>
+                    <FilterChips 
+                        selectedValue={filters.status} 
+                        onChange={handleStatusChange} 
+                        options={statusFilterOptions} 
+                        className="classes-filter-chips" 
+                    />
                 </div>
 
-                <div className="filter-group">
+                <div className="filter-section">
                     <label className="filter-label">Período:</label>
-                    <select 
-                        className="filter-select"
-                        value={filters.dateRange}
-                        onChange={(e) => handleDateRangeChange(e.target.value)}
-                    >
-                        <option value="upcoming">Próximas</option>
-                        <option value="today">Hoy</option>
-                        <option value="week">Esta Semana</option>
-                        <option value="past">Pasadas</option>
-                        <option value="">Todas</option>
-                    </select>
+                    <FilterChips 
+                        selectedValue={filters.dateRange} 
+                        onChange={handleDateRangeChange} 
+                        options={dateRangeFilterOptions} 
+                        className="classes-filter-chips" 
+                    />
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

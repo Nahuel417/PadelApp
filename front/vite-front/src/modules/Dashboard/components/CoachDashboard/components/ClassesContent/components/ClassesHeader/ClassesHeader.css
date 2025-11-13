@@ -1,83 +1,95 @@
-/* Classes Header Styles */
+/* Classes Header Styles - Idéntico al UserHeader del Admin Dashboard */
 .classes-header {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(35, 135, 68, 0.3);
-}
-
-.classes-header__top {
-    margin-bottom: 1.5rem;
-}
-
-.classes-header__title-section {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.75rem 2rem;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    box-shadow: 0 10px 20px rgba(9, 39, 71, 0.08);
+}
+
+.classes-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.classes-header-title {
+    margin: 0;
+    font-size: 1.65rem;
+    color: #092747;
+    font-weight: 700;
+}
+
+.classes-header-caption {
+    font-size: 0.85rem;
+    color: rgba(9, 39, 71, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+.classes-header-stats {
+    display: flex;
+    align-items: center;
     gap: 1rem;
 }
 
-.classes-header__title {
-    color: #092747;
-    font-size: 1.5rem;
+.classes-header-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    background: rgba(255, 255, 255, 0.95);
+    min-width: 120px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.classes-header-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(9, 39, 71, 0.12);
+}
+
+.classes-header-stat-value {
+    font-size: 1.4rem;
     font-weight: 700;
-    margin: 0;
-}
-
-.classes-header__stats {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: rgba(9, 39, 71, 0.1);
-    border-radius: 20px;
-    font-size: 0.875rem;
-    font-weight: 600;
     color: #092747;
 }
 
-.stat-item i {
-    font-size: 1rem;
+.classes-header-stat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(9, 39, 71, 0.55);
 }
 
-.stat-item.upcoming {
-    background: rgba(255, 193, 7, 0.1);
-    color: #856404;
+.classes-header-stat--total .classes-header-stat-value {
+    color: #092747;
 }
 
-.stat-item.upcoming i {
-    color: #ffc107;
-}
-
-.stat-item.completed {
-    background: rgba(35, 135, 68, 0.1);
+.classes-header-stat--upcoming .classes-header-stat-value {
     color: #238744;
 }
 
-.stat-item.completed i {
-    color: #238744;
+.classes-header-stat--completed .classes-header-stat-value {
+    color: #1d3d5f;
 }
 
-.classes-header__filters {
+.classes-filters {
     display: flex;
     gap: 2rem;
     flex-wrap: wrap;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(9, 39, 71, 0.1);
 }
 
-.filter-group {
+.filter-section {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 0.75rem;
 }
 
@@ -88,51 +100,57 @@
     white-space: nowrap;
 }
 
-.filter-select {
-    padding: 0.5rem 1rem;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    background: white;
-    color: #092747;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    min-width: 140px;
+.classes-filter-chips {
+    gap: 0.5rem;
 }
 
-.filter-select:hover {
-    border-color: #238744;
+/* Estilos específicos para los chips de clases - siguiendo ReserveFilters */
+.classes-filter-chips .filter-chip {
+    min-width: 90px;
+    justify-content: center;
 }
 
-.filter-select:focus {
-    outline: none;
-    border-color: #238744;
-    box-shadow: 0 0 0 3px rgba(35, 135, 68, 0.1);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .classes-header__title-section {
+/* Responsive - Idéntico al UserHeader */
+@media (max-width: 960px) {
+    .classes-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .classes-header__stats {
-        gap: 1rem;
+    .classes-header-stats {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 0.75rem;
     }
 
-    .classes-header__filters {
+    .classes-header-stat {
+        flex: 1 1 140px;
+    }
+}
+
+@media (max-width: 640px) {
+    .classes-header {
+        padding: 1.5rem;
+    }
+
+    .classes-header-title {
+        font-size: 1.45rem;
+    }
+
+    .classes-header-caption {
+        font-size: 0.75rem;
+    }
+
+    .classes-filters {
         flex-direction: column;
         gap: 1rem;
     }
 
-    .filter-group {
+    .filter-section {
         width: 100%;
     }
 
-    .filter-select {
-        flex: 1;
-        min-width: unset;
+    .classes-filter-chips .filter-chip {
+        min-width: 80px;
     }
 }

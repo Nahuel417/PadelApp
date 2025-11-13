@@ -1,13 +1,18 @@
 import React from 'react';
-import { CoachClass } from '../../../../../../../../../../services/coachServices';
 import './ClassCard.css';
+import { CoachClass } from '../../../../../../../../../../services/coachServices';
 
 export interface ClassCardProps {
-    classItem: CoachClass;
-    onViewDetails: () => void;
+    classData: CoachClass;
+    onViewDetails: (classId: string) => void;
 }
 
-const ClassCard: React.FC<ClassCardProps> = ({ classItem, onViewDetails }) => {
+const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
+    // Validación para evitar errores si classData es undefined
+    if (!classData) {
+        return null;
+    }
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('es-AR', {
@@ -19,110 +24,91 @@ const ClassCard: React.FC<ClassCardProps> = ({ classItem, onViewDetails }) => {
     };
 
     const formatTime = (timeString: string) => {
-        return timeString.slice(0, 5); // Remove seconds from HH:MM:SS
+        return timeString.slice(0, 5); // HH:MM
     };
 
-    const getStatusColor = (status: string) => {
+    const getStatusInfo = (status: string) => {
         switch (status) {
             case 'confirmed':
-                return 'confirmed';
+                return { 
+                    className: 'confirmed', 
+                    text: 'Confirmada',
+                    icon: 'bi-check-circle-fill'
+                };
+            case 'pending':
+                return { 
+                    className: 'pending', 
+                    text: 'Pendiente',
+                    icon: 'bi-clock-fill'
+                };
             case 'completed':
-                return 'completed';
+                return { 
+                    className: 'completed', 
+                    text: 'Completada',
+                    icon: 'bi-check-circle-fill'
+                };
             case 'cancelled':
-                return 'cancelled';
-            case 'pending':
+                return { 
+                    className: 'cancelled', 
+                    text: 'Cancelada',
+                    icon: 'bi-x-circle-fill'
+                };
             default:
-                return 'pending';
+                return { 
+                    className: 'pending', 
+                    text: 'Pendiente',
+                    icon: 'bi-clock-fill'
+                };
         }
     };
 
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case 'confirmed':
-                return 'Confirmada';
-            case 'completed':
-                return 'Completada';
-            case 'cancelled':
-                return 'Cancelada';
-            case 'pending':
-            default:
-                return 'Pendiente';
-        }
-    };
-
-    const getPaymentStatusText = (paymentStatus: string) => {
-        switch (paymentStatus) {
-            case 'paid':
-                return 'Pagado';
-            case 'pending':
-                return 'Pendiente';
-            case 'failed':
-                return 'Fallido';
-            default:
-                return 'Sin definir';
-        }
-    };
-
-    const isUpcoming = new Date(classItem.reservation_date) >= new Date();
+    const statusInfo = getStatusInfo(classData.status);
+    const isPastClass = new Date(classData.reservation_date) < new Date();
 
     return (
-        <div className={`class-card ${!isUpcoming ? 'past' : ''}`}>
+        <div className={`class-card ${isPastClass ? 'past' : ''} ${classData.status === 'cancelled' ? 'unavailable' : ''}`}>
             <div className="class-card__header">
-                <div className="class-card__date-time">
-                    <h4 className="class-card__date">{formatDate(classItem.reservation_date)}</h4>
-                    <p className="class-card__time">
-                        {formatTime(classItem.start_time)} - {formatTime(classItem.end_time)}
-                    </p>
+                <div className="class-info">
+                    <h3 className="class-card__name">
+                        {classData.court?.name || 'Cancha no especificada'}
+                    </h3>
+                    <p className="class-card__email">{formatDate(classData.reservation_date)}</p>
                 </div>
-                <div className={`class-card__status ${getStatusColor(classItem.status)}`}>
-                    <i className={`bi ${
-                        classItem.status === 'confirmed' ? 'bi-check-circle-fill' :
-                        classItem.status === 'completed' ? 'bi-check-circle-fill' :
-                        classItem.status === 'cancelled' ? 'bi-x-circle-fill' :
-                        'bi-clock-fill'
-                    }`}></i>
-                    {getStatusText(classItem.status)}
+                <div className={`class-card__status ${statusInfo.className}`}>
+                    <i className={`bi ${statusInfo.icon}`}></i>
+                    {statusInfo.text}
                 </div>
             </div>
 
             <div className="class-card__content">
                 <div className="class-info-item">
+                    <span className="class-info-label">Horario:</span>
+                    <span className="class-info-value schedule">
+                        {formatTime(classData.start_time)} - {formatTime(classData.end_time)}
+                    </span>
+                </div>
+
+                <div className="class-info-item">
                     <span className="class-info-label">Alumno:</span>
                     <span className="class-info-value">
-                        {classItem.user.first_name} {classItem.user.last_name}
-                    </span>
-                </div>
-
-                {classItem.court && (
-                    <div className="class-info-item">
-                        <span className="class-info-label">Cancha:</span>
-                        <span className="class-info-value">{classItem.court.name}</span>
-                    </div>
-                )}
-
-                <div className="class-info-item">
-                    <span className="class-info-label">Tipo:</span>
-                    <span className="class-info-value">{classItem.affair}</span>
-                </div>
-
-                <div className="class-info-item">
-                    <span className="class-info-label">Monto:</span>
-                    <span className="class-info-value price">
-                        ${classItem.total_amount.toLocaleString('es-AR')}
+                        {classData.user.first_name} {classData.user.last_name}
                     </span>
                 </div>
 
                 <div className="class-info-item">
-                    <span className="class-info-label">Pago:</span>
-                    <span className={`class-info-value payment-${classItem.payment_status}`}>
-                        {getPaymentStatusText(classItem.payment_status)}
-                    </span>
+                    <span className="class-info-label">Email:</span>
+                    <span className="class-info-value">{classData.user.email}</span>
                 </div>
 
-                {classItem.notes && (
-                    <div className="class-info-item full-width">
+                <div className="class-info-item">
+                    <span className="class-info-label">Tipo de Clase:</span>
+                    <span className="class-info-value">{classData.affair}</span>
+                </div>
+
+                {classData.notes && (
+                    <div className="class-description">
                         <span className="class-info-label">Notas:</span>
-                        <span className="class-info-value">{classItem.notes}</span>
+                        <p className="class-description-text">{classData.notes}</p>
                     </div>
                 )}
             </div>
@@ -130,8 +116,8 @@ const ClassCard: React.FC<ClassCardProps> = ({ classItem, onViewDetails }) => {
             <div className="class-card__actions">
                 <button 
                     className="class-action-btn details"
-                    onClick={onViewDetails}
-                    title="Ver detalles"
+                    onClick={() => onViewDetails(classData.id)}
+                    title="Ver detalles de la clase"
                 >
                     <i className="bi bi-eye"></i>
                     Ver Detalles

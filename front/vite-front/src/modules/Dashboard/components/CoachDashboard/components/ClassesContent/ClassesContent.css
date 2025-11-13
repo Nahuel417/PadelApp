@@ -1,6 +1,9 @@
-/* Classes Content Styles */
+/* Classes Content Styles - Siguiendo patrones del Admin Dashboard */
+
 .classes-content {
-    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .error-container {
@@ -8,41 +11,43 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4rem 2rem;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.9);
+    min-height: 120px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgba(185, 28, 28, 0.3);
+    border: 1px dashed rgba(9, 39, 71, 0.12);
+    background: rgba(9, 39, 71, 0.02);
+    color: rgba(9, 39, 71, 0.65);
+    font-size: 0.95rem;
+    padding: 1.5rem;
+    text-align: center;
 }
 
 .error-container h3 {
     color: #b91c1c;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     margin-bottom: 0.5rem;
 }
 
 .error-container p {
-    color: #666;
-    font-size: 1rem;
+    color: rgba(9, 39, 71, 0.65);
+    font-size: 0.95rem;
     margin-bottom: 1.5rem;
 }
 
 .retry-button {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     background: #238744;
     color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
+    border: 1px solid #238744;
+    border-radius: 6px;
+    font-weight: 500;
     font-size: 0.875rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .retry-button:hover {
     background: #1e7139;
-    transform: translateY(-1px);
+    border-color: #1e7139;
 }
 
 /* Loading States */
@@ -51,27 +56,37 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4rem 2rem;
+    min-height: 120px;
+    border-radius: 12px;
+    border: 1px dashed rgba(9, 39, 71, 0.12);
+    background: rgba(9, 39, 71, 0.02);
+    color: rgba(9, 39, 71, 0.65);
+    font-size: 0.95rem;
+    padding: 1.5rem;
     text-align: center;
 }
 
 .loading-spinner {
-    width: 3rem;
-    height: 3rem;
-    border: 3px solid rgba(35, 135, 68, 0.2);
-    border-top: 3px solid #238744;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid rgba(35, 135, 68, 0.2);
+    border-top: 2px solid #238744;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 1rem;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-container p {
-    color: #666;
-    font-size: 1rem;
+    color: rgba(9, 39, 71, 0.65);
+    font-size: 0.95rem;
     margin: 0;
 }

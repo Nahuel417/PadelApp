@@ -54,8 +54,8 @@ const ClassesList: React.FC<ClassesListProps> = ({
                 {classes.map((classItem) => (
                     <ClassCard
                         key={classItem.id}
-                        classItem={classItem}
-                        onViewDetails={() => onViewClass(classItem)}
+                        classData={classItem}
+                        onViewDetails={(classId) => onViewClass(classItem)}
                     />
                 ))}
             </div>

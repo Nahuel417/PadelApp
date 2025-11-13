@@ -137,7 +137,7 @@ const createDefaultCoachProfile = async (userId: string): Promise<CoachProfile> 
             user_id: userId,
             hourly_rate: 5000, // Valor por defecto
             is_available: true,
-            phone: userData.phone || '', // Usar teléfono del usuario si existe
+            phone: '', // Campo requerido en coaches, se puede actualizar después
             bio: null
         })
         .select(`
@@ -361,7 +361,7 @@ export const getClassDetails = async (classId: string): Promise<CoachClass> => {
         .from('reservations')
         .select(`
             *,
-            user:users(id, first_name, last_name, email, phone),
+            user:users(id, first_name, last_name, email),
             court:courts(id, name)
         `)
         .eq('id', classId)

@@ -1,25 +1,23 @@
-/* Classes List Styles */
-.classes-list {
-    margin-bottom: 2rem;
-}
+/* Classes List Styles - Siguiendo patrones del Admin Dashboard */
 
 .classes-list__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 1.5rem;
 }
 
 .classes-list__loading {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 1.5rem;
 }
 
 .class-card-skeleton {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
+    background: white;
+    border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
     animation: pulse 1.5s ease-in-out infinite;
 }
 

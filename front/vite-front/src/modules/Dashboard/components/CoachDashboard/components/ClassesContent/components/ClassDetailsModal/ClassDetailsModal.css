@@ -113,7 +113,6 @@
     padding: 0.75rem;
     background: rgba(9, 39, 71, 0.05);
     border-radius: 8px;
-    border-left: 3px solid #238744;
 }
 
 .detail-label {
@@ -127,6 +126,10 @@
     color: #092747;
     font-size: 0.875rem;
     text-align: right;
+}
+
+.detail-value.status.available i {
+    color: inherit;
 }
 
 .detail-value.price {

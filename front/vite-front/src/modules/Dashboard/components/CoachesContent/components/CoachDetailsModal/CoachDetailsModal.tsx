@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './CoachDetailsModal.css';
+import { DetailsModal, DetailSection } from '../../../../../../shared/components';
 import { Coach, getCoachStats } from '../../../../../../services/coaches';
 import { getCoachAvailability } from '../../../../../../services/coachAvailability';
 
@@ -71,7 +71,6 @@ export const CoachDetailsModal: React.FC<CoachDetailsModalProps> = ({ isOpen, co
         }).format(rate);
     };
 
-
     const formatDate = (dateString?: string) => {
         if (!dateString) return 'No especificado';
         const date = new Date(dateString);
@@ -120,176 +119,143 @@ export const CoachDetailsModal: React.FC<CoachDetailsModalProps> = ({ isOpen, co
     const statusIcon = coach.is_available ? 'bi-check-circle-fill' : 'bi-x-circle-fill';
     const statusClass = coach.is_available ? 'available' : 'unavailable';
 
-    return (
-        <div className="coach-details-overlay" onClick={onClose}>
-            <div className="coach-details-content" onClick={(e) => e.stopPropagation()}>
-                <div className="coach-details-header">
-                    <div className="details-header-left">
-                        <div className="details-header-icon">
-                            <i className="bi bi-person-video3"></i>
-                        </div>
-                        <div className="details-header-text">
-                            <h2>Detalles del Entrenador</h2>
-                            <p className="details-header-subtitle">
-                                {coach.user.first_name} {coach.user.last_name}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="details-header-actions">
-                        <span className={`details-status-badge ${statusClass}`}>
+    // Configuración del modal
+    const modalProps = {
+        title: 'Detalles del Entrenador',
+        subtitle: `${coach.user.first_name} ${coach.user.last_name}`,
+        headerIcon: 'bi-person-video3',
+        statusBadge: {
+            text: statusText,
+            className: statusClass,
+            icon: statusIcon
+        },
+        summaryCard: {
+            avatar: `${coach.user.first_name.charAt(0)}${coach.user.last_name.charAt(0)}`,
+            title: `${coach.user.first_name} ${coach.user.last_name}`,
+            subtitle: coach.user.email,
+            extraInfo: coach.phone ? (
+                <p className="summary-phone">
+                    <i className="bi bi-telephone"></i>
+                    {coach.phone}
+                </p>
+            ) : null
+        }
+    };
+
+    // Secciones de detalles
+    const sections: DetailSection[] = [
+        {
+            title: 'Información Personal',
+            icon: 'bi-person-circle',
+            items: [
+                {
+                    label: 'Nombre completo',
+                    value: `${coach.user.first_name} ${coach.user.last_name}`
+                },
+                {
+                    label: 'Email',
+                    value: coach.user.email
+                },
+                {
+                    label: 'Teléfono',
+                    value: coach.phone || 'No especificado'
+                },
+                {
+                    label: 'Fecha de nacimiento',
+                    value: formatDate(coach.user.birthday)
+                },
+                {
+                    label: 'Género',
+                    value: getGenreText(coach.user.genre)
+                },
+                {
+                    label: 'Estado',
+                    value: (
+                        <span className={`status ${statusClass}`}>
                             <i className={`bi ${statusIcon}`}></i>
                             {statusText}
                         </span>
-                        <button className="coach-details-close" onClick={onClose} aria-label="Cerrar modal de detalles">
-                            <i className="bi bi-x-lg"></i>
-                        </button>
-                    </div>
+                    ),
+                    className: 'status-item'
+                },
+                {
+                    label: 'Biografía',
+                    value: coach.bio || 'No especificada',
+                    fullWidth: true
+                }
+            ]
+        },
+        {
+            title: 'Información Profesional',
+            icon: 'bi-briefcase',
+            items: [
+                {
+                    label: 'Tarifa por hora',
+                    value: formatRate(coach.hourly_rate),
+                    className: 'price'
+                },
+                {
+                    label: 'Fecha de alta',
+                    value: formatDate(coach.created_at)
+                },
+                {
+                    label: 'Clases totales',
+                    value: `${coachStats.totalClasses} clases`,
+                    className: 'stats'
+                }
+            ]
+        },
+        {
+            title: 'Horarios de Disponibilidad',
+            icon: 'bi-calendar-week',
+            items: [],
+            customContent: isLoading ? (
+                <div className="details-loading">
+                    <i className="bi bi-arrow-clockwise spin"></i>
+                    Cargando horarios...
                 </div>
+            ) : availability.length === 0 ? (
+                <div className="no-availability">
+                    <i className="bi bi-calendar-x"></i>
+                    <p>No hay horarios configurados</p>
+                    <small>Configura horarios desde la edición del entrenador</small>
+                </div>
+            ) : (
+                <div className="availability-schedule">
+                    {DAYS_OF_WEEK.map((day) => {
+                        const daySlots = availabilityByDay[day.value];
+                        if (!daySlots || daySlots.length === 0) return null;
 
-                <div className="coach-details-body">
-                    <div className="coach-summary-card">
-                        <div className="summary-avatar">
-                            <span>
-                                {coach.user.first_name.charAt(0)}
-                                {coach.user.last_name.charAt(0)}
-                            </span>
-                        </div>
-                        <div className="summary-info">
-                            <h3>
-                                {coach.user.first_name} {coach.user.last_name}
-                            </h3>
-                            <p>{coach.user.email}</p>
-                            {coach.phone && (
-                                <p className="summary-phone">
-                                    <i className="bi bi-telephone"></i>
-                                    {coach.phone}
-                                </p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Información Personal */}
-                    <div className="details-section details-section-card">
-                        <h3 className="details-section-title">
-                            <i className="bi bi-person-circle"></i>
-                            Información Personal
-                        </h3>
-                        <div className="details-grid">
-                            <div className="detail-item">
-                                <span className="detail-label">Nombre completo</span>
-                                <span className="detail-value">
-                                    {coach.user.first_name} {coach.user.last_name}
-                                </span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="detail-label">Email</span>
-                                <span className="detail-value">{coach.user.email}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="detail-label">Teléfono</span>
-                                <span className="detail-value">{coach.phone || 'No especificado'}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="detail-label">Fecha de nacimiento</span>
-                                <span className="detail-value">{formatDate(coach.user.birthday)}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="detail-label">Género</span>
-                                <span className="detail-value">{getGenreText(coach.user.genre)}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="detail-label">Estado</span>
-                                <span className={`detail-value status ${statusClass}`}>
-                                    <i className={`bi ${statusIcon}`}></i>
-                                    {statusText}
-                                </span>
-                            </div>
-                            <div className="detail-item full-width">
-                                <span className="detail-label">Biografía</span>
-                                <span className="detail-value">{coach.bio || 'No especificada'}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Información Profesional */}
-                    <div className="details-section details-section-card">
-                        <h3 className="details-section-title">
-                            <i className="bi bi-briefcase"></i>
-                            Información Profesional
-                        </h3>
-                        <div className="details-grid">
-                            <div className="detail-item">
-                                <span className="detail-label">Tarifa por hora</span>
-                                <span className="detail-value price">{formatRate(coach.hourly_rate)}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="detail-label">Fecha de alta</span>
-                                <span className="detail-value">{formatDate(coach.created_at)}</span>
-                            </div>
-                            <div className="detail-item">
-                                <span className="detail-label">Clases totales</span>
-                                <span className="detail-value stats">{coachStats.totalClasses} clases</span>
-                            </div>
-                        </div>
-
-                        {coach.bio && (
-                            <div className="description-section">
-                                <span className="detail-label">Biografía</span>
-                                <p className="description-text">{coach.bio}</p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Horarios de Disponibilidad */}
-                    <div className="details-section details-section-card">
-                        <h3 className="details-section-title">
-                            <i className="bi bi-calendar-week"></i>
-                            Horarios de Disponibilidad
-                        </h3>
-
-                        {isLoading ? (
-                            <div className="loading-availability">
-                                <i className="bi bi-arrow-clockwise spin"></i>
-                                Cargando horarios...
-                            </div>
-                        ) : availability.length === 0 ? (
-                            <div className="no-availability">
-                                <i className="bi bi-calendar-x"></i>
-                                <p>No hay horarios configurados</p>
-                                <small>Configura horarios desde la edición del entrenador</small>
-                            </div>
-                        ) : (
-                            <div className="availability-schedule">
-                                {DAYS_OF_WEEK.map((day) => {
-                                    const daySlots = availabilityByDay[day.value];
-                                    if (!daySlots || daySlots.length === 0) return null;
-
-                                    return (
-                                        <div key={day.value} className="day-schedule">
-                                            <div className="day-name">{day.label}</div>
-                                            <div className="day-slots">
-                                                {daySlots.map((slot, index) => (
-                                                    <div key={slot.id || index} className="time-slot">
-                                                        <i className="bi bi-clock"></i>
-                                                        {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
-                                                    </div>
-                                                ))}
-                                            </div>
+                        return (
+                            <div key={day.value} className="day-schedule">
+                                <div className="day-name">{day.label}</div>
+                                <div className="day-slots">
+                                    {daySlots.map((slot, index) => (
+                                        <div key={slot.id || index} className="time-slot">
+                                            <i className="bi bi-clock"></i>
+                                            {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
                                         </div>
-                                    );
-                                })}
+                                    ))}
+                                </div>
                             </div>
-                        )}
-                    </div>
+                        );
+                    })}
                 </div>
+            )
+        }
+    ];
 
-                <div className="coach-details-footer">
-                    <button className="btn-close" onClick={onClose}>
-                        <i className="bi bi-x-circle"></i>
-                        <span>Cerrar</span>
-                    </button>
-                </div>
-            </div>
-        </div>
+    return (
+        <DetailsModal
+            isOpen={isOpen}
+            onClose={onClose}
+            title={modalProps.title}
+            subtitle={modalProps.subtitle}
+            headerIcon={modalProps.headerIcon}
+            statusBadge={modalProps.statusBadge}
+            summaryCard={modalProps.summaryCard}
+            sections={sections}
+            isLoading={false}
+        />
     );
 };
