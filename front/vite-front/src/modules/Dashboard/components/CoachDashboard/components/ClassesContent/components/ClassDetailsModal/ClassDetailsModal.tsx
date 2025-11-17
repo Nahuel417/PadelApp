@@ -8,20 +8,19 @@ export interface ClassDetailsModalProps {
     onClose: () => void;
 }
 
-const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
-    isOpen,
-    classDetails,
-    onClose
-}) => {
+const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({ isOpen, classDetails, onClose }) => {
     if (!isOpen || !classDetails) return null;
 
     const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
+        // Parsear la fecha manualmente para evitar problemas de zona horaria
+        const [year, month, day] = dateString.split('-').map(Number);
+        const date = new Date(year, month - 1, day); // month - 1 porque los meses van de 0-11
+
         return date.toLocaleDateString('es-AR', {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
         });
     };
 
@@ -94,16 +93,21 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
                         </div>
                         <div className="details-header-text">
                             <h2>Detalles de la Clase</h2>
-                            <p className="details-header-subtitle">
-                                {formatDate(classDetails.reservation_date)}
-                            </p>
+                            <p className="details-header-subtitle">{formatDate(classDetails.reservation_date)}</p>
                         </div>
                     </div>
                     <div className="details-header-actions">
                         <span className={`details-status-badge ${classDetails.status}`}>
-                            <i className={`bi ${classDetails.status === 'confirmed' ? 'bi-check-circle-fill' : 
-                                classDetails.status === 'completed' ? 'bi-check-circle-fill' :
-                                classDetails.status === 'cancelled' ? 'bi-x-circle-fill' : 'bi-clock-fill'}`}></i>
+                            <i
+                                className={`bi ${
+                                    classDetails.status === 'confirmed'
+                                        ? 'bi-check-circle-fill'
+                                        : classDetails.status === 'completed'
+                                        ? 'bi-check-circle-fill'
+                                        : classDetails.status === 'cancelled'
+                                        ? 'bi-x-circle-fill'
+                                        : 'bi-clock-fill'
+                                }`}></i>
                             {getStatusText(classDetails.status)}
                         </span>
                     </div>
@@ -129,18 +133,13 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
                             </div>
                             <div className="detail-item">
                                 <span className="detail-label">Estado</span>
-                                <span 
-                                    className="detail-value status-badge"
-                                    style={{ color: getStatusColor(classDetails.status) }}
-                                >
+                                <span className="detail-value status-badge" style={{ color: getStatusColor(classDetails.status) }}>
                                     {getStatusText(classDetails.status)}
                                 </span>
                             </div>
                             <div className="detail-item">
                                 <span className="detail-label">Cancha</span>
-                                <span className="detail-value">
-                                    {classDetails.court?.name || 'No especificada'}
-                                </span>
+                                <span className="detail-value">{classDetails.court?.name || 'No especificada'}</span>
                             </div>
                         </div>
                     </div>
@@ -174,27 +173,19 @@ const ClassDetailsModal: React.FC<ClassDetailsModalProps> = ({
                         <div className="detail-grid">
                             <div className="detail-item">
                                 <span className="detail-label">Monto Total</span>
-                                <span className="detail-value price">
-                                    ${classDetails.total_amount.toLocaleString('es-AR')}
-                                </span>
+                                <span className="detail-value price">${classDetails.total_amount.toLocaleString('es-AR')}</span>
                             </div>
                             <div className="detail-item">
                                 <span className="detail-label">Estado del Pago</span>
-                                <span className={`detail-value payment-${classDetails.payment_status}`}>
-                                    {getPaymentStatusText(classDetails.payment_status)}
-                                </span>
+                                <span className={`detail-value payment-${classDetails.payment_status}`}>{getPaymentStatusText(classDetails.payment_status)}</span>
                             </div>
                             <div className="detail-item">
                                 <span className="detail-label">Fecha de Pago</span>
-                                <span className="detail-value">
-                                    {getPaymentDateText()}
-                                </span>
+                                <span className="detail-value">{getPaymentDateText()}</span>
                             </div>
                             <div className="detail-item">
                                 <span className="detail-label">Método de Pago</span>
-                                <span className="detail-value">
-                                    {getPaymentMethodText()}
-                                </span>
+                                <span className="detail-value">{getPaymentMethodText()}</span>
                             </div>
                         </div>
                     </div>

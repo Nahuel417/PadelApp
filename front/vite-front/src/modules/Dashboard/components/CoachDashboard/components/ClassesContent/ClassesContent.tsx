@@ -5,6 +5,11 @@ import ClassesList from './components/ClassesList/ClassesList';
 import ClassDetailsModal from './components/ClassDetailsModal/ClassDetailsModal';
 import './ClassesContent.css';
 
+interface ClassesFilters {
+    status: string;
+    selectedDate: Date | null;
+}
+
 export interface ClassesContentProps {
     coachId: string;
 }
@@ -15,9 +20,9 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
     const [error, setError] = useState<string | null>(null);
     const [selectedClass, setSelectedClass] = useState<CoachClass | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState<ClassesFilters>({
         status: '',
-        dateRange: 'upcoming',
+        selectedDate: null,
     });
 
     // Cargar clases
@@ -26,26 +31,23 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
             setIsLoading(true);
             setError(null);
 
-            const dateFilters: any = {};
-            const today = new Date().toISOString().split('T')[0];
+            const dateFilters: Record<string, string> = {};
 
-            switch (filters.dateRange) {
-                case 'today':
-                    dateFilters.date_from = today;
-                    dateFilters.date_to = today;
-                    break;
-                case 'upcoming':
-                    dateFilters.date_from = today;
-                    break;
-                case 'week':
-                    const weekFromNow = new Date();
-                    weekFromNow.setDate(weekFromNow.getDate() + 7);
-                    dateFilters.date_from = today;
-                    dateFilters.date_to = weekFromNow.toISOString().split('T')[0];
-                    break;
-                case 'past':
-                    dateFilters.date_to = today;
-                    break;
+            // Helper para formatear fecha en zona horaria local
+            const formatDateLocal = (date: Date): string => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            if (filters.selectedDate) {
+                const selectedIso = formatDateLocal(filters.selectedDate);
+                dateFilters.date_from = selectedIso;
+                dateFilters.date_to = selectedIso;
+            } else {
+                const todayIso = formatDateLocal(new Date());
+                dateFilters.date_from = todayIso;
             }
 
             const filterParams = {

@@ -4,7 +4,6 @@ import { useUserStore } from '../../../../store/userStore';
 import { getCoachProfile, getCoachStats, CoachProfile } from '../../../../services/coachServices';
 import ClassesContent from './components/ClassesContent/ClassesContent';
 import ProfileContent from './components/ProfileContent/ProfileContent';
-import StudentsContent from './components/StudentsContent/StudentsContent';
 import ScheduleContent from './components/ScheduleContent/ScheduleContent';
 import './CoachDashboard.css';
 
@@ -15,7 +14,7 @@ const CoachDashboard: React.FC = () => {
     const [stats, setStats] = useState({
         upcomingClasses: 0,
         totalStudents: 0,
-        monthlyClasses: 0
+        monthlyClasses: 0,
     });
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -28,7 +27,7 @@ const CoachDashboard: React.FC = () => {
                 const profile = await getCoachProfile(user.id);
                 console.log('CoachDashboard - Profile loaded:', profile);
                 setCoachProfile(profile);
-                
+
                 const coachStats = await getCoachStats(profile.id);
                 console.log('CoachDashboard - Stats loaded:', coachStats);
                 setStats(coachStats);
@@ -49,7 +48,7 @@ const CoachDashboard: React.FC = () => {
 
     const renderContent = () => {
         console.log('CoachDashboard - renderContent:', { activeSection, coachProfile, isLoading });
-        
+
         if (isLoading) {
             return (
                 <div className="loading-container">
@@ -64,9 +63,7 @@ const CoachDashboard: React.FC = () => {
                 <div className="error-container">
                     <h3>Error al cargar perfil</h3>
                     <p>{error}</p>
-                    <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#666' }}>
-                        Asegúrate de que tu usuario tenga un perfil de entrenador creado en el sistema.
-                    </p>
+                    <p style={{ marginTop: '1rem', fontSize: '0.875rem', color: '#666' }}>Asegúrate de que tu usuario tenga un perfil de entrenador creado en el sistema.</p>
                 </div>
             );
         }
@@ -85,8 +82,6 @@ const CoachDashboard: React.FC = () => {
                 return <ClassesContent coachId={coachProfile.id} />;
             case 'perfil':
                 return <ProfileContent coachProfile={coachProfile} onProfileUpdate={setCoachProfile} />;
-            case 'alumnos':
-                return <StudentsContent coachId={coachProfile.id} />;
             case 'horarios':
                 return <ScheduleContent coachId={coachProfile.id} />;
             case 'dashboard':
@@ -146,21 +141,15 @@ const CoachDashboard: React.FC = () => {
                                 <div className="info-card">
                                     <h4 className="info-title">Bienvenido, {coachProfile?.user.first_name}</h4>
                                     <p className="info-text">
-                                        Gestiona tus clases programadas, horarios de disponibilidad y la información de tus alumnos. 
-                                        Mantén actualizada tu agenda y comunica cualquier cambio a tus estudiantes.
+                                        Gestiona tus clases programadas, horarios de disponibilidad y la información de tus alumnos. Mantén actualizada tu agenda y comunica cualquier cambio
+                                        a tus estudiantes.
                                     </p>
                                     <div className="quick-actions">
-                                        <button 
-                                            className="quick-action-btn"
-                                            onClick={() => setActiveSection('mis-clases')}
-                                        >
+                                        <button className="quick-action-btn" onClick={() => setActiveSection('mis-clases')}>
                                             <i className="bi bi-calendar-check"></i>
                                             Ver Clases
                                         </button>
-                                        <button 
-                                            className="quick-action-btn"
-                                            onClick={() => setActiveSection('horarios')}
-                                        >
+                                        <button className="quick-action-btn" onClick={() => setActiveSection('horarios')}>
                                             <i className="bi bi-clock"></i>
                                             Gestionar Horarios
                                         </button>
@@ -174,12 +163,7 @@ const CoachDashboard: React.FC = () => {
     };
 
     return (
-        <DashboardLayout 
-            userRole="coach" 
-            userName={`${user.first_name} ${user.last_name}`}
-            activeSection={activeSection}
-            onSectionChange={setActiveSection}
-        >
+        <DashboardLayout userRole="coach" userName={`${user.first_name} ${user.last_name}`} activeSection={activeSection} onSectionChange={setActiveSection}>
             {renderContent()}
         </DashboardLayout>
     );

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import './ClassesHeader.css';
 import FilterChips, { FilterChipOption } from '../../../../../../../../shared/components/Filters/FilterChips/FilterChips';
+import { DateFilter } from '../../../../../../../../shared/components/DateFilter/DateFilter';
 
 export interface ClassesHeaderProps {
     title: string;
@@ -9,9 +10,9 @@ export interface ClassesHeaderProps {
     completedClasses: number;
     filters: {
         status: string;
-        dateRange: string;
+        selectedDate: Date | null;
     };
-    onFilterChange: (filters: { status: string; dateRange: string }) => void;
+    onFilterChange: (filters: { status: string; selectedDate: Date | null }) => void;
 }
 
 const formatCount = (value: number): string => new Intl.NumberFormat('es-AR').format(value);
@@ -20,35 +21,19 @@ const formatCount = (value: number): string => new Intl.NumberFormat('es-AR').fo
 const STATUS_OPTIONS: Array<string> = ['', 'pending', 'confirmed', 'completed', 'cancelled'];
 const STATUS_LABELS: Record<string, string> = {
     '': 'Todas',
-    'pending': 'Pendientes',
-    'confirmed': 'Confirmadas',
-    'completed': 'Completadas',
-    'cancelled': 'Canceladas',
+    pending: 'Pendientes',
+    confirmed: 'Confirmadas',
+    completed: 'Completadas',
+    cancelled: 'Canceladas',
 };
 
-const DATE_RANGE_OPTIONS: Array<string> = ['', 'upcoming', 'today', 'week', 'past'];
-const DATE_RANGE_LABELS: Record<string, string> = {
-    '': 'Todas',
-    'upcoming': 'Próximas',
-    'today': 'Hoy',
-    'week': 'Esta Semana',
-    'past': 'Pasadas',
-};
-
-const ClassesHeader: React.FC<ClassesHeaderProps> = ({
-    title,
-    totalClasses,
-    upcomingClasses,
-    completedClasses,
-    filters,
-    onFilterChange
-}) => {
+const ClassesHeader: React.FC<ClassesHeaderProps> = ({ title, totalClasses, upcomingClasses, completedClasses, filters, onFilterChange }) => {
     const handleStatusChange = (status: string) => {
         onFilterChange({ ...filters, status });
     };
 
-    const handleDateRangeChange = (dateRange: string) => {
-        onFilterChange({ ...filters, dateRange });
+    const handleDateChange = (date: Date | null) => {
+        onFilterChange({ ...filters, selectedDate: date });
     };
 
     const metrics = [
@@ -58,15 +43,7 @@ const ClassesHeader: React.FC<ClassesHeaderProps> = ({
     ];
 
     // Opciones para FilterChips - siguiendo el patrón de ReserveFilters
-    const statusFilterOptions: FilterChipOption[] = useMemo(
-        () => STATUS_OPTIONS.map((status) => ({ value: status, label: STATUS_LABELS[status] })),
-        []
-    );
-
-    const dateRangeFilterOptions: FilterChipOption[] = useMemo(
-        () => DATE_RANGE_OPTIONS.map((dateRange) => ({ value: dateRange, label: DATE_RANGE_LABELS[dateRange] })),
-        []
-    );
+    const statusFilterOptions: FilterChipOption[] = useMemo(() => STATUS_OPTIONS.map((status) => ({ value: status, label: STATUS_LABELS[status] })), []);
 
     return (
         <>
@@ -89,21 +66,17 @@ const ClassesHeader: React.FC<ClassesHeaderProps> = ({
             <div className="classes-filters">
                 <div className="filter-section">
                     <label className="filter-label">Estado:</label>
-                    <FilterChips 
-                        selectedValue={filters.status} 
-                        onChange={handleStatusChange} 
-                        options={statusFilterOptions} 
-                        className="classes-filter-chips" 
-                    />
+                    <FilterChips selectedValue={filters.status} onChange={handleStatusChange} options={statusFilterOptions} className="classes-filter-chips" />
                 </div>
 
                 <div className="filter-section">
-                    <label className="filter-label">Período:</label>
-                    <FilterChips 
-                        selectedValue={filters.dateRange} 
-                        onChange={handleDateRangeChange} 
-                        options={dateRangeFilterOptions} 
-                        className="classes-filter-chips" 
+                    <label className="filter-label">Fecha:</label>
+                    <DateFilter
+                        selectedDate={filters.selectedDate ?? undefined}
+                        onDateChange={handleDateChange}
+                        placeholder="Seleccionar fecha"
+                        className="classes-date-filter"
+                        allowFutureDates
                     />
                 </div>
             </div>

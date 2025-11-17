@@ -13,7 +13,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
     const handleViewDetails = (classId: string) => {
         setIsLoading(true);
         onViewDetails(classId);
-        
+
         // Resetear el loading después de un breve momento para permitir que el modal se abra
         setTimeout(() => {
             setIsLoading(false);
@@ -25,12 +25,15 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
     }
 
     const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
+        // Parsear la fecha manualmente para evitar problemas de zona horaria
+        const [year, month, day] = dateString.split('-').map(Number);
+        const date = new Date(year, month - 1, day); // month - 1 porque los meses van de 0-11
+
         return date.toLocaleDateString('es-AR', {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
         });
     };
 
@@ -41,34 +44,34 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
     const getStatusInfo = (status: string) => {
         switch (status) {
             case 'confirmed':
-                return { 
-                    className: 'confirmed', 
+                return {
+                    className: 'confirmed',
                     text: 'Confirmada',
-                    icon: 'bi-check-circle-fill'
+                    icon: 'bi-check-circle-fill',
                 };
             case 'pending':
-                return { 
-                    className: 'pending', 
+                return {
+                    className: 'pending',
                     text: 'Pendiente',
-                    icon: 'bi-clock-fill'
+                    icon: 'bi-clock-fill',
                 };
             case 'completed':
-                return { 
-                    className: 'completed', 
+                return {
+                    className: 'completed',
                     text: 'Completada',
-                    icon: 'bi-check-circle-fill'
+                    icon: 'bi-check-circle-fill',
                 };
             case 'cancelled':
-                return { 
-                    className: 'cancelled', 
+                return {
+                    className: 'cancelled',
                     text: 'Cancelada',
-                    icon: 'bi-x-circle-fill'
+                    icon: 'bi-x-circle-fill',
                 };
             default:
-                return { 
-                    className: 'pending', 
+                return {
+                    className: 'pending',
                     text: 'Pendiente',
-                    icon: 'bi-clock-fill'
+                    icon: 'bi-clock-fill',
                 };
         }
     };
@@ -80,9 +83,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
         <div className={`class-card ${isPastClass ? 'past' : ''} ${classData.status === 'cancelled' ? 'unavailable' : ''} status-${classData.status}`}>
             <div className="class-card__header">
                 <div className="class-info">
-                    <h3 className="class-card__name">
-                        {classData.court?.name || 'Cancha no especificada'}
-                    </h3>
+                    <h3 className="class-card__name">{classData.court?.name || 'Cancha no especificada'}</h3>
                     <p className="class-card__email">{formatDate(classData.reservation_date)}</p>
                 </div>
                 <div className={`class-card__status ${statusInfo.className}`}>
@@ -107,13 +108,8 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
                 </div>
 
                 <div className="class-info-item">
-                    <span className="class-info-label">Email:</span>
-                    <span className="class-info-value">{classData.user.email}</span>
-                </div>
-
-                <div className="class-info-item">
-                    <span className="class-info-label">Tipo de Clase:</span>
-                    <span className="class-info-value">{classData.affair}</span>
+                    <span className="class-info-label">Cancha:</span>
+                    <span className="class-info-value">{classData.court?.name || 'No asignada'}</span>
                 </div>
 
                 {classData.notes && (
@@ -125,12 +121,7 @@ const ClassCard: React.FC<ClassCardProps> = ({ classData, onViewDetails }) => {
             </div>
 
             <div className="class-card__actions">
-                <button 
-                    className="class-action-btn details"
-                    onClick={() => handleViewDetails(classData.id)}
-                    title="Ver detalles de la clase"
-                    disabled={isLoading}
-                >
+                <button className="class-action-btn details" onClick={() => handleViewDetails(classData.id)} title="Ver detalles de la clase" disabled={isLoading}>
                     {isLoading ? (
                         <>
                             <i className="bi bi-arrow-clockwise spin"></i>

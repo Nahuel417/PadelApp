@@ -151,6 +151,7 @@
     padding: 1.5rem;
     border: 1px solid rgba(9, 39, 71, 0.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid #238744;
 }
 
 .detail-section:last-child {
@@ -166,7 +167,6 @@
     font-weight: 600;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid rgba(35, 135, 68, 0.2);
 }
 
 .detail-section-title i {

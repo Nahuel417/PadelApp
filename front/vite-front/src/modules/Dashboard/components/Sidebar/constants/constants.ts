@@ -4,8 +4,7 @@ export const COMMON_MENU_ITEMS: MenuItem[] = [{ id: 'dashboard', label: 'Dashboa
 
 export const COACH_MENU_ITEMS: MenuItem[] = [
     { id: 'mis-clases', label: 'Mis Clases', icon: 'bi-calendar2-check' },
-    { id: 'alumnos', label: 'Mis Alumnos', icon: 'bi-people' },
-    { id: 'horarios', label: 'Horarios', icon: 'bi-clock' },
+    { id: 'horarios', label: 'Mis Horarios', icon: 'bi-clock' },
     { id: 'perfil', label: 'Mi Perfil', icon: 'bi-person' },
 ];
 

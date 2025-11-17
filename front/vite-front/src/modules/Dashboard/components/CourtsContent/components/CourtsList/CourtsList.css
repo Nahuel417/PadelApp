@@ -60,9 +60,10 @@
     justify-content: center;
     padding: 4rem 2rem;
     text-align: center;
-    background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px dashed rgba(9, 39, 71, 0.2);
+    background-color: #ffffffe6;
 }
 
 .empty-icon {
@@ -93,7 +94,8 @@
 }
 
 @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 1;
     }
     50% {
