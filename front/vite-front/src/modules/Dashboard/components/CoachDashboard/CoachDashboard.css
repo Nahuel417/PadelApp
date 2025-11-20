@@ -1,121 +1,143 @@
-/* CoachDashboard Styles */
+/* CoachDashboard Home - Coherente con otras secciones */
 
-.coach-dashboard-container {
-    width: 100%;
+.dashboard-home {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-/* Page Header */
-.coach-page-header {
-    margin-bottom: 2rem;
+/* Dashboard Header - Mismo estilo que ClassesHeader */
+.dashboard-header {
+    padding: 1.75rem 2rem;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    box-shadow: 0 10px 20px rgba(9, 39, 71, 0.08);
 }
 
-.coach-page-title {
+.dashboard-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 1.65rem;
     color: #092747;
     font-weight: 700;
-    font-size: 1.875rem;
-    margin-bottom: 0.5rem;
 }
 
-.coach-title-underline {
-    border: 2px solid #238744;
-    width: 4rem;
-    height: 4px;
-    background-color: #238744;
-    border-radius: 4px;
+.dashboard-subtitle {
+    font-size: 0.85rem;
+    color: rgba(9, 39, 71, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
 }
 
 /* Stats Grid */
-.coach-stats-grid {
+.stats-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-@media (min-width: 1024px) {
-    .coach-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
 }
 
 /* Stat Card */
-.coach-stat-card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
+.stat-card {
+    background: white;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    border-radius: 12px;
     padding: 1.5rem;
-    transition: box-shadow 0.2s ease;
-}
-
-.coach-stat-card:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.coach-stat-card-content {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 1.25rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-.coach-stat-info {
-    display: flex;
-    flex-direction: column;
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(9, 39, 71, 0.12);
+    border-color: rgba(35, 135, 68, 0.2);
 }
 
-.coach-stat-label {
-    color: #092747;
-    font-size: 0.875rem;
-    font-weight: 500;
-}
-
-.coach-stat-value {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #092747;
-}
-
-.coach-stat-icon {
-    width: 3rem;
-    height: 3rem;
-    background-color: rgba(35, 135, 68, 0.1);
-    border-radius: 50%;
+.stat-icon-wrapper {
+    width: 3.5rem;
+    height: 3.5rem;
+    background: linear-gradient(135deg, rgba(35, 135, 68, 0.1) 0%, rgba(35, 135, 68, 0.05) 100%);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 }
 
-.coach-stat-icon-emoji {
+.stat-icon {
+    font-size: 1.5rem;
     color: #238744;
-    font-size: 1.25rem;
 }
 
-/* Info Card */
-.coach-info-card {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-    padding: 1.5rem;
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
-.coach-info-title {
+.stat-label {
+    color: rgba(9, 39, 71, 0.65);
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
     color: #092747;
-    font-weight: 600;
-    font-size: 1.125rem;
+    margin: 0;
+    line-height: 1;
+}
+
+/* Welcome Card */
+.welcome-card {
+    background: white;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.welcome-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     margin-bottom: 1rem;
 }
 
-.coach-info-text {
+.welcome-icon {
+    font-size: 1.5rem;
+    color: #238744;
+}
+
+.welcome-title {
     color: #092747;
-    line-height: 1.625;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.welcome-text {
+    color: rgba(9, 39, 71, 0.75);
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+    font-size: 0.95rem;
 }
 
 /* Quick Actions */
 .quick-actions {
     display: flex;
     gap: 1rem;
-    margin-top: 1.5rem;
     flex-wrap: wrap;
 }
 
@@ -131,13 +153,14 @@
     font-weight: 600;
     font-size: 0.875rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     text-decoration: none;
 }
 
 .quick-action-btn:hover {
-    background: #1e7139;
+    background: #1f7a3a;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(35, 135, 68, 0.3);
 }
 
 .quick-action-btn i {
@@ -165,8 +188,12 @@
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .loading-container p {
@@ -204,12 +231,50 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .dashboard-header {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .dashboard-title {
+        font-size: 1.35rem;
+    }
+
+    .dashboard-subtitle {
+        font-size: 0.75rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: 1.25rem;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+    }
+
+    .welcome-card {
+        padding: 1.5rem;
+    }
+
+    .welcome-title {
+        font-size: 1.1rem;
+    }
+
     .quick-actions {
         flex-direction: column;
     }
-    
+
     .quick-action-btn {
         justify-content: center;
         width: 100%;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

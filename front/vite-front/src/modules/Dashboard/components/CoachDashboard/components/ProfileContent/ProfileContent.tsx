@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CoachProfile, updateCoachProfile, UpdateCoachProfileData } from '../../../../../../services/coachServices';
+import { CoachProfile, updateCoachProfile, UpdateCoachProfileData, updateUserData } from '../../../../../../services/coachServices';
 import Swal from 'sweetalert';
 import './ProfileContent.css';
 
@@ -13,6 +13,11 @@ interface FormData {
     hourly_rate: number;
     is_available: boolean;
     phone: string;
+    genre: string;
+}
+
+interface FormState {
+    hourlyRateInput: string;
 }
 
 interface FormErrors {
@@ -21,16 +26,15 @@ interface FormErrors {
     phone?: string;
 }
 
-const ProfileContent: React.FC<ProfileContentProps> = ({
-    coachProfile,
-    onProfileUpdate
-}) => {
+const ProfileContent: React.FC<ProfileContentProps> = ({ coachProfile, onProfileUpdate }) => {
     const [formData, setFormData] = useState<FormData>({
         bio: coachProfile.bio || '',
         hourly_rate: coachProfile.hourly_rate || 0,
         is_available: coachProfile.is_available,
-        phone: coachProfile.phone || ''
+        phone: coachProfile.phone || '',
+        genre: coachProfile.user.genre || 'otro',
     });
+    const [hourlyRateInput, setHourlyRateInput] = useState(coachProfile.hourly_rate ? `${coachProfile.hourly_rate}` : '');
     const [errors, setErrors] = useState<FormErrors>({});
     const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +43,7 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
         return date.toLocaleDateString('es-AR', {
             year: 'numeric',
             month: 'long',
-            day: 'numeric'
+            day: 'numeric',
         });
     };
 
@@ -65,18 +69,57 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
     };
 
     const handleInputChange = (field: keyof FormData, value: any) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
 
         // Clear error when user starts typing
         if (errors[field as keyof FormErrors]) {
-            setErrors(prev => ({
+            setErrors((prev) => ({
                 ...prev,
-                [field]: undefined
+                [field]: undefined,
             }));
         }
+    };
+
+    const handleHourlyRateChange = (value: string) => {
+        const sanitizedValue = value.replace(',', '.');
+        if (/^\d*(\.\d{0,2})?$/.test(sanitizedValue)) {
+            setHourlyRateInput(sanitizedValue);
+            const numericValue = sanitizedValue === '' ? 0 : parseFloat(sanitizedValue);
+            handleInputChange('hourly_rate', numericValue);
+        }
+    };
+
+    const adjustHourlyRate = (delta: number) => {
+        const currentValue = parseFloat(hourlyRateInput || '0');
+        const baseValue = Number.isNaN(currentValue) ? 0 : currentValue;
+        const nextValue = Math.max(0, baseValue + delta);
+        const normalized = nextValue.toFixed(2);
+        const trimmedValue = normalized.replace(/\.00$/, '').replace(/\.([1-9])0$/, '.$1');
+        setHourlyRateInput(trimmedValue);
+        handleInputChange('hourly_rate', parseFloat(normalized));
+    };
+
+    const handleHourlyRateKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            adjustHourlyRate(1);
+        } else if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            adjustHourlyRate(-1);
+        }
+    };
+
+    const handleHourlyRateBlur = () => {
+        if (hourlyRateInput === '') {
+            return;
+        }
+
+        const normalized = hourlyRateInput.endsWith('.') ? hourlyRateInput.slice(0, -1) : hourlyRateInput;
+        setHourlyRateInput(normalized);
+        handleInputChange('hourly_rate', normalized === '' ? 0 : parseFloat(normalized));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -93,8 +136,13 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
                 bio: formData.bio.trim() || null,
                 hourly_rate: formData.hourly_rate,
                 is_available: formData.is_available,
-                phone: formData.phone.trim()
+                phone: formData.phone.trim(),
             };
+
+            // Actualizar género si cambió
+            if (formData.genre !== coachProfile.user.genre) {
+                await updateUserData(coachProfile.user_id, { genre: formData.genre });
+            }
 
             const updatedProfile = await updateCoachProfile(coachProfile.id, updateData);
             onProfileUpdate(updatedProfile);
@@ -105,7 +153,6 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
                 icon: 'success',
                 timer: 2000,
             });
-
         } catch (error) {
             console.error('Error updating profile:', error);
             Swal({
@@ -121,8 +168,10 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
     return (
         <div className="profile-content">
             <div className="profile-header">
-                <h3 className="profile-title">Mi Perfil</h3>
-                <p className="profile-subtitle">Gestiona tu información personal y profesional</p>
+                <div className="profile-header-content">
+                    <h2 className="profile-title">Mi Perfil</h2>
+                    <span className="profile-subtitle">Gestiona tu información personal y profesional</span>
+                </div>
             </div>
 
             <div className="profile-layout">
@@ -146,12 +195,6 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
                         <div className="info-item">
                             <span className="info-label">Fecha de Nacimiento</span>
                             <span className="info-value">{formatDate(coachProfile.user.birthday)}</span>
-                        </div>
-                        <div className="info-item">
-                            <span className="info-label">Género</span>
-                            <span className="info-value">
-                                {coachProfile.user.genre.charAt(0).toUpperCase() + coachProfile.user.genre.slice(1)}
-                            </span>
                         </div>
                         <div className="info-item">
                             <span className="info-label">Fecha de Alta</span>
@@ -183,19 +226,34 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
                         </div>
 
                         <div className="form-group">
+                            <label htmlFor="genre" className="form-label">
+                                Género *
+                            </label>
+                            <select id="genre" value={formData.genre} onChange={(e) => handleInputChange('genre', e.target.value)} className="form-input">
+                                <option value="masculino">Masculino</option>
+                                <option value="femenino">Femenino</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div className="form-group">
                             <label htmlFor="hourly_rate" className="form-label">
                                 Tarifa por Hora (ARS) *
                             </label>
-                            <input
-                                type="number"
-                                id="hourly_rate"
-                                value={formData.hourly_rate}
-                                onChange={(e) => handleInputChange('hourly_rate', parseFloat(e.target.value) || 0)}
-                                className={`form-input ${errors.hourly_rate ? 'error' : ''}`}
-                                min="0"
-                                step="0.01"
-                                placeholder="0.00"
-                            />
+                            <div className="input-with-icon">
+                                <span className="currency-symbol">$</span>
+                                <input
+                                    type="text"
+                                    id="hourly_rate"
+                                    inputMode="decimal"
+                                    value={hourlyRateInput}
+                                    onChange={(e) => handleHourlyRateChange(e.target.value)}
+                                    onBlur={handleHourlyRateBlur}
+                                    onKeyDown={handleHourlyRateKeyDown}
+                                    className={`form-input ${errors.hourly_rate ? 'error' : ''}`}
+                                    placeholder="0.00"
+                                />
+                            </div>
                             {errors.hourly_rate && <span className="error-message">{errors.hourly_rate}</span>}
                         </div>
 
@@ -212,45 +270,40 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
                                 placeholder="Cuéntanos sobre tu experiencia, especialidades y metodología de enseñanza..."
                                 maxLength={500}
                             />
-                            <div className="char-count">
-                                {formData.bio.length}/500 caracteres
-                            </div>
+                            <div className="char-count">{formData.bio.length}/500 caracteres</div>
                             {errors.bio && <span className="error-message">{errors.bio}</span>}
                         </div>
 
                         <div className="form-group">
+                            <label className="form-label">Estado de Disponibilidad</label>
                             <div className="availability-toggle">
-                                <label className="toggle-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.is_available}
-                                        onChange={(e) => handleInputChange('is_available', e.target.checked)}
-                                        className="toggle-input"
-                                    />
-                                    <span className="toggle-slider"></span>
-                                    <span className="toggle-text">
-                                        {formData.is_available ? 'Disponible para nuevas clases' : 'No disponible para nuevas clases'}
-                                    </span>
-                                </label>
+                                <div className="toggle-content">
+                                    <div className="toggle-info">
+                                        <i className={`bi ${formData.is_available ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}`}></i>
+                                        <span className="toggle-status">{formData.is_available ? 'Disponible para nuevas clases' : 'No disponible para nuevas clases'}</span>
+                                    </div>
+                                    <label className="toggle-switch">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.is_available}
+                                            onChange={(e) => handleInputChange('is_available', e.target.checked)}
+                                            className="toggle-input"
+                                        />
+                                        <span className="toggle-slider"></span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
                         <div className="form-actions">
-                            <button
-                                type="submit"
-                                className="btn-save"
-                                disabled={isLoading}
-                            >
+                            <button type="submit" className="btn-save" disabled={isLoading}>
                                 {isLoading ? (
                                     <>
                                         <i className="bi bi-arrow-clockwise spin"></i>
                                         Guardando...
                                     </>
                                 ) : (
-                                    <>
-                                        <i className="bi bi-check-lg"></i>
-                                        Guardar Cambios
-                                    </>
+                                    <>Guardar Cambios</>
                                 )}
                             </button>
                         </div>

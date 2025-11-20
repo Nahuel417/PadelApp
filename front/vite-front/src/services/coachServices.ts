@@ -71,6 +71,10 @@ export interface UpdateCoachProfileData {
     phone?: string;
 }
 
+export interface UpdateUserData {
+    genre?: string;
+}
+
 export interface CreateAvailabilityData {
     coach_id: string;
     day_of_week: number;
@@ -172,6 +176,15 @@ export const updateCoachProfile = async (coachId: string, profileData: UpdateCoa
 
     if (error) throw error;
     return data;
+};
+
+/**
+ * Actualizar datos del usuario (género)
+ */
+export const updateUserData = async (userId: string, userData: UpdateUserData): Promise<void> => {
+    const { error } = await supabase.from('users').update(userData).eq('id', userId);
+
+    if (error) throw error;
 };
 
 /**

@@ -1,66 +1,53 @@
 import React from 'react';
 import { CoachClass } from '../../../../../../../../services/coachServices';
-import ClassCard from './components/ClassCard/ClassCard';
+import { ClassRow } from '../ClassRow/ClassRow';
+import { ClassTableHeader } from '../ClassTableHeader/ClassTableHeader';
+import { Pagination } from '../../../../../../../../shared';
 import './ClassesList.css';
 
 export interface ClassesListProps {
     classes: CoachClass[];
     isLoading: boolean;
     onViewClass: (classItem: CoachClass) => void;
+    currentPage?: number;
+    hasNextPage?: boolean;
+    onPageChange?: (page: number) => void;
 }
 
-const ClassesList: React.FC<ClassesListProps> = ({
-    classes,
-    isLoading,
-    onViewClass
-}) => {
-    if (isLoading) {
+const ClassesList: React.FC<ClassesListProps> = ({ classes, isLoading, onViewClass, currentPage = 1, hasNextPage, onPageChange }) => {
+    if (isLoading && classes.length === 0) {
         return (
-            <div className="classes-list">
-                <div className="classes-list__loading">
-                    {[...Array(3)].map((_, index) => (
-                        <div key={index} className="class-card-skeleton">
-                            <div className="skeleton-header"></div>
-                            <div className="skeleton-content">
-                                <div className="skeleton-line"></div>
-                                <div className="skeleton-line"></div>
-                                <div className="skeleton-line short"></div>
-                            </div>
-                            <div className="skeleton-actions"></div>
-                        </div>
-                    ))}
-                </div>
+            <div className="class-list-loading">
+                <div className="spinner"></div>
             </div>
         );
     }
 
     if (classes.length === 0) {
         return (
-            <div className="classes-list">
-                <div className="classes-list-empty">
-                    <div className="classes-empty-icon">
-                        <i className="bi bi-inbox"></i>
-                    </div>
-                    <div className="classes-empty-content">
-                        <h3>No se registran clases</h3>
-                        <p>Ajustá los filtros o revisá más tarde para ver nuevas clases programadas.</p>
-                    </div>
+            <div className="class-list-empty">
+                <div className="class-empty-icon">
+                    <i className="bi bi-inbox"></i>
+                </div>
+                <div className="class-empty-content">
+                    <h3>No se registran clases</h3>
+                    <p>Ajustá los filtros o revisá más tarde para ver nuevas clases programadas.</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="classes-list">
-            <div className="classes-list__grid">
+        <div className="class-table-container">
+            <ClassTableHeader />
+            <div className="class-table">
                 {classes.map((classItem) => (
-                    <ClassCard
-                        key={classItem.id}
-                        classData={classItem}
-                        onViewDetails={(classId) => onViewClass(classItem)}
-                    />
+                    <ClassRow key={classItem.id} classItem={classItem} onViewDetails={onViewClass} />
                 ))}
             </div>
+
+            {/* Paginación */}
+            {onPageChange && <Pagination currentPage={currentPage} hasNextPage={hasNextPage || false} onPageChange={onPageChange} />}
         </div>
     );
 };

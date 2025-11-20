@@ -1,6 +1,6 @@
-/* ReserveRow Component Styles */
+/* ClassRow Component Styles */
 
-.reserve-row {
+.class-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -12,31 +12,31 @@
     border: 2px solid;
 }
 
-.reserve-row.pending {
+.class-row.pending {
     border-color: #60a5fa;
     background-color: #dbeafe;
 }
 
-.reserve-row.confirmed {
+.class-row.confirmed {
     border-color: #238744;
     background-color: #e1f3ea;
 }
 
-.reserve-row.completed {
+.class-row.completed {
     border-color: #60a5fa;
 }
 
-.reserve-row.cancelled {
+.class-row.cancelled {
     background-color: #fdeaea;
     border-color: #b91c1c;
 }
 
-.reserve-row:hover {
+.class-row:hover {
     transform: scale(1.01);
 }
 
-/* Reserve Columns */
-.reserve-col {
+/* Class Columns */
+.class-col {
     flex: 1;
     text-align: center;
     font-size: 0.875rem;
@@ -44,35 +44,35 @@
     color: black;
 }
 
-.reserve-col-date,
-.reserve-col-time,
-.reserve-col-court,
-.reserve-col-user,
-.reserve-col-trainer,
-.reserve-col-price,
-.reserve-col-status {
+.class-col-date,
+.class-col-time,
+.class-col-court,
+.class-col-user,
+.class-col-affair,
+.class-col-price,
+.class-col-status {
     text-align: start;
 }
 
-.reserve-col span {
+.class-col span {
     display: block;
     word-break: break-word;
     width: fit-content;
 }
 
-.reserve-col-date {
+.class-col-date {
     flex: 0.9;
 }
 
-.reserve-col-time {
+.class-col-time {
     flex: 0.9;
 }
 
-.reserve-col-court {
+.class-col-court {
     flex: 0.8;
 }
 
-.reserve-court-tag {
+.class-court-tag {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -86,29 +86,30 @@
     letter-spacing: 0.02em;
 }
 
-.reserve-col-user {
+.class-col-user {
     flex: 1;
 }
 
-.reserve-col-trainer {
+.class-col-affair {
     flex: 1;
 }
 
-.reserve-col-price {
+.class-col-price {
     flex: 0.8;
     font-weight: 600;
     color: #238744;
 }
 
-.reserve-col-status {
+.class-col-status {
     flex: 0.9;
 }
 
-.reserve-col-actions {
-    flex: 1;
+.class-col-actions {
+    flex: 0.6;
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
+    padding-right: 0.625rem;
 }
 
 /* Status Badge */
@@ -135,13 +136,7 @@
 }
 
 /* Action Buttons */
-.reserve-col-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.reserve-action-btn {
+.class-action-btn {
     border: none;
     border-radius: 3px;
     cursor: pointer;
@@ -153,59 +148,39 @@
     align-items: center;
     justify-content: center;
     background-color: transparent;
-    min-width: auto;
 }
 
-.reserve-action-btn i {
+.class-action-btn i {
     font-size: 1.125rem;
     transition: all 0.2s ease;
 }
 
-.reserve-action-btn.approve i {
-    color: #238744;
-}
-
-.reserve-action-btn.approve:hover i {
-    color: #1a5c32;
-    transform: scale(1.1);
-}
-
-.reserve-action-btn.reject i {
-    color: #b91c1c;
-}
-
-.reserve-action-btn.reject:hover i {
-    color: #7f1515;
-    transform: scale(1.1);
-}
-
-.reserve-action-btn.cancel i {
-    color: inherit;
-}
-
-.reserve-action-btn.cancel:hover i {
-    transform: scale(1.05);
-}
-
-.reserve-action-btn.cancel {
-    color: #092747;
-    transition: all 0.2s ease;
-}
-
-.reserve-action-btn.cancel:hover {
-    transform: translateY(-1px);
-}
-
-.reserve-action-btn.cancel:focus-visible {
-    outline: 2px solid rgba(9, 39, 71, 0.35);
-    outline-offset: 2px;
-}
-
-.reserve-action-btn.details i {
+.class-action-btn.details i {
     color: #092747;
 }
 
-.reserve-action-btn.details:hover i {
-    color: #238744;
-    transform: scale(1.1);
+.class-action-btn.details:hover i {
+    /* color: #238744; */
+    transform: scale(1.2);
+}
+
+.class-action-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Spinner dentro del botón */
+.btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(9, 39, 71, 0.2);
+    border-top-color: #238744;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }

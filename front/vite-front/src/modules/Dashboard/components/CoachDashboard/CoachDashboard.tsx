@@ -87,76 +87,66 @@ const CoachDashboard: React.FC = () => {
             case 'dashboard':
             default:
                 return (
-                    <div className="main-dashboard-container">
-                        <div className="page-header">
-                            <h3 className="page-title">Panel de Entrenador</h3>
-                            <hr className="title-underline" />
+                    <div className="dashboard-home">
+                        <div className="dashboard-header">
+                            <div className="dashboard-header-content">
+                                <h2 className="dashboard-title">Panel de Entrenador</h2>
+                                <span className="dashboard-subtitle">Resumen de tu actividad</span>
+                            </div>
                         </div>
 
-                        {isLoading ? (
-                            <div className="loading-container">
-                                <div className="loading-spinner"></div>
-                                <p>Cargando datos...</p>
+                        <div className="stats-grid">
+                            <div className="stat-card">
+                                <div className="stat-icon-wrapper">
+                                    <i className="bi bi-calendar-check stat-icon"></i>
+                                </div>
+                                <div className="stat-info">
+                                    <p className="stat-label">Clases Programadas</p>
+                                    <p className="stat-value">{stats.upcomingClasses}</p>
+                                </div>
                             </div>
-                        ) : (
-                            <>
-                                <div className="stats-grid">
-                                    <div className="stat-card">
-                                        <div className="stat-card-content">
-                                            <div className="stat-info">
-                                                <p className="stat-label">Clases Programadas</p>
-                                                <p className="stat-value">{stats.upcomingClasses}</p>
-                                            </div>
-                                            <div className="stat-icon">
-                                                <span className="stat-icon-emoji">📅</span>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div className="stat-card">
-                                        <div className="stat-card-content">
-                                            <div className="stat-info">
-                                                <p className="stat-label">Alumnos Activos</p>
-                                                <p className="stat-value">{stats.totalStudents}</p>
-                                            </div>
-                                            <div className="stat-icon">
-                                                <span className="stat-icon-emoji">👥</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="stat-card">
-                                        <div className="stat-card-content">
-                                            <div className="stat-info">
-                                                <p className="stat-label">Clases Este Mes</p>
-                                                <p className="stat-value">{stats.monthlyClasses}</p>
-                                            </div>
-                                            <div className="stat-icon">
-                                                <span className="stat-icon-emoji">🏆</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div className="stat-card">
+                                <div className="stat-icon-wrapper">
+                                    <i className="bi bi-people stat-icon"></i>
                                 </div>
-
-                                <div className="info-card">
-                                    <h4 className="info-title">Bienvenido, {coachProfile?.user.first_name}</h4>
-                                    <p className="info-text">
-                                        Gestiona tus clases programadas, horarios de disponibilidad y la información de tus alumnos. Mantén actualizada tu agenda y comunica cualquier cambio
-                                        a tus estudiantes.
-                                    </p>
-                                    <div className="quick-actions">
-                                        <button className="quick-action-btn" onClick={() => setActiveSection('mis-clases')}>
-                                            <i className="bi bi-calendar-check"></i>
-                                            Ver Clases
-                                        </button>
-                                        <button className="quick-action-btn" onClick={() => setActiveSection('horarios')}>
-                                            <i className="bi bi-clock"></i>
-                                            Gestionar Horarios
-                                        </button>
-                                    </div>
+                                <div className="stat-info">
+                                    <p className="stat-label">Alumnos Activos</p>
+                                    <p className="stat-value">{stats.totalStudents}</p>
                                 </div>
-                            </>
-                        )}
+                            </div>
+
+                            <div className="stat-card">
+                                <div className="stat-icon-wrapper">
+                                    <i className="bi bi-trophy stat-icon"></i>
+                                </div>
+                                <div className="stat-info">
+                                    <p className="stat-label">Clases Este Mes</p>
+                                    <p className="stat-value">{stats.monthlyClasses}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="welcome-card">
+                            <div className="welcome-header">
+                                <i className="bi bi-hand-wave welcome-icon"></i>
+                                <h3 className="welcome-title">Bienvenido, {coachProfile?.user.first_name}</h3>
+                            </div>
+                            <p className="welcome-text">
+                                Gestiona tus clases programadas, horarios de disponibilidad y la información de tus alumnos. Mantén actualizada tu agenda y comunica cualquier cambio a tus
+                                estudiantes.
+                            </p>
+                            <div className="quick-actions">
+                                <button className="quick-action-btn" onClick={() => setActiveSection('mis-clases')}>
+                                    <i className="bi bi-calendar-check"></i>
+                                    Ver Clases
+                                </button>
+                                <button className="quick-action-btn" onClick={() => setActiveSection('horarios')}>
+                                    <i className="bi bi-clock"></i>
+                                    Gestionar Horarios
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 );
         }
