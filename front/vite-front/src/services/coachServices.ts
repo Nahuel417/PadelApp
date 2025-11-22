@@ -248,14 +248,14 @@ export const getCoachStats = async (coachId: string) => {
             console.warn('getCoachStats - Error loading upcoming classes:', upcomingError);
         }
 
-        // Alumnos únicos
-        const { data: students, error: studentsError } = await supabase.from('reservations').select('user_id').eq('coach_id', coachId).in('status', ['confirmed', 'completed']);
+        // Ingresos totales (clases confirmadas y completadas)
+        const { data: revenueData, error: revenueError } = await supabase.from('reservations').select('total_amount').eq('coach_id', coachId).in('status', ['confirmed', 'completed']);
 
-        if (studentsError) {
-            console.warn('getCoachStats - Error loading students:', studentsError);
+        if (revenueError) {
+            console.warn('getCoachStats - Error loading revenue:', revenueError);
         }
 
-        const uniqueStudents = new Set(students?.map((s) => s.user_id) || []).size;
+        const totalRevenue = revenueData?.reduce((acc, r) => acc + (r.total_amount || 0), 0) || 0;
 
         // Clases completadas este mes
         const currentMonth = new Date();
@@ -273,7 +273,7 @@ export const getCoachStats = async (coachId: string) => {
 
         const stats = {
             upcomingClasses: upcomingClasses?.length || 0,
-            totalStudents: uniqueStudents,
+            totalRevenue: totalRevenue,
             monthlyClasses: monthlyClasses?.length || 0,
         };
 
@@ -284,10 +284,28 @@ export const getCoachStats = async (coachId: string) => {
         // Retornar estadísticas por defecto en caso de error
         return {
             upcomingClasses: 0,
-            totalStudents: 0,
+            totalRevenue: 0,
             monthlyClasses: 0,
         };
     }
+};
+
+/**
+ * Obtener datos de clases para métricas (últimos 6 meses)
+ */
+export const getCoachMetricsData = async (coachId: string) => {
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+    const { data, error } = await supabase
+        .from('reservations')
+        .select('reservation_date, status, total_amount')
+        .eq('coach_id', coachId)
+        .gte('reservation_date', sixMonthsAgo.toISOString().split('T')[0])
+        .order('reservation_date', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
 };
 
 /**

@@ -187,27 +187,42 @@
     display: none;
 }
 
-/* Botón Salir del Dashboard */
+/* Sidebar Footer */
+.sidebar-footer {
+    margin-top: auto;
+    padding: 1rem 1rem 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    border-top: 1px solid #e5e7eb;
+    background-color: white;
+}
+
+.sidebar.collapsed .sidebar-footer {
+    padding: 1rem 0.5rem;
+}
+
+/* Botón Salir del Dashboard y Logout */
 .exit-dashboard-btn {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 20px 16px 8px 16px;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.625rem;
     border-radius: 8px;
     border: 2px solid rgba(128, 128, 128, 0.4);
     background-color: #fff;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: calc(100% - 2rem);
+    width: 100%;
+    margin: 0;
 }
 
 .sidebar.collapsed .exit-dashboard-btn {
     justify-content: center;
-    padding: 6px 0;
-    margin: 1.5rem 0.5rem 0.5rem 0.5rem;
-    width: calc(100% - 1rem);
+    padding: 0.5rem;
+    width: 100%;
     gap: 0;
+    margin: 0;
 }
 
 .exit-dashboard-btn:hover {
@@ -338,4 +353,15 @@
     .sidebar-toggle {
         display: none;
     }
+}
+
+/* Logout Button Specifics */
+.exit-dashboard-btn.logout-btn:hover {
+    border-color: #dc2626;
+    background-color: #fee2e2;
+}
+
+.exit-dashboard-btn.logout-btn:hover .exit-dashboard-label,
+.exit-dashboard-btn.logout-btn:hover .exit-dashboard-icon i {
+    color: #dc2626;
 }

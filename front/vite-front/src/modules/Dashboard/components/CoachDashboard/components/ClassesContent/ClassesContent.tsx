@@ -135,6 +135,13 @@ const ClassesContent: React.FC<ClassesContentProps> = ({ coachId }) => {
                 onFilterChange={handleFilterChange}
             />
 
+            <div className="info-notice">
+                <i className="bi bi-info-circle-fill"></i>
+                <p>
+                    Por defecto se muestran las <strong>clases futuras</strong>. Para ver clases anteriores, utilizá el filtro de fecha seleccionando el día específico que deseás consultar.
+                </p>
+            </div>
+
             <ClassesList classes={classes} isLoading={isLoading} onViewClass={handleViewClass} currentPage={currentPage} hasNextPage={hasNextPage} onPageChange={handlePageChange} />
 
             <ClassDetailsModal isOpen={isModalOpen} classDetails={selectedClass} onClose={handleCloseModal} />

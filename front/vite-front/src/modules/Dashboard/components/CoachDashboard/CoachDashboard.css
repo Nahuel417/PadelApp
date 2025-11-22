@@ -99,74 +99,6 @@
     line-height: 1;
 }
 
-/* Welcome Card */
-.welcome-card {
-    background: white;
-    border: 1px solid rgba(9, 39, 71, 0.08);
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-}
-
-.welcome-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.welcome-icon {
-    font-size: 1.5rem;
-    color: #238744;
-}
-
-.welcome-title {
-    color: #092747;
-    font-weight: 700;
-    font-size: 1.25rem;
-    margin: 0;
-}
-
-.welcome-text {
-    color: rgba(9, 39, 71, 0.75);
-    line-height: 1.6;
-    margin: 0 0 1.5rem 0;
-    font-size: 0.95rem;
-}
-
-/* Quick Actions */
-.quick-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.quick-action-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    background: #238744;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-}
-
-.quick-action-btn:hover {
-    background: #1f7a3a;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(35, 135, 68, 0.3);
-}
-
-.quick-action-btn i {
-    font-size: 1rem;
-}
-
 /* Loading States */
 .loading-container {
     display: flex;
@@ -253,23 +185,6 @@
 
     .stat-value {
         font-size: 1.75rem;
-    }
-
-    .welcome-card {
-        padding: 1.5rem;
-    }
-
-    .welcome-title {
-        font-size: 1.1rem;
-    }
-
-    .quick-actions {
-        flex-direction: column;
-    }
-
-    .quick-action-btn {
-        justify-content: center;
-        width: 100%;
     }
 }
 

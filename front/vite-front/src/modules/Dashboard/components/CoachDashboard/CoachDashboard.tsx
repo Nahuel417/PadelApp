@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../DashboardLayout';
 import { useUserStore } from '../../../../store/userStore';
-import { getCoachProfile, getCoachStats, CoachProfile } from '../../../../services/coachServices';
+import { getCoachProfile, getCoachStats, getCoachMetricsData, CoachProfile } from '../../../../services/coachServices';
 import ClassesContent from './components/ClassesContent/ClassesContent';
 import ProfileContent from './components/ProfileContent/ProfileContent';
 import ScheduleContent from './components/ScheduleContent/ScheduleContent';
+import CoachMetricsSection from './components/CoachMetricsSection/CoachMetricsSection';
 import './CoachDashboard.css';
 
 const CoachDashboard: React.FC = () => {
@@ -13,9 +14,10 @@ const CoachDashboard: React.FC = () => {
     const [coachProfile, setCoachProfile] = useState<CoachProfile | null>(null);
     const [stats, setStats] = useState({
         upcomingClasses: 0,
-        totalStudents: 0,
+        totalRevenue: 0,
         monthlyClasses: 0,
     });
+    const [metricsData, setMetricsData] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -31,6 +33,10 @@ const CoachDashboard: React.FC = () => {
                 const coachStats = await getCoachStats(profile.id);
                 console.log('CoachDashboard - Stats loaded:', coachStats);
                 setStats(coachStats);
+
+                const metrics = await getCoachMetricsData(profile.id);
+                console.log('CoachDashboard - Metrics loaded:', metrics);
+                setMetricsData(metrics);
             } catch (error) {
                 console.error('Error loading coach data:', error);
                 setError(error instanceof Error ? error.message : 'Error desconocido al cargar datos del entrenador');
@@ -108,11 +114,11 @@ const CoachDashboard: React.FC = () => {
 
                             <div className="stat-card">
                                 <div className="stat-icon-wrapper">
-                                    <i className="bi bi-people stat-icon"></i>
+                                    <i className="bi bi-cash-coin stat-icon"></i>
                                 </div>
                                 <div className="stat-info">
-                                    <p className="stat-label">Alumnos Activos</p>
-                                    <p className="stat-value">{stats.totalStudents}</p>
+                                    <p className="stat-label">Ingresos Totales</p>
+                                    <p className="stat-value">${stats.totalRevenue.toFixed(2)}</p>
                                 </div>
                             </div>
 
@@ -127,26 +133,7 @@ const CoachDashboard: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="welcome-card">
-                            <div className="welcome-header">
-                                <i className="bi bi-hand-wave welcome-icon"></i>
-                                <h3 className="welcome-title">Bienvenido, {coachProfile?.user.first_name}</h3>
-                            </div>
-                            <p className="welcome-text">
-                                Gestiona tus clases programadas, horarios de disponibilidad y la información de tus alumnos. Mantén actualizada tu agenda y comunica cualquier cambio a tus
-                                estudiantes.
-                            </p>
-                            <div className="quick-actions">
-                                <button className="quick-action-btn" onClick={() => setActiveSection('mis-clases')}>
-                                    <i className="bi bi-calendar-check"></i>
-                                    Ver Clases
-                                </button>
-                                <button className="quick-action-btn" onClick={() => setActiveSection('horarios')}>
-                                    <i className="bi bi-clock"></i>
-                                    Gestionar Horarios
-                                </button>
-                            </div>
-                        </div>
+                        <CoachMetricsSection metricsData={metricsData} isLoading={isLoading} />
                     </div>
                 );
         }
