@@ -1,4 +1,4 @@
-.courts-header {
+.dashboard-home-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -11,20 +11,20 @@
     margin-bottom: 2rem;
 }
 
-.courts-header-content {
+.dashboard-home-header-content {
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
 }
 
-.courts-header-title {
+.dashboard-home-header-title {
     margin: 0;
     font-size: 1.65rem;
     color: #092747;
     font-weight: 700;
 }
 
-.courts-header-caption {
+.dashboard-home-header-caption {
     font-size: 0.85rem;
     color: rgba(9, 39, 71, 0.6);
     text-transform: uppercase;
@@ -32,19 +32,13 @@
     font-weight: 600;
 }
 
-.courts-header-right {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.courts-header-stats {
+.dashboard-home-header-stats {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-.courts-header-stat {
+.dashboard-home-header-stat {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
@@ -56,18 +50,18 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.courts-header-stat:hover {
+.dashboard-home-header-stat:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(9, 39, 71, 0.12);
 }
 
-.courts-header-stat-value {
+.dashboard-home-header-stat-value {
     font-size: 1.4rem;
     font-weight: 700;
     color: #092747;
 }
 
-.courts-header-stat-label {
+.dashboard-home-header-stat-label {
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -76,46 +70,54 @@
 }
 
 /* Colores específicos */
-.courts-header-stat--total .courts-header-stat-value {
-    color: #092747;
+.dashboard-home-header-stat--reservas .dashboard-home-header-stat-value,
+.dashboard-home-header-stat--reservations .dashboard-home-header-stat-value {
+    color: #238744; /* Verde */
 }
 
-.courts-header-stat--active .courts-header-stat-value {
-    color: #238744;
+.dashboard-home-header-stat--usuarios .dashboard-home-header-stat-value,
+.dashboard-home-header-stat--users .dashboard-home-header-stat-value {
+    color: #092747; /* Azul oscuro */
 }
 
-.courts-header-stat--inactive .courts-header-stat-value {
-    color: #b91c1c;
+.dashboard-home-header-stat--canchas .dashboard-home-header-stat-value,
+.dashboard-home-header-stat--courts .dashboard-home-header-stat-value {
+    color: #238744; /* Verde */
+}
+
+.dashboard-home-header-stat--entrenadores .dashboard-home-header-stat-value,
+.dashboard-home-header-stat--coaches .dashboard-home-header-stat-value {
+    color: #2563eb; /* Azul brillante */
 }
 
 /* Responsive */
 @media (max-width: 960px) {
-    .courts-header {
+    .dashboard-home-header {
         flex-direction: column;
         align-items: flex-start;
     }
 
-    .courts-header-stats {
+    .dashboard-home-header-stats {
         width: 100%;
         flex-wrap: wrap;
         gap: 0.75rem;
     }
 
-    .courts-header-stat {
+    .dashboard-home-header-stat {
         flex: 1 1 140px;
     }
 }
 
 @media (max-width: 640px) {
-    .courts-header {
+    .dashboard-home-header {
         padding: 1.5rem;
     }
 
-    .courts-header-title {
+    .dashboard-home-header-title {
         font-size: 1.45rem;
     }
 
-    .courts-header-caption {
+    .dashboard-home-header-caption {
         font-size: 0.75rem;
     }
 }

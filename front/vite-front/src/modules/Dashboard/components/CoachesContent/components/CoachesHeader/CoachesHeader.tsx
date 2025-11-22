@@ -8,38 +8,29 @@ export interface CoachesHeaderProps {
     onAddCoach?: () => void;
 }
 
-export const CoachesHeader: React.FC<CoachesHeaderProps> = ({
-    title,
-    totalCoaches,
-    availableCoaches
-}) => {
+const formatCount = (value: number): string => new Intl.NumberFormat('es-AR').format(value);
+
+export const CoachesHeader: React.FC<CoachesHeaderProps> = ({ title, totalCoaches, availableCoaches }) => {
+    const metrics = [
+        { id: 'total', label: 'Total', value: totalCoaches },
+        { id: 'available', label: 'Disponibles', value: availableCoaches },
+        { id: 'unavailable', label: 'No Disponibles', value: totalCoaches - availableCoaches },
+    ];
+
     return (
         <div className="coaches-header">
-            <div className="coaches-header__info">
-                <h1 className="coaches-header__title">{title}</h1>
-                <div className="coaches-header__stats">
-                    <div className="stat-item">
-                        <span className="stat-value">{totalCoaches}</span>
-                        <span className="stat-label">Total</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="stat-value active">{availableCoaches}</span>
-                        <span className="stat-label">Disponibles</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="stat-value inactive">{totalCoaches - availableCoaches}</span>
-                        <span className="stat-label">No disponibles</span>
-                    </div>
-                </div>
+            <div className="coaches-header-content">
+                <h2 className="coaches-header-title">{title}</h2>
+                <span className="coaches-header-caption">Gestión de equipo</span>
             </div>
-            <div className="coaches-header__note">
-                <div className="info-card">
-                    <i className="bi bi-info-circle"></i>
-                    <div className="info-content">
-                        <p className="info-title">Gestión de Entrenadores</p>
-                        <p className="info-text">Para agregar o quitar entrenadores, accede a la sección de <strong>Usuarios</strong></p>
+
+            <div className="coaches-header-stats" role="list">
+                {metrics.map((metric) => (
+                    <div key={metric.id} className={`coaches-header-stat coaches-header-stat--${metric.id}`} role="listitem">
+                        <span className="coaches-header-stat-value">{formatCount(metric.value)}</span>
+                        <span className="coaches-header-stat-label">{metric.label}</span>
                     </div>
-                </div>
+                ))}
             </div>
         </div>
     );

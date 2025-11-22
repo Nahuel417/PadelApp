@@ -51,6 +51,7 @@
     padding: 1.75rem 2rem;
     border: 1px solid rgba(9, 39, 71, 0.08);
     box-shadow: 0 10px 20px rgba(9, 39, 71, 0.08);
+    height: fit-content;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 

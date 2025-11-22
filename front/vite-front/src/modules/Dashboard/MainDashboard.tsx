@@ -1,16 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DashboardLayout from './DashboardLayout';
 import ReservesContent from './components/ReservesContent/ReservesContent';
 import UsersContent from './components/UsersContent/UsersContent';
 import CourtsContent from './components/CourtsContent/CourtsContent';
 import CoachesContent from './components/CoachesContent/CoachesContent';
+import SettingsContent from './components/SettingsContent/SettingsContent';
+import { DashboardHomeHeader } from './components/DashboardHomeHeader/DashboardHomeHeader';
+import RevenueChart from './components/Charts/RevenueChart';
+import ReservationsStatusChart from './components/Charts/ReservationsStatusChart';
+import PopularTimesChart from './components/Charts/PopularTimesChart';
+import './components/Charts/Charts.css';
 import './MainDashboard.css';
+import { useUserStore } from '../../store/userStore';
+import { useDashboardStore } from '../../store/dashboardStore';
+import { UserRole } from '../../utils/enums/roles.enum';
 
 const MainDashboard: React.FC = () => {
-    // TODO: Obtener estos datos del estado global o contexto
-    const userRole = 'admin'; // Puede ser 'admin', 'coach', 'superadmin'
-    const userName = 'Juan Pérez';
+    const user = useUserStore((state) => state.userActive);
+    const { stats, chartData, fetchDashboardData, loading } = useDashboardStore();
+
+    // Mapeo de rol para el layout
+    const getUserRoleString = (roleId?: number): 'superadmin' | 'admin' | 'coach' => {
+        switch (roleId) {
+            case UserRole.SUPERADMIN:
+                return 'superadmin';
+            case UserRole.ADMIN:
+                return 'admin';
+            case UserRole.COACH:
+                return 'coach';
+            default:
+                return 'admin';
+        }
+    };
+
+    const userRole = getUserRoleString(user?.role_id);
+    const userName = user ? `${user.first_name} ${user.last_name}` : 'Usuario';
+
     const [activeSection, setActiveSection] = useState('dashboard');
+
+    useEffect(() => {
+        fetchDashboardData();
+    }, [fetchDashboardData]);
+
+    const dashboardMetrics = [
+        { id: 'users', label: 'Usuarios Totales', value: stats.users },
+        { id: 'reservations', label: 'Reservas Activas', value: stats.reservations },
+        { id: 'courts', label: 'Canchas Disp.', value: stats.courts },
+        { id: 'coaches', label: 'Entrenadores', value: stats.coaches },
+    ];
 
     const renderContent = () => {
         switch (activeSection) {
@@ -22,59 +59,18 @@ const MainDashboard: React.FC = () => {
                 return <CourtsContent userRole={userRole} />;
             case 'entrenadores':
                 return <CoachesContent userRole={userRole} />;
+            case 'configuracion':
+                return <SettingsContent />;
             case 'dashboard':
             default:
                 return (
                     <div className="main-dashboard-container">
-                        <div className="page-header">
-                            <h3 className="page-title">Panel Principal</h3>
-                            <hr className="title-underline" />
-                        </div>
+                        <DashboardHomeHeader title="Panel Principal" metrics={dashboardMetrics} />
 
-                        <div className="stats-grid">
-                            {/* Estadísticas Cards */}
-                            <div className="stat-card">
-                                <div className="stat-card-content">
-                                    <div className="stat-info">
-                                        <p className="stat-label">Reservas Activas</p>
-                                        <p className="stat-value">24</p>
-                                    </div>
-                                    <div className="stat-icon">
-                                        <span className="stat-icon-emoji">📅</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="stat-card">
-                                <div className="stat-card-content">
-                                    <div className="stat-info">
-                                        <p className="stat-label">Usuarios Totales</p>
-                                        <p className="stat-value">156</p>
-                                    </div>
-                                    <div className="stat-icon">
-                                        <span className="stat-icon-emoji">👥</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="stat-card">
-                                <div className="stat-card-content">
-                                    <div className="stat-info">
-                                        <p className="stat-label">Canchas Disponibles</p>
-                                        <p className="stat-value">8</p>
-                                    </div>
-                                    <div className="stat-icon">
-                                        <span className="stat-icon-emoji">🏓</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="welcome-card">
-                            <h4 className="welcome-title">Bienvenido al Panel de Administración</h4>
-                            <p className="welcome-text">
-                                Desde aquí puedes gestionar todas las reservas, usuarios y canchas de la plataforma. Utiliza el menú lateral para navegar entre las diferentes secciones.
-                            </p>
+                        <div className="charts-grid">
+                            <RevenueChart categories={chartData.revenue.categories} data={chartData.revenue.data} />
+                            <ReservationsStatusChart series={chartData.reservationStatus.series} />
+                            <PopularTimesChart categories={chartData.popularTimes.categories} data={chartData.popularTimes.data} />
                         </div>
                     </div>
                 );

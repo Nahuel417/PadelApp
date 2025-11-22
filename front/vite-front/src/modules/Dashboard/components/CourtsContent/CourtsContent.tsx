@@ -48,100 +48,106 @@ const CourtsContent: React.FC<CourtsContentProps> = ({ userRole = 'admin' }) => 
         setIsModalOpen(true);
     }, []);
 
-    const handleToggleStatus = useCallback(async (court: Court) => {
-        const newStatus = !court.is_active;
-        const actionText = newStatus ? 'activar' : 'desactivar';
-        
-        Swal({
-            title: `¿${actionText.charAt(0).toUpperCase() + actionText.slice(1)} cancha?`,
-            text: `¿Estás seguro de que deseas ${actionText} la cancha "${court.name}"?`,
-            icon: 'warning',
-            buttons: {
-                cancel: {
-                    text: 'Cancelar',
-                    value: false,
-                    visible: true,
-                },
-                confirm: {
-                    text: `Sí, ${actionText}`,
-                    value: true,
-                    visible: true,
-                },
-            },
-            dangerMode: !newStatus,
-        }).then(async (willToggle: boolean) => {
-            if (willToggle) {
-                try {
-                    await toggleCourtStatus(court.id, newStatus);
-                    await fetchCourts();
-                    Swal({
-                        title: newStatus ? 'Activada' : 'Desactivada',
-                        text: `La cancha ha sido ${newStatus ? 'activada' : 'desactivada'} exitosamente.`,
-                        icon: 'success',
-                        timer: 2000,
-                    });
-                } catch (error) {
-                    console.error('Error toggling court status:', error);
-                    Swal({
-                        title: 'Error',
-                        text: `No se pudo ${actionText} la cancha. Intenta de nuevo.`,
-                        icon: 'error',
-                    });
-                }
-            }
-        });
-    }, [fetchCourts]);
+    const handleToggleStatus = useCallback(
+        async (court: Court) => {
+            const newStatus = !court.is_active;
+            const actionText = newStatus ? 'activar' : 'desactivar';
 
-    const handleDeleteCourt = useCallback(async (court: Court) => {
-        Swal({
-            title: '¿Eliminar cancha?',
-            text: `¿Estás seguro de que deseas eliminar la cancha "${court.name}"? Esta acción no se puede deshacer.`,
-            icon: 'warning',
-            buttons: {
-                cancel: {
-                    text: 'Cancelar',
-                    value: false,
-                    visible: true,
+            Swal({
+                title: `¿${actionText.charAt(0).toUpperCase() + actionText.slice(1)} cancha?`,
+                text: `¿Estás seguro de que deseas ${actionText} la cancha "${court.name}"?`,
+                icon: 'warning',
+                buttons: {
+                    cancel: {
+                        text: 'Cancelar',
+                        value: false,
+                        visible: true,
+                    },
+                    confirm: {
+                        text: `Sí, ${actionText}`,
+                        value: true,
+                        visible: true,
+                    },
                 },
-                confirm: {
-                    text: 'Sí, eliminar',
-                    value: true,
-                    visible: true,
-                },
-            },
-            dangerMode: true,
-        }).then(async (willDelete: boolean) => {
-            if (willDelete) {
-                try {
-                    await deleteCourt(court.id);
-                    await fetchCourts();
-                    Swal({
-                        title: 'Eliminada',
-                        text: 'La cancha ha sido eliminada exitosamente.',
-                        icon: 'success',
-                        timer: 2000,
-                    });
-                } catch (error: any) {
-                    console.error('Error deleting court:', error);
-                    
-                    // Verificar si es error de clave foránea
-                    if (error.code === '23503') {
+                dangerMode: !newStatus,
+            }).then(async (willToggle: boolean) => {
+                if (willToggle) {
+                    try {
+                        await toggleCourtStatus(court.id, newStatus);
+                        await fetchCourts();
                         Swal({
-                            title: 'No se puede eliminar',
-                            text: 'Esta cancha tiene reservas asociadas. Primero debes eliminar o cancelar las reservas vinculadas a esta cancha.',
-                            icon: 'warning',
+                            title: newStatus ? 'Activada' : 'Desactivada',
+                            text: `La cancha ha sido ${newStatus ? 'activada' : 'desactivada'} exitosamente.`,
+                            icon: 'success',
+                            timer: 2000,
                         });
-                    } else {
+                    } catch (error) {
+                        console.error('Error toggling court status:', error);
                         Swal({
                             title: 'Error',
-                            text: 'No se pudo eliminar la cancha. Intenta de nuevo.',
+                            text: `No se pudo ${actionText} la cancha. Intenta de nuevo.`,
                             icon: 'error',
                         });
                     }
                 }
-            }
-        });
-    }, [fetchCourts]);
+            });
+        },
+        [fetchCourts]
+    );
+
+    const handleDeleteCourt = useCallback(
+        async (court: Court) => {
+            Swal({
+                title: '¿Eliminar cancha?',
+                text: `¿Estás seguro de que deseas eliminar la cancha "${court.name}"? Esta acción no se puede deshacer.`,
+                icon: 'warning',
+                buttons: {
+                    cancel: {
+                        text: 'Cancelar',
+                        value: false,
+                        visible: true,
+                    },
+                    confirm: {
+                        text: 'Sí, eliminar',
+                        value: true,
+                        visible: true,
+                    },
+                },
+                dangerMode: true,
+            }).then(async (willDelete: boolean) => {
+                if (willDelete) {
+                    try {
+                        await deleteCourt(court.id);
+                        await fetchCourts();
+                        Swal({
+                            title: 'Eliminada',
+                            text: 'La cancha ha sido eliminada exitosamente.',
+                            icon: 'success',
+                            timer: 2000,
+                        });
+                    } catch (error: any) {
+                        console.error('Error deleting court:', error);
+
+                        // Verificar si es error de clave foránea
+                        if (error.code === '23503') {
+                            Swal({
+                                title: 'No se puede eliminar',
+                                text: 'Esta cancha tiene reservas asociadas. Primero debes eliminar o cancelar las reservas vinculadas a esta cancha.',
+                                icon: 'warning',
+                            });
+                        } else {
+                            Swal({
+                                title: 'Error',
+                                text: 'No se pudo eliminar la cancha. Intenta de nuevo.',
+                                icon: 'error',
+                            });
+                        }
+                    }
+                }
+            });
+        },
+        [fetchCourts]
+    );
 
     const handleCloseModal = useCallback(() => {
         setIsModalOpen(false);
@@ -154,7 +160,7 @@ const CourtsContent: React.FC<CourtsContentProps> = ({ userRole = 'admin' }) => 
     }, [fetchCourts, handleCloseModal]);
 
     // Calcular estadísticas
-    const activeCourts = courts.filter(court => court.is_active).length;
+    const activeCourts = courts.filter((court) => court.is_active).length;
     const totalCourts = courts.length;
 
     if (error) {
@@ -173,27 +179,18 @@ const CourtsContent: React.FC<CourtsContentProps> = ({ userRole = 'admin' }) => 
 
     return (
         <div className="courts-content">
-            <CourtsHeader 
-                title="Gestión de Canchas"
-                totalCourts={totalCourts}
-                activeCourts={activeCourts}
-                onAddCourt={handleAddCourt}
-            />
+            <CourtsHeader title="Gestión de Canchas" totalCourts={totalCourts} activeCourts={activeCourts} />
 
-            <CourtsList
-                courts={courts}
-                isLoading={isLoading}
-                onEditCourt={handleEditCourt}
-                onToggleStatus={handleToggleStatus}
-                onDeleteCourt={handleDeleteCourt}
-            />
+            <div className="courts-actions-bar">
+                <button className="courts-add-btn" onClick={handleAddCourt} type="button" aria-label="Agregar nueva cancha">
+                    <i className="bi bi-plus-lg"></i>
+                    <span>Nueva Cancha</span>
+                </button>
+            </div>
 
-            <CourtFormModal
-                isOpen={isModalOpen}
-                court={selectedCourt}
-                onClose={handleCloseModal}
-                onSaveSuccess={handleSaveSuccess}
-            />
+            <CourtsList courts={courts} isLoading={isLoading} onEditCourt={handleEditCourt} onToggleStatus={handleToggleStatus} onDeleteCourt={handleDeleteCourt} />
+
+            <CourtFormModal isOpen={isModalOpen} court={selectedCourt} onClose={handleCloseModal} onSaveSuccess={handleSaveSuccess} />
         </div>
     );
 };

@@ -5,43 +5,31 @@ export interface CourtsHeaderProps {
     title: string;
     totalCourts: number;
     activeCourts: number;
-    onAddCourt: () => void;
 }
 
-export const CourtsHeader: React.FC<CourtsHeaderProps> = ({
-    title,
-    totalCourts,
-    activeCourts,
-    onAddCourt
-}) => {
+const formatCount = (value: number): string => new Intl.NumberFormat('es-AR').format(value);
+
+export const CourtsHeader: React.FC<CourtsHeaderProps> = ({ title, totalCourts, activeCourts }) => {
+    const metrics = [
+        { id: 'total', label: 'Total', value: totalCourts },
+        { id: 'active', label: 'Activas', value: activeCourts },
+        { id: 'inactive', label: 'Inactivas', value: totalCourts - activeCourts },
+    ];
+
     return (
         <div className="courts-header">
-            <div className="courts-header__info">
-                <h1 className="courts-header__title">{title}</h1>
-                <div className="courts-header__stats">
-                    <div className="stat-item">
-                        <span className="stat-value">{totalCourts}</span>
-                        <span className="stat-label">Total</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="stat-value active">{activeCourts}</span>
-                        <span className="stat-label">Activas</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="stat-value inactive">{totalCourts - activeCourts}</span>
-                        <span className="stat-label">Inactivas</span>
-                    </div>
-                </div>
+            <div className="courts-header-content">
+                <h2 className="courts-header-title">{title}</h2>
+                <span className="courts-header-caption">Gestión de instalaciones</span>
             </div>
-            <div className="courts-header__actions">
-                <button 
-                    className="add-court-btn"
-                    onClick={onAddCourt}
-                    type="button"
-                >
-                    <i className="bi bi-plus-circle"></i>
-                    Agregar Cancha
-                </button>
+
+            <div className="courts-header-stats" role="list">
+                {metrics.map((metric) => (
+                    <div key={metric.id} className={`courts-header-stat courts-header-stat--${metric.id}`} role="listitem">
+                        <span className="courts-header-stat-value">{formatCount(metric.value)}</span>
+                        <span className="courts-header-stat-label">{metric.label}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );

@@ -216,7 +216,7 @@ export const fetchHorarios = async ({ affair, cancha, entrenador, fecha }) => {
         // En JS getDay() devuelve 0=Domingo, 1=Lunes... lo ajustamos a 1= Lunes, 7=Domingo
         const jsDay = fechaDate.getDay();
         const dayOfWeek = jsDay === 0 ? 7 : jsDay;
-        
+
         console.log('Debug fetchHorarios:', { fecha, jsDay, dayOfWeek, fechaDate });
 
         const { data: coachData, error: coachError } = await supabase

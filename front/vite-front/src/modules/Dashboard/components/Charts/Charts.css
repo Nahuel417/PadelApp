@@ -1,0 +1,84 @@
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    width: 100%; /* Ocupar todo el ancho */
+}
+
+.chart-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    min-width: 0; /* Prevenir overflow en grid items */
+}
+
+.chart-title {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.1rem;
+    color: #092747;
+    font-weight: 600;
+}
+
+/* Fix para Tooltips de ApexCharts */
+.apexcharts-tooltip {
+    background: #fff !important;
+    border-color: #e5e7eb !important;
+    color: #092747 !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.apexcharts-tooltip-title {
+    background: #f9fafb !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    font-family: inherit !important;
+    color: #092747 !important;
+}
+
+.apexcharts-tooltip-text {
+    color: #092747 !important;
+    font-family: inherit !important;
+}
+
+.apexcharts-tooltip-text-y-value,
+.apexcharts-tooltip-text-y-label,
+.apexcharts-tooltip-text-value,
+.apexcharts-tooltip-text-label {
+    color: #092747 !important;
+}
+
+.apexcharts-xaxistooltip {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    color: #092747 !important;
+    border-radius: 4px !important;
+}
+
+.apexcharts-xaxistooltip-text {
+    color: #092747 !important;
+    font-family: inherit !important;
+    font-weight: 600 !important;
+}
+
+.apexcharts-tooltip-series-group.apexcharts-active .apexcharts-tooltip-marker {
+    opacity: 1;
+}
+
+.apexcharts-text {
+    fill: #6b7280 !important;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .charts-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columnas en pantallas medianas */
+    }
+}
+
+@media (max-width: 768px) {
+    .charts-grid {
+        grid-template-columns: 1fr; /* 1 columna en móviles */
+    }
+}

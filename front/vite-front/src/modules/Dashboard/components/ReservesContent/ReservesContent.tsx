@@ -2,7 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import './ReservesContent.css';
 import Swal from 'sweetalert';
 import { ReservesContentProps, ReserveStatus, Reserve } from './types/types';
-import { filterReservesByStatus, countPendingReserves, sortReservesByDate } from './utils/reserveUtils';
+import { filterReservesByStatus, countPendingReserves, countCancelledReserves, countConfirmedReserves, sortReservesByDate } from './utils/reserveUtils';
 import { ReserveHeader, ReserveFilters, ReserveList, ReservesMetricsSection, ReserveDetailsModal } from './components';
 import { DateFilter } from '../../../../shared';
 import { useDashboardReserves } from '../../hooks/useDashboardReserves';
@@ -37,8 +37,10 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
         return reserves;
     }, [sortedReserves, selectedStatus, selectedDate]);
 
-    // Contar reservas pendientes
+    // Contar reservas
     const pendingCount = useMemo(() => countPendingReserves(sortedReserves), [sortedReserves]);
+    const cancelledCount = useMemo(() => countCancelledReserves(sortedReserves), [sortedReserves]);
+    const confirmedCount = useMemo(() => countConfirmedReserves(sortedReserves), [sortedReserves]);
 
     // Preparar métricas con reservas filtradas
     const metricsReserves = useMemo(() => filteredReserves.slice(0, 60), [filteredReserves]);
@@ -86,9 +88,7 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
 
             Swal({
                 title: '¿Cancelar reserva?',
-                text: `¿Estás seguro de que deseas cancelar esta reserva? ${
-                    reserve.status === 'confirmed' ? `Se restará $${reserve.total_amount?.toFixed(2) || '0.00'} del ingreso.` : ''
-                }`,
+                text: `¿Estás seguro de que deseas cancelar esta reserva? ${reserve.status === 'confirmed' ? `Se restará $${reserve.total_amount?.toFixed(2) || '0.00'} del ingreso.` : ''}`,
                 icon: 'warning',
                 buttons: {
                     cancel: {
@@ -155,16 +155,17 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
 
     return (
         <div className="reserves-content">
-            <ReserveHeader title="Panel de Reservas" totalReserves={sortedReserves.length} pendingReserves={pendingCount} />
+            <ReserveHeader
+                title="Panel de Reservas"
+                totalReserves={sortedReserves.length}
+                confirmedReserves={confirmedCount}
+                pendingReserves={pendingCount}
+                cancelledReserves={cancelledCount}
+            />
 
             <div className="reserves-filters-container">
                 <ReserveFilters selectedStatus={selectedStatus} onStatusChange={handleStatusChange} />
-                <DateFilter
-                    selectedDate={selectedDate || undefined}
-                    onDateChange={setSelectedDate}
-                    placeholder="Filtrar por fecha"
-                    className="reserves-date-filter"
-                />
+                <DateFilter selectedDate={selectedDate || undefined} onDateChange={setSelectedDate} placeholder="Filtrar por fecha" className="reserves-date-filter" />
             </div>
 
             <ReserveList
@@ -181,11 +182,7 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
 
             <ReservesMetricsSection reserves={metricsReserves} isLoading={isLoading} />
 
-            <ReserveDetailsModal
-                isOpen={isModalOpen}
-                reserve={selectedReserve}
-                onClose={handleCloseModal}
-            />
+            <ReserveDetailsModal isOpen={isModalOpen} reserve={selectedReserve} onClose={handleCloseModal} />
         </div>
     );
 };

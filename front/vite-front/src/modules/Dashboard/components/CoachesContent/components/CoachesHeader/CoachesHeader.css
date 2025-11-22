@@ -1,128 +1,115 @@
-/* Coaches Header Styles */
 .coaches-header {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.75rem 2rem;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    box-shadow: 0 10px 20px rgba(9, 39, 71, 0.08);
     margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.coaches-header__info {
+.coaches-header-content {
     display: flex;
     flex-direction: column;
+    gap: 0.35rem;
+}
+
+.coaches-header-title {
+    margin: 0;
+    font-size: 1.65rem;
+    color: #092747;
+    font-weight: 700;
+}
+
+.coaches-header-caption {
+    font-size: 0.85rem;
+    color: rgba(9, 39, 71, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+.coaches-header-stats {
+    display: flex;
+    align-items: center;
     gap: 1rem;
 }
 
-.coaches-header__title {
-    color: #092747;
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin: 0;
-}
-
-.coaches-header__stats {
-    display: flex;
-    gap: 2rem;
-}
-
-.stat-item {
+.coaches-header-stat {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    gap: 0.2rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    background: rgba(255, 255, 255, 0.95);
+    min-width: 120px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.stat-value {
-    font-size: 1.5rem;
+.coaches-header-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(9, 39, 71, 0.12);
+}
+
+.coaches-header-stat-value {
+    font-size: 1.4rem;
     font-weight: 700;
     color: #092747;
 }
 
-.stat-value.active {
+.coaches-header-stat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(9, 39, 71, 0.55);
+}
+
+/* Colores específicos */
+.coaches-header-stat--total .coaches-header-stat-value {
+    color: #092747;
+}
+
+.coaches-header-stat--available .coaches-header-stat-value {
     color: #238744;
 }
 
-.stat-value.inactive {
+.coaches-header-stat--unavailable .coaches-header-stat-value {
     color: #b91c1c;
 }
 
-.stat-label {
-    font-size: 0.875rem;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
-}
-
-.coaches-header__note {
-    display: flex;
-    align-items: center;
-}
-
-.info-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    background: linear-gradient(135deg, rgba(35, 135, 68, 0.1) 0%, rgba(9, 39, 71, 0.05) 100%);
-    border: 1px solid rgba(35, 135, 68, 0.2);
-    border-radius: 8px;
-    max-width: 500px;
-}
-
-.info-card i {
-    font-size: 1.25rem;
-    color: #238744;
-    flex-shrink: 0;
-    margin-top: 0.125rem;
-}
-
-.info-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.info-title {
-    margin: 0;
-    font-weight: 700;
-    color: #092747;
-    font-size: 0.95rem;
-}
-
-.info-text {
-    margin: 0;
-    font-size: 0.85rem;
-    color: #666;
-    line-height: 1.4;
-}
-
-.info-text strong {
-    color: #238744;
-    font-weight: 600;
-}
-
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 960px) {
     .coaches-header {
         flex-direction: column;
-        gap: 1.5rem;
-        align-items: stretch;
+        align-items: flex-start;
     }
 
-    .coaches-header__stats {
-        justify-content: space-around;
-    }
-
-    .coaches-header__note {
-        justify-content: center;
-    }
-
-    .info-card {
-        max-width: none;
+    .coaches-header-stats {
         width: 100%;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .coaches-header-stat {
+        flex: 1 1 140px;
+    }
+}
+
+@media (max-width: 640px) {
+    .coaches-header {
+        padding: 1.5rem;
+    }
+
+    .coaches-header-title {
+        font-size: 1.45rem;
+    }
+
+    .coaches-header-caption {
+        font-size: 0.75rem;
     }
 }
