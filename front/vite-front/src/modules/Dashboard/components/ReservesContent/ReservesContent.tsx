@@ -1,14 +1,18 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import './ReservesContent.css';
-import { ReservesContentProps, ReserveStatus } from './types/types';
-import { filterReservesByStatus, countPendingReserves, sortReservesByDate } from './utils/reserveUtils';
-import { ReserveHeader, ReserveFilters, ReserveList } from './components';
+import Swal from 'sweetalert';
+import { ReservesContentProps, ReserveStatus, Reserve } from './types/types';
+import { filterReservesByStatus, countPendingReserves, countCancelledReserves, countConfirmedReserves, sortReservesByDate } from './utils/reserveUtils';
+import { ReserveHeader, ReserveFilters, ReserveList, ReservesMetricsSection, ReserveDetailsModal } from './components';
 import { DateFilter } from '../../../../shared';
 import { useDashboardReserves } from '../../hooks/useDashboardReserves';
+import { cancelReservation } from '../../../../services/reservation';
 
 const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' }) => {
     const [selectedStatus, setSelectedStatus] = useState<ReserveStatus | 'all'>('all');
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [selectedReserve, setSelectedReserve] = useState<Reserve | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Hook personalizado para manejar estado de reservas del dashboard
     const { reserves: rawReserves, isLoading, error, hasNextPage, currentPage, onPageChange, refetch, setStatusFilter } = useDashboardReserves();
@@ -33,8 +37,13 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
         return reserves;
     }, [sortedReserves, selectedStatus, selectedDate]);
 
-    // Contar reservas pendientes
+    // Contar reservas
     const pendingCount = useMemo(() => countPendingReserves(sortedReserves), [sortedReserves]);
+    const cancelledCount = useMemo(() => countCancelledReserves(sortedReserves), [sortedReserves]);
+    const confirmedCount = useMemo(() => countConfirmedReserves(sortedReserves), [sortedReserves]);
+
+    // Preparar métricas con reservas filtradas
+    const metricsReserves = useMemo(() => filteredReserves.slice(0, 60), [filteredReserves]);
 
     // Handler para cambio de filtro de estado
     const handleStatusChange = useCallback(
@@ -74,16 +83,60 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
 
     const handleCancel = useCallback(
         async (id: string) => {
-            try {
-                console.log('Cancelar reserva:', id);
-                // TODO: Implementar lógica de cancelación con servicio
-                await refetch(); // Recargar datos después de la acción
-            } catch (error) {
-                console.error('Error al cancelar reserva:', error);
-            }
+            const reserve = rawReserves.find((r) => r.id === id);
+            if (!reserve) return;
+
+            Swal({
+                title: '¿Cancelar reserva?',
+                text: `¿Estás seguro de que deseas cancelar esta reserva? ${reserve.status === 'confirmed' ? `Se restará $${reserve.total_amount?.toFixed(2) || '0.00'} del ingreso.` : ''}`,
+                icon: 'warning',
+                buttons: {
+                    cancel: {
+                        text: 'No, mantener',
+                        value: false,
+                        visible: true,
+                    },
+                    confirm: {
+                        text: 'Sí, cancelar',
+                        value: true,
+                        visible: true,
+                    },
+                },
+                dangerMode: true,
+            }).then(async (willCancel: boolean) => {
+                if (willCancel) {
+                    try {
+                        await cancelReservation(id);
+                        await refetch();
+                        Swal({
+                            title: 'Cancelada',
+                            text: 'La reserva ha sido cancelada exitosamente.',
+                            icon: 'success',
+                            timer: 2000,
+                        });
+                    } catch (error) {
+                        console.error('Error al cancelar reserva:', error);
+                        Swal({
+                            title: 'Error',
+                            text: 'No se pudo cancelar la reserva. Intenta de nuevo.',
+                            icon: 'error',
+                        });
+                    }
+                }
+            });
         },
-        [refetch]
+        [rawReserves, refetch]
     );
+
+    const handleViewDetails = useCallback((reserve: Reserve) => {
+        setSelectedReserve(reserve);
+        setIsModalOpen(true);
+    }, []);
+
+    const handleCloseModal = useCallback(() => {
+        setIsModalOpen(false);
+        setSelectedReserve(null);
+    }, []);
 
     // Mostrar error si existe
     if (error) {
@@ -102,11 +155,17 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
 
     return (
         <div className="reserves-content">
-            <ReserveHeader title="Panel de Reservas" totalReserves={sortedReserves.length} pendingReserves={pendingCount} />
+            <ReserveHeader
+                title="Panel de Reservas"
+                totalReserves={sortedReserves.length}
+                confirmedReserves={confirmedCount}
+                pendingReserves={pendingCount}
+                cancelledReserves={cancelledCount}
+            />
 
             <div className="reserves-filters-container">
                 <ReserveFilters selectedStatus={selectedStatus} onStatusChange={handleStatusChange} />
-                <DateFilter selectedDate={selectedDate} onDateChange={setSelectedDate} placeholder="Filtrar por fecha" className="reserves-date-filter" />
+                <DateFilter selectedDate={selectedDate || undefined} onDateChange={setSelectedDate} placeholder="Filtrar por fecha" className="reserves-date-filter" />
             </div>
 
             <ReserveList
@@ -114,11 +173,16 @@ const ReservesContent: React.FC<ReservesContentProps> = ({ userRole = 'admin' })
                 onApprove={handleApprove}
                 onReject={handleReject}
                 onCancel={handleCancel}
+                onViewDetails={handleViewDetails}
                 isLoading={isLoading}
                 currentPage={currentPage}
                 hasNextPage={hasNextPage}
                 onPageChange={onPageChange}
             />
+
+            <ReservesMetricsSection reserves={metricsReserves} isLoading={isLoading} />
+
+            <ReserveDetailsModal isOpen={isModalOpen} reserve={selectedReserve} onClose={handleCloseModal} />
         </div>
     );
 };

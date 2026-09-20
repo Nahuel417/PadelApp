@@ -1,0 +1,265 @@
+.user-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background: #ffffff;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.user-row:hover,
+.user-row:focus-within {
+    transform: translateY(-1px);
+}
+
+.user-row--active {
+    border-color: #238744;
+}
+
+.user-row--inactive {
+    border-color: #b91c1c;
+}
+
+.user-row--pending {
+    border-color: #d48806;
+}
+
+.user-col-r {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+    position: relative;
+}
+
+.user-col-r span {
+    color: #092747;
+    font-size: 0.9rem;
+}
+
+.user-name {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.user-email {
+    color: rgba(9, 39, 71, 0.6);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.user-role-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border-radius: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: #092747;
+    color: #ffffff;
+    width: fit-content;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.user-role-chip--coach {
+    background: #238744;
+    color: #ffffff;
+}
+
+.user-role-chip--admin {
+    background: #d48806;
+    color: #ffffff;
+}
+
+.user-role-chip--superadmin {
+    background: #b91c1c;
+    color: #ffffff;
+}
+
+.user-manage-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid #238744;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.user-manage-button i {
+    font-size: 0.95rem;
+    color: #238744;
+}
+
+.user-manage-button:hover,
+.user-manage-button:focus {
+    background: #238744;
+}
+
+.user-manage-button:hover i {
+    color: #ffffff;
+}
+
+.user-delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    border: 1px solid #b91c1c;
+    background: transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.user-delete-button i {
+    font-size: 0.95rem;
+    color: #b91c1c;
+}
+
+.user-delete-button:hover,
+.user-delete-button:focus {
+    background: #b91c1c;
+}
+
+.user-delete-button:hover i,
+.user-delete-button:focus i {
+    color: #ffffff;
+}
+
+.user-delete-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: rgba(185, 28, 28, 0.08);
+}
+
+.user-col-name {
+    flex: 1.4;
+}
+
+.user-col-role {
+    flex: 1;
+}
+
+.user-col-status {
+    flex: 0.9;
+    background-color: transparent;
+}
+
+.user-col-status span {
+    font-size: 0.75rem;
+    width: fit-content;
+}
+
+.user-col-created {
+    flex: 0.9;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.user-col-actions {
+    flex: 0.7;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.user-col-email {
+    flex: 1.4;
+}
+
+@media (max-width: 960px) {
+    .user-row {
+        flex-wrap: wrap;
+        padding: 0.75rem 1rem;
+    }
+
+    .user-col-r {
+        flex: 1 1 48%;
+    }
+
+    .user-col-actions {
+        flex: 1 1 100%;
+        justify-content: flex-start;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 720px) {
+    .user-table-header {
+        display: none;
+    }
+
+    .user-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+        padding: 0.85rem 1rem;
+    }
+
+    .user-col-r {
+        flex: 1 1 100%;
+    }
+
+    .user-col-r::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: rgba(9, 39, 71, 0.6);
+        letter-spacing: 0.08em;
+    }
+
+    .user-col-role span,
+    .user-col-status span,
+    .user-col-created span {
+        font-size: 0.85rem;
+    }
+
+    .user-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .user-manage-button,
+    .user-delete-button {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-row {
+        padding: 0.75rem 0.85rem;
+    }
+
+    .user-col-r::before {
+        font-size: 0.65rem;
+    }
+
+    .user-col-email span {
+        word-break: break-word;
+    }
+
+    .user-actions {
+        gap: 0.6rem;
+    }
+}

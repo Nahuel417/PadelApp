@@ -9,8 +9,20 @@ export const formatDate = (dateString: string): string => {
     return date.toLocaleDateString('es-ES', {
         day: '2-digit',
         month: '2-digit',
-        year: 'numeric'
+        year: 'numeric',
     });
+};
+
+export const formatTime = (timeString: string): string => {
+    if (!timeString) return '--:--';
+    const [hours = '', minutes = ''] = timeString.split(':');
+    return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+};
+
+export const extractCourtNumber = (courtName: string): string => {
+    if (!courtName) return '—';
+    const match = courtName.match(/\d+/);
+    return match ? match[0] : courtName.trim();
 };
 
 /**
@@ -29,10 +41,24 @@ export const filterReservesByStatus = (reserves: Reserve[], status: ReserveStatu
 };
 
 /**
+ * Cuenta reservas confirmadas
+ */
+export const countConfirmedReserves = (reserves: Reserve[]): number => {
+    return reserves.filter((reserve) => reserve.status === 'confirmed').length;
+};
+
+/**
  * Cuenta reservas pendientes
  */
 export const countPendingReserves = (reserves: Reserve[]): number => {
     return reserves.filter((reserve) => reserve.status === 'pending').length;
+};
+
+/**
+ * Cuenta reservas canceladas
+ */
+export const countCancelledReserves = (reserves: Reserve[]): number => {
+    return reserves.filter((reserve) => reserve.status === 'cancelled').length;
 };
 
 /**

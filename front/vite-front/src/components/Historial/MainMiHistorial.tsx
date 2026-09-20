@@ -10,8 +10,8 @@ import Pagination from '../../shared/components/Pagination/Pagination';
 import './MainMiHistorial.css';
 import { ReservationStatus } from '../../utils/enums/reservationStatus.enum';
 import { Reservation } from '../../interfaces/reservationInterface';
-import FiltroReserva from '../Filtros/FiltroReservas/FiltroReserva';
 import Spinner from '../../shared/components/Spinner/Spinner';
+import FilterChips from '../../shared/components/Filters/FilterChips/FilterChips';
 
 interface ReservationsCache {
     [key: string]: {
@@ -19,6 +19,13 @@ interface ReservationsCache {
         hasNextPage: boolean;
     };
 }
+
+const STATUS_FILTER_OPTIONS = [
+    { value: '', label: 'Todas' },
+    { value: 'confirmed', label: 'Confirmadas' },
+    { value: 'pending', label: 'Pendientes' },
+    { value: 'cancelled', label: 'Canceladas' },
+];
 
 const MainMiHistorial = () => {
     const userActive = useUserStore((state) => state.userActive);
@@ -123,7 +130,7 @@ const MainMiHistorial = () => {
                     </p>
 
                     <div className="contenedor-turnos" id="contenedor-turnos">
-                        <FiltroReserva estadoSeleccionado={filtroEstado} onChange={setFiltroEstado} />
+                        <FilterChips selectedValue={filtroEstado} onChange={setFiltroEstado} options={STATUS_FILTER_OPTIONS} />
 
                         <CajaThead />
 

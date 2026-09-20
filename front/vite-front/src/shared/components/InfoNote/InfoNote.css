@@ -1,0 +1,8 @@
+.info-note {
+    margin: 0;
+    font-size: 0.8rem;
+    color: rgba(9, 39, 71, 0.6);
+    background: rgba(9, 39, 71, 0.05);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+}

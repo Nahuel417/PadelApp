@@ -1,0 +1,269 @@
+/* Coach Card Styles */
+.coach-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(35, 135, 68, 0.3);
+    transition: all 0.3s ease;
+}
+
+.coach-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.coach-card.unavailable {
+    opacity: 0.7;
+    border-color: rgba(185, 28, 28, 0.3);
+}
+
+.coach-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+}
+
+.coach-info {
+    flex: 1;
+}
+
+.coach-card__name {
+    color: #092747;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+}
+
+.coach-card__email {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.coach-card__status {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.coach-card__status.available {
+    background: rgba(35, 135, 68, 0.1);
+    color: #238744;
+}
+
+.coach-card__status.unavailable {
+    background: rgba(185, 28, 28, 0.1);
+    color: #b91c1c;
+}
+
+.coach-card__status i {
+    font-size: 0.9rem;
+    color: inherit;
+}
+
+.coach-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+.coach-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coach-info-label {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.coach-info-value {
+    color: #092747;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: right;
+    flex: 1;
+    margin-left: 1rem;
+}
+
+.coach-info-value.rate {
+    color: #238744;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.coach-description {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.coach-description-text {
+    color: #092747;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0.75rem;
+    background: rgba(9, 39, 71, 0.05);
+    border-radius: 6px;
+}
+
+.coach-card__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.coach-action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.coach-action-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.coach-action-btn:active::after {
+    animation: coachButtonPulse 0.45s ease;
+}
+
+.coach-action-btn.edit {
+    background: transparent;
+    color: #666;
+    border: 2px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.coach-action-btn.edit:hover {
+    border-color: #092747;
+    background-color: #f0f0f0;
+    color: #092747;
+    transform: translateX(-2px);
+}
+
+.coach-action-btn.edit:active {
+    transform: translateX(-4px) scale(0.95);
+}
+
+.coach-action-btn i {
+    font-size: 1rem;
+    color: inherit;
+    transition: transform 0.3s ease, color 0.2s ease;
+}
+
+.coach-action-btn:hover i {
+    transform: translateX(-2px) scale(1.2);
+}
+
+.coach-action-btn.details {
+    background: rgba(9, 39, 71, 0.1);
+    color: #092747;
+    border: 2px solid transparent;
+}
+
+.coach-action-btn.details:hover {
+    background: rgba(9, 39, 71, 0.2);
+    transform: translateY(-1px);
+    border-color: #092747;
+}
+
+.coach-action-btn.toggle.activate {
+    background: rgba(35, 135, 68, 0.1);
+    color: #238744;
+    border: 2px solid transparent;
+}
+
+.coach-action-btn.toggle.activate:hover {
+    background: rgba(35, 135, 68, 0.2);
+    transform: translateY(-1px);
+    border-color: #238744;
+}
+
+.coach-action-btn.toggle.deactivate {
+    background: rgba(185, 28, 28, 0.1);
+    color: #b91c1c;
+    border: 2px solid transparent;
+}
+
+.coach-action-btn.toggle.deactivate:hover {
+    background: rgba(185, 28, 28, 0.2);
+    transform: translateY(-1px);
+    border-color: #b91c1c;
+}
+
+@keyframes coachButtonPulse {
+    0% {
+        opacity: 0.18;
+        transform: scale(0.85);
+    }
+    60% {
+        opacity: 0.12;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.45);
+    }
+}
+/* Responsive */
+@media (max-width: 480px) {
+    .coach-card {
+        padding: 1.25rem;
+    }
+
+    .coach-card__header {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .coach-card__actions {
+        flex-direction: column;
+    }
+
+    .coach-action-btn {
+        justify-content: center;
+    }
+
+    .coach-info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .coach-info-value {
+        text-align: left;
+        margin-left: 0;
+    }
+}

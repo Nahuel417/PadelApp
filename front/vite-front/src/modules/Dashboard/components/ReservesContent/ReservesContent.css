@@ -15,7 +15,8 @@
 }
 
 .reserves-date-filter {
-    max-width: 200px;
+    min-width: 220px;
+    display: flex;
 }
 
 /* Error handling styles */

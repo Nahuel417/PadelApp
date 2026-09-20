@@ -1,0 +1,13 @@
+.user-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid #238744;
+    background-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}

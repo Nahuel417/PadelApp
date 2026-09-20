@@ -13,17 +13,16 @@
 }
 
 .reserve-row.pending {
-    background-color: #dbeafe;
     border-color: #60a5fa;
+    background-color: #dbeafe;
 }
 
 .reserve-row.confirmed {
-    background-color: #e1f3ea;
     border-color: #238744;
+    background-color: #e1f3ea;
 }
 
 .reserve-row.completed {
-    background-color: #dbeafe;
     border-color: #60a5fa;
 }
 
@@ -33,8 +32,7 @@
 }
 
 .reserve-row:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: scale(1.02);
+    transform: scale(1.01);
 }
 
 /* Reserve Columns */
@@ -59,6 +57,7 @@
 .reserve-col span {
     display: block;
     word-break: break-word;
+    width: fit-content;
 }
 
 .reserve-col-date {
@@ -71,6 +70,20 @@
 
 .reserve-col-court {
     flex: 0.8;
+}
+
+.reserve-court-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(9, 39, 71, 0.08);
+    border: 1px solid rgba(9, 39, 71, 0.2);
+    color: #092747;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
 .reserve-col-user {
@@ -92,7 +105,7 @@
 }
 
 .reserve-col-actions {
-    flex: 0.8;
+    flex: 1;
     display: flex;
     gap: 0.5rem;
     justify-content: flex-end;
@@ -125,6 +138,7 @@
 .reserve-col-actions {
     display: flex;
     justify-content: flex-end;
+    gap: 10px;
 }
 
 .reserve-action-btn {
@@ -143,7 +157,7 @@
 }
 
 .reserve-action-btn i {
-    font-size: 1.1rem;
+    font-size: 1.125rem;
     transition: all 0.2s ease;
 }
 
@@ -153,7 +167,7 @@
 
 .reserve-action-btn.approve:hover i {
     color: #1a5c32;
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 .reserve-action-btn.reject i {
@@ -162,14 +176,36 @@
 
 .reserve-action-btn.reject:hover i {
     color: #7f1515;
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 
 .reserve-action-btn.cancel i {
-    color: black;
+    color: inherit;
 }
 
 .reserve-action-btn.cancel:hover i {
+    transform: scale(1.05);
+}
+
+.reserve-action-btn.cancel {
     color: #092747;
-    transform: scale(1.2);
+    transition: all 0.2s ease;
+}
+
+.reserve-action-btn.cancel:hover {
+    transform: translateY(-1px);
+}
+
+.reserve-action-btn.cancel:focus-visible {
+    outline: 2px solid rgba(9, 39, 71, 0.35);
+    outline-offset: 2px;
+}
+
+.reserve-action-btn.details i {
+    color: #092747;
+}
+
+.reserve-action-btn.details:hover i {
+    color: #238744;
+    transform: scale(1.1);
 }

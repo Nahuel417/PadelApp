@@ -1,0 +1,28 @@
+.user-search {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(9, 39, 71, 0.2);
+    background-color: white;
+    min-width: 280px;
+}
+
+.user-search i {
+    color: rgba(9, 39, 71, 0.6);
+    font-size: 1rem;
+}
+
+.user-search input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 0.95rem;
+    color: #092747;
+    background: transparent;
+}
+
+.user-search input::placeholder {
+    color: rgba(9, 39, 71, 0.4);
+}

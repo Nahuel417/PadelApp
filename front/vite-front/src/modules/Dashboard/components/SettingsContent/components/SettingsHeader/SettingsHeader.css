@@ -1,0 +1,114 @@
+.settings-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid rgba(9, 39, 71, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    margin-bottom: 2rem;
+}
+
+.settings-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.settings-header-title {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #1e293b;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.settings-header-caption {
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.settings-header-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.settings-header-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.875rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+    background: #f8fafc;
+    min-width: 140px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-header-stat:hover {
+    transform: translateY(-2px);
+    background: #fff;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    border-color: rgba(35, 135, 68, 0.1);
+}
+
+.settings-header-stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+}
+
+.settings-header-stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+}
+
+/* Colores específicos */
+.settings-header-stat--role .settings-header-stat-value {
+    color: #1e293b;
+}
+
+.settings-header-stat--status .settings-header-stat-value {
+    color: #238744;
+}
+
+.settings-header-stat--joined .settings-header-stat-value {
+    color: #334155;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+    .settings-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+    }
+
+    .settings-header-stats {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .settings-header-stat {
+        flex: 1 1 140px;
+    }
+}
+
+@media (max-width: 640px) {
+    .settings-header-title {
+        font-size: 1.5rem;
+    }
+}

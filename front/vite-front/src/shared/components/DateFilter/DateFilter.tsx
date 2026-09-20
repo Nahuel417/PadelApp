@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import './DateFilter.css';
 
+const START_YEAR_LIMIT = 2020;
+
+const startOfDay = (date: Date) => {
+    const copy = new Date(date);
+    copy.setHours(0, 0, 0, 0);
+    return copy;
+};
+
+const endOfDay = (date: Date) => {
+    const copy = new Date(date);
+    copy.setHours(23, 59, 59, 999);
+    return copy;
+};
+
+const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
+
 export interface DateFilterProps {
     selectedDate?: Date;
     onDateChange: (date: Date | null) => void;
@@ -10,6 +26,7 @@ export interface DateFilterProps {
     disabled?: boolean;
     minDate?: Date;
     maxDate?: Date;
+    allowFutureDates?: boolean;
 }
 
 export const DateFilter: React.FC<DateFilterProps> = ({
@@ -20,10 +37,35 @@ export const DateFilter: React.FC<DateFilterProps> = ({
     className = '',
     disabled = false,
     minDate,
-    maxDate
+    maxDate,
+    allowFutureDates = false,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(new Date());
+
+    const getMinAllowedMonth = () => (minDate ? startOfMonth(minDate) : new Date(START_YEAR_LIMIT, 0, 1));
+    const getMaxAllowedMonth = () => (maxDate ? startOfMonth(maxDate) : null);
+
+    const getIsPrevDisabled = (month: Date) => {
+        const prevMonth = new Date(month.getFullYear(), month.getMonth() - 1, 1);
+        return prevMonth < getMinAllowedMonth();
+    };
+
+    const getIsNextDisabled = (month: Date) => {
+        const nextMonth = new Date(month.getFullYear(), month.getMonth() + 1, 1);
+
+        if (!allowFutureDates) {
+            const currentMonthStart = startOfMonth(new Date());
+            return nextMonth > currentMonthStart;
+        }
+
+        const maxMonth = getMaxAllowedMonth();
+        if (maxMonth) {
+            return nextMonth > maxMonth;
+        }
+
+        return false;
+    };
 
     useEffect(() => {
         if (selectedDate) {
@@ -40,40 +82,53 @@ export const DateFilter: React.FC<DateFilterProps> = ({
         return date.toLocaleDateString('es-ES', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
         });
     };
 
     const handleDateSelect = (date: Date) => {
-        // No permitir fechas futuras
         const today = new Date();
         today.setHours(23, 59, 59, 999); // Fin del día actual
 
-        if (date > today) return;
+        if (!allowFutureDates && date > today) return;
+        if (minDate && date < startOfDay(minDate)) return;
+        if (maxDate && date > endOfDay(maxDate)) return;
 
         onDateChange(date);
         setIsOpen(false);
     };
 
     const handlePrevMonth = () => {
-        const prevMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
-
-        // Solo permitir navegar a años razonables (desde 2020)
-        if (prevMonth.getFullYear() >= 2020) {
-            setCurrentMonth(prevMonth);
+        if (getIsPrevDisabled(currentMonth)) {
+            return;
         }
+
+        const prevMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
+        setCurrentMonth(prevMonth);
     };
 
     const handleNextMonth = () => {
-        const nextMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
-        const today = new Date();
-
-        // Solo permitir navegar al mes actual si estamos en un mes anterior
-        if (nextMonth.getFullYear() < today.getFullYear() ||
-            (nextMonth.getFullYear() === today.getFullYear() && nextMonth.getMonth() <= today.getMonth())) {
-            setCurrentMonth(nextMonth);
+        if (getIsNextDisabled(currentMonth)) {
+            return;
         }
+
+        const nextMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+        setCurrentMonth(nextMonth);
     };
+
+    const startOfDay = (date: Date) => {
+        const copy = new Date(date);
+        copy.setHours(0, 0, 0, 0);
+        return copy;
+    };
+
+    const endOfDay = (date: Date) => {
+        const copy = new Date(date);
+        copy.setHours(23, 59, 59, 999);
+        return copy;
+    };
+
+    const startOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 
     const getDaysInMonth = (date: Date) => {
         const year = date.getFullYear();
@@ -92,26 +147,27 @@ export const DateFilter: React.FC<DateFilterProps> = ({
             days.push({
                 date: new Date(year, month - 1, day),
                 isCurrentMonth: false,
-                isDisabled: true
+                isDisabled: true,
             });
         }
 
         // Días del mes actual
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        const today = startOfDay(new Date());
 
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
             const isToday = date.getTime() === today.getTime();
             const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
-            const isFuture = date > today;
+            const isFuture = !allowFutureDates && date > today;
+            const isBeforeMin = minDate ? date < startOfDay(minDate) : false;
+            const isAfterMax = maxDate ? date > endOfDay(maxDate) : false;
 
             days.push({
                 date,
                 isCurrentMonth: true,
                 isToday,
                 isSelected,
-                isDisabled: isFuture
+                isDisabled: isFuture || isBeforeMin || isAfterMax,
             });
         }
 
@@ -119,22 +175,14 @@ export const DateFilter: React.FC<DateFilterProps> = ({
     };
 
     const days = getDaysInMonth(currentMonth);
-    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
     return (
         <div className={`date-filter ${className}`}>
             {label && <label className="date-filter-label">{label}</label>}
             <div className="date-filter-input-container">
-                <button
-                    className="date-filter-input"
-                    onClick={() => setIsOpen(!isOpen)}
-                    disabled={disabled}
-                    type="button"
-                >
-                    <span className="date-filter-value">
-                        {selectedDate ? formatDateForDisplay(selectedDate) : placeholder}
-                    </span>
+                <button className="date-filter-input" onClick={() => setIsOpen(!isOpen)} disabled={disabled} type="button">
+                    <span className="date-filter-value">{selectedDate ? formatDateForDisplay(selectedDate) : placeholder}</span>
                     <div className="date-filter-icon-container">
                         {selectedDate && (
                             <button
@@ -145,8 +193,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                                     onDateChange(null);
                                     setIsOpen(false);
                                 }}
-                                title="Quitar filtro"
-                            >
+                                title="Quitar filtro">
                                 <i className="bi bi-x"></i>
                             </button>
                         )}
@@ -165,27 +212,20 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                                     type="button"
                                     className="date-filter-calendar-nav"
                                     onClick={handlePrevMonth}
-                                    disabled={currentMonth.getFullYear() <= 2020}
-                                >
+                                    disabled={minDate ? startOfMonth(currentMonth) <= startOfMonth(minDate) : currentMonth.getFullYear() <= 2020}>
                                     <i className="bi bi-chevron-left"></i>
                                 </button>
                                 <div className="date-filter-calendar-month">
                                     {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                                 </div>
-                                <button
-                                    type="button"
-                                    className="date-filter-calendar-nav"
-                                    onClick={handleNextMonth}
-                                    disabled={currentMonth.getMonth() === new Date().getMonth() &&
-                                             currentMonth.getFullYear() === new Date().getFullYear()}
-                                >
+                                <button type="button" className="date-filter-calendar-nav" onClick={handleNextMonth} disabled={getIsNextDisabled(currentMonth)}>
                                     <i className="bi bi-chevron-right"></i>
                                 </button>
                             </div>
 
                             {/* Días de la semana */}
                             <div className="date-filter-calendar-weekdays">
-                                {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map(day => (
+                                {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((day) => (
                                     <div key={day} className="date-filter-calendar-weekday">
                                         {day}
                                     </div>
@@ -198,16 +238,9 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                                     <button
                                         key={index}
                                         type="button"
-                                        className={`date-filter-calendar-day ${
-                                            day.isToday ? 'today' : ''
-                                        } ${
-                                            day.isSelected ? 'selected' : ''
-                                        } ${
-                                            day.isDisabled ? 'disabled' : ''
-                                        }`}
+                                        className={`date-filter-calendar-day ${day.isToday ? 'today' : ''} ${day.isSelected ? 'selected' : ''} ${day.isDisabled ? 'disabled' : ''}`}
                                         onClick={() => !day.isDisabled && handleDateSelect(day.date)}
-                                        disabled={day.isDisabled}
-                                    >
+                                        disabled={day.isDisabled}>
                                         {day.date.getDate()}
                                     </button>
                                 ))}
@@ -216,12 +249,7 @@ export const DateFilter: React.FC<DateFilterProps> = ({
                     </div>
                 )}
 
-                {isOpen && (
-                    <div
-                        className="date-filter-backdrop"
-                        onClick={() => setIsOpen(false)}
-                    />
-                )}
+                {isOpen && <div className="date-filter-backdrop" onClick={() => setIsOpen(false)} />}
             </div>
         </div>
     );

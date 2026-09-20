@@ -1,0 +1,186 @@
+/* ClassRow Component Styles */
+
+.class-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 10px 10px 10px 10px;
+    color: black;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid;
+}
+
+.class-row.pending {
+    border-color: #60a5fa;
+    background-color: #dbeafe;
+}
+
+.class-row.confirmed {
+    border-color: #238744;
+    background-color: #e1f3ea;
+}
+
+.class-row.completed {
+    border-color: #60a5fa;
+}
+
+.class-row.cancelled {
+    background-color: #fdeaea;
+    border-color: #b91c1c;
+}
+
+.class-row:hover {
+    transform: scale(1.01);
+}
+
+/* Class Columns */
+.class-col {
+    flex: 1;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: black;
+}
+
+.class-col-date,
+.class-col-time,
+.class-col-court,
+.class-col-user,
+.class-col-affair,
+.class-col-price,
+.class-col-status {
+    text-align: start;
+}
+
+.class-col span {
+    display: block;
+    word-break: break-word;
+    width: fit-content;
+}
+
+.class-col-date {
+    flex: 0.9;
+}
+
+.class-col-time {
+    flex: 0.9;
+}
+
+.class-col-court {
+    flex: 0.8;
+}
+
+.class-court-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(9, 39, 71, 0.08);
+    border: 1px solid rgba(9, 39, 71, 0.2);
+    color: #092747;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.class-col-user {
+    flex: 1;
+}
+
+.class-col-affair {
+    flex: 1;
+}
+
+.class-col-price {
+    flex: 0.8;
+    font-weight: 600;
+    color: #238744;
+}
+
+.class-col-status {
+    flex: 0.9;
+}
+
+.class-col-actions {
+    flex: 0.6;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    padding-right: 0.625rem;
+}
+
+/* Status Badge */
+.status-badge {
+    font-weight: 700;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.status-badge.pending {
+    color: #3b82d9;
+}
+
+.status-badge.confirmed {
+    color: #238744;
+}
+
+.status-badge.completed {
+    color: #3b82d9;
+}
+
+.status-badge.cancelled {
+    color: #b91c1c;
+}
+
+/* Action Buttons */
+.class-action-btn {
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+
+.class-action-btn i {
+    font-size: 1.125rem;
+    transition: all 0.2s ease;
+}
+
+.class-action-btn.details i {
+    color: #092747;
+}
+
+.class-action-btn.details:hover i {
+    /* color: #238744; */
+    transform: scale(1.2);
+}
+
+.class-action-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Spinner dentro del botón */
+.btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(9, 39, 71, 0.2);
+    border-top-color: #238744;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

@@ -1,4 +1,6 @@
 export type ReserveStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
+export type PaymentStatus = 'pending' | 'approved' | 'rejected' | 'cancelled' | 'refunded';
+export type PaymentMethod = 'credit_card' | 'debit_card' | 'bank_transfer' | 'cash' | 'digital_wallet';
 
 export interface Reserve {
     id: string;
@@ -10,6 +12,13 @@ export interface Reserve {
     status: ReserveStatus;
     total_amount: number;
     trainerName?: string;
+    payment_status?: PaymentStatus;
+    payment_method?: PaymentMethod;
+    payment_reference?: string;
+    paid_at?: string;
+    created_at?: string;
+    cancelled_at?: string;
+    notes?: string;
 }
 
 export interface ReservesContentProps {
@@ -32,6 +41,7 @@ export interface ReserveListProps {
     onApprove?: (id: string) => void;
     onReject?: (id: string) => void;
     onCancel?: (id: string) => void;
+    onViewDetails?: (reserve: Reserve) => void;
     isLoading?: boolean;
     currentPage?: number;
     hasNextPage?: boolean;
@@ -43,4 +53,5 @@ export interface ReserveRowProps {
     onApprove?: (id: string) => void;
     onReject?: (id: string) => void;
     onCancel?: (id: string) => void;
+    onViewDetails?: (reserve: Reserve) => void;
 }

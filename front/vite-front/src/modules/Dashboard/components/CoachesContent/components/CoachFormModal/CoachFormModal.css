@@ -1,0 +1,783 @@
+/* Enhanced Coach Form Modal Styles */
+
+.coach-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.coach-modal-content {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 750px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes coachButtonPulse {
+    0% {
+        opacity: 0.18;
+        transform: scale(0.85);
+    }
+    60% {
+        opacity: 0.12;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.45);
+    }
+}
+
+/* Header Mejorado */
+.coach-modal-header-enhanced {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(35, 135, 68, 0.08) 0%, rgba(9, 39, 71, 0.05) 100%);
+    border-bottom: 2px solid rgba(35, 135, 68, 0.1);
+    border-radius: 16px 16px 0 0;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #238744 0%, #1f7a3a 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 1.5rem;
+}
+
+.header-text h2 {
+    margin: 0;
+    color: #092747;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.header-subtitle {
+    margin: 0.25rem 0 0 0;
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.coach-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #999;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.coach-modal-close i {
+    color: inherit;
+}
+
+.coach-modal-close::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.coach-modal-close:active::after {
+    animation: coachButtonPulse 0.45s ease;
+}
+
+.coach-modal-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #092747;
+}
+
+/* Tabs Mejoradas */
+.coach-modal-tabs-enhanced {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1.5rem 2rem 0;
+    border-bottom: 2px solid rgba(9, 39, 71, 0.1);
+}
+
+.tab-button-enhanced {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: none;
+    border: none;
+    color: #666;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+}
+
+.tab-button-enhanced::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.tab-button-enhanced:active::after {
+    animation: coachButtonPulse 0.45s ease;
+}
+
+.tab-button-enhanced:hover {
+    color: #238744;
+}
+
+.tab-button-enhanced.active {
+    color: #238744;
+    border-bottom-color: #238744;
+}
+
+.tab-button-enhanced span {
+    color: inherit;
+}
+
+.tab-button-enhanced i {
+    font-size: 1.1rem;
+    color: inherit;
+}
+
+.tab-button-enhanced span.tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 0.5rem;
+    background: #238744;
+    color: white;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 0.25rem;
+}
+
+/* Contenido del Formulario */
+.coach-form-enhanced {
+    padding: 2rem;
+}
+
+.tab-content-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 20px rgba(9, 39, 71, 0.08);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    color: #092747;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(35, 135, 68, 0.2);
+}
+
+.section-title i {
+    color: #238744;
+    font-size: 1.25rem;
+}
+
+.section-subtitle {
+    margin: 0;
+    color: #999;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Grupos de Formulario */
+.form-group-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group-enhanced label {
+    font-weight: 600;
+    color: #092747;
+    font-size: 0.9rem;
+}
+
+.form-group-enhanced input,
+.form-group-enhanced textarea {
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    color: #092747;
+}
+
+.form-group-enhanced input:focus,
+.form-group-enhanced textarea:focus {
+    outline: none;
+    border-color: #238744;
+    box-shadow: 0 0 0 3px rgba(35, 135, 68, 0.1);
+}
+
+.form-group-enhanced input.error,
+.form-group-enhanced textarea.error {
+    border-color: #b91c1c;
+    background: rgba(185, 28, 28, 0.05);
+}
+
+.error-message-enhanced {
+    color: #b91c1c;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.form-help-enhanced {
+    color: #999;
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* Grid de Formulario */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Input con Icono */
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-symbol,
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    color: #999;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.input-icon i {
+    color: inherit;
+}
+
+.input-with-icon input {
+    padding-left: 2.5rem !important;
+    width: 100%;
+    color: #092747;
+}
+
+/* Búsqueda de Usuario */
+.email-search-container-enhanced {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.email-search-container-enhanced input {
+    flex: 1;
+    color: gray;
+    cursor: not-allowed;
+}
+
+.search-btn-enhanced {
+    padding: 0.75rem 1rem;
+    background: #238744;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.search-btn-enhanced::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.search-btn-enhanced:active::after {
+    animation: coachButtonPulse 0.45s ease;
+}
+
+.search-btn-enhanced:hover:not(:disabled) {
+    background: #1f7a3a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(35, 135, 68, 0.3);
+}
+
+.search-btn-enhanced:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Tarjeta de Usuario */
+.user-info-card-enhanced {
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(35, 135, 68, 0.08) 0%, rgba(9, 39, 71, 0.05) 100%);
+    border: 1px solid rgba(35, 135, 68, 0.2);
+    border-radius: 8px;
+}
+
+.user-info-header-enhanced {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    color: #238744;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.user-info-header-enhanced span {
+    color: inherit;
+}
+
+.user-info-header-enhanced i {
+    font-size: 1.1rem;
+    color: inherit;
+}
+
+.user-details-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.user-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+}
+
+.user-detail-row .detail-label {
+    font-weight: 600;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.user-detail-row .detail-value {
+    color: #092747;
+    font-weight: 500;
+}
+
+/* Textarea */
+.textarea-enhanced {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Horarios */
+.schedule-header-enhanced {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.add-slot-btn-enhanced {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: #238744;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.add-slot-btn-enhanced:hover {
+    background: #1f7a3a;
+    transform: translateY(-1px);
+}
+
+.add-slot-btn-enhanced::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.add-slot-btn-enhanced:active::after {
+    animation: coachButtonPulse 0.45s ease;
+}
+
+.availability-slots-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.no-slots-enhanced {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: rgba(9, 39, 71, 0.05);
+    border-radius: 8px;
+    border: 2px dashed rgba(9, 39, 71, 0.1);
+}
+
+.no-slots-enhanced i {
+    font-size: 2.5rem;
+    color: #092747;
+    opacity: 0.3;
+    margin-bottom: 0.5rem;
+}
+
+.no-slots-enhanced p {
+    margin: 0;
+    color: #092747;
+    font-weight: 600;
+}
+
+.no-slots-enhanced small {
+    display: block;
+    margin-top: 0.5rem;
+    color: #999;
+}
+
+.availability-slot-enhanced {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(35, 135, 68, 0.05);
+    border: 1px solid rgba(35, 135, 68, 0.2);
+    border-radius: 8px;
+    position: relative;
+}
+
+.slot-controls-enhanced {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.day-select,
+.time-input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.day-select {
+    flex: 1;
+    min-width: 120px;
+}
+
+.time-input {
+    flex: 0.8;
+    color: #092747;
+}
+
+.day-select:focus,
+.time-input:focus {
+    outline: none;
+    border-color: #238744;
+    box-shadow: 0 0 0 3px rgba(35, 135, 68, 0.1);
+}
+
+.time-separator {
+    color: #999;
+    font-weight: 600;
+    padding: 0 0.25rem;
+}
+
+.remove-slot-btn-enhanced {
+    padding: 0.5rem;
+    background: #b91c1c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.remove-slot-btn-enhanced:hover {
+    background: #991b1b;
+    transform: scale(1.05);
+}
+
+.remove-slot-btn-enhanced::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.remove-slot-btn-enhanced:active::after {
+    animation: coachButtonPulse 0.45s ease;
+}
+
+.slot-preview-enhanced {
+    padding: 0.5rem 0.75rem;
+    background: white;
+    border-left: 3px solid #238744;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #092747;
+    font-weight: 500;
+}
+
+/* Acciones del Formulario */
+.form-actions-enhanced {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.75rem;
+    border-radius: 0 0 16px 16px;
+    display: flex;
+}
+
+.btn-cancel-enhanced,
+.btn-save-enhanced {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel-enhanced::after,
+.btn-save-enhanced::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.btn-cancel-enhanced:active::after,
+.btn-save-enhanced:active::after {
+    animation: coachButtonPulse 0.45s ease;
+}
+
+.btn-cancel-enhanced {
+    background: rgba(9, 39, 71, 0.1);
+    color: #092747;
+}
+
+.btn-cancel-enhanced i {
+    color: inherit;
+}
+
+.btn-cancel-enhanced:hover {
+    background: rgba(9, 39, 71, 0.2);
+}
+
+.btn-save-enhanced {
+    background: #238744;
+    color: white;
+}
+
+.btn-save-enhanced:hover:not(:disabled) {
+    background: #1f7a3a;
+    transform: translateY(-1px);
+}
+
+.btn-save-enhanced:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .coach-modal-content {
+        max-width: 95vw;
+        max-height: 95vh;
+    }
+
+    .coach-modal-header-enhanced {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .header-left {
+        width: 100%;
+    }
+
+    .coach-modal-close {
+        align-self: flex-end;
+    }
+
+    .coach-modal-tabs-enhanced {
+        flex-wrap: wrap;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .schedule-header-enhanced {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .add-slot-btn-enhanced {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .slot-controls-enhanced {
+        flex-wrap: wrap;
+    }
+
+    .form-actions-enhanced {
+        flex-direction: column-reverse;
+    }
+
+    .btn-cancel-enhanced,
+    .btn-save-enhanced {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -5,7 +5,7 @@ import { ReserveTableHeader } from '../ReserveTableHeader/ReserveTableHeader';
 import { ReserveRow } from '../ReserveRow/ReserveRow';
 import { Pagination, Spinner } from '../../../../../../shared';
 
-export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, onReject, onCancel, isLoading, currentPage = 1, hasNextPage, onPageChange }) => {
+export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, onReject, onCancel, onViewDetails, isLoading, currentPage = 1, hasNextPage, onPageChange }) => {
     if (isLoading && reserves.length === 0) {
         return (
             <div className="reserve-list-loading">
@@ -17,8 +17,13 @@ export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, o
     if (reserves.length === 0) {
         return (
             <div className="reserve-list-empty">
-                <i className="bi bi-inbox"></i>
-                <p>No hay reservas para mostrar</p>
+                <div className="reserve-empty-icon">
+                    <i className="bi bi-inbox"></i>
+                </div>
+                <div className="reserve-empty-content">
+                    <h3>No se registran reservas</h3>
+                    <p>Ajustá los filtros o revisá más tarde para ver nuevas solicitudes.</p>
+                </div>
             </div>
         );
     }
@@ -28,7 +33,7 @@ export const ReserveList: React.FC<ReserveListProps> = ({ reserves, onApprove, o
             <ReserveTableHeader />
             <div className="reserve-table">
                 {reserves.map((reserve) => (
-                    <ReserveRow key={reserve.id} reserve={reserve} onApprove={onApprove} onReject={onReject} onCancel={onCancel} />
+                    <ReserveRow key={reserve.id} reserve={reserve} onApprove={onApprove} onReject={onReject} onCancel={onCancel} onViewDetails={onViewDetails} />
                 ))}
             </div>
 

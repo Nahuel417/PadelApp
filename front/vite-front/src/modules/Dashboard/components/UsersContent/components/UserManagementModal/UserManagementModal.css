@@ -1,0 +1,310 @@
+.user-management-modal {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.user-management-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.user-management-section-title {
+    /* font-size: 1.1rem; */
+    color: #092747;
+    font-weight: 700;
+}
+
+.user-management-profile {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.2rem;
+    background: rgba(9, 39, 71, 0.04);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+}
+
+.profile-label {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(9, 39, 71, 0.6);
+    margin-bottom: 0.3rem;
+}
+
+.profile-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #092747;
+}
+
+.profile-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(35, 135, 68, 0.12);
+    color: #238744;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.user-management-alert {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #b91c1c;
+    background: rgba(185, 28, 28, 0.08);
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(185, 28, 28, 0.2);
+}
+
+.section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #092747;
+    font-weight: 700;
+}
+
+.section-caption {
+    font-size: 0.85rem;
+    color: rgba(9, 39, 71, 0.65);
+}
+
+.section-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.link-button {
+    border: none;
+    background: transparent;
+    color: #092747;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+}
+
+.link-button::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -0.1rem;
+    width: 100%;
+    height: 2px;
+    background: rgba(9, 39, 71, 0.4);
+    transition: transform 0.2s ease;
+    transform: scaleX(0);
+    transform-origin: left;
+}
+
+.link-button:hover::after {
+    transform: scaleX(1);
+}
+
+.user-management-spinner,
+.user-management-empty,
+.user-management-error-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    border-radius: 12px;
+    border: 1px dashed rgba(9, 39, 71, 0.12);
+    background: rgba(9, 39, 71, 0.02);
+    color: rgba(9, 39, 71, 0.65);
+    font-size: 0.95rem;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.user-management-placeholder-text {
+    color: rgba(9, 39, 71, 0.7);
+}
+
+.user-management-error {
+    color: #b91c1c;
+    font-size: 0.85rem;
+    margin-right: auto;
+}
+
+.user-management-reservations-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 120px;
+    border-radius: 12px;
+    border: 1px dashed rgba(9, 39, 71, 0.12);
+    background: rgba(9, 39, 71, 0.02);
+    color: rgba(9, 39, 71, 0.7);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.user-management-trigger {
+    border: none;
+    border-radius: 999px;
+    padding: 0.55rem 1.4rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: #238744;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-management-trigger:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(35, 135, 68, 0.25);
+}
+
+.user-management-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-management-cancel,
+.user-management-confirm {
+    border: none;
+    border-radius: 999px;
+    padding: 0.55rem 1.35rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-management-cancel {
+    background: rgba(9, 39, 71, 0.08);
+    color: #092747;
+}
+
+.user-management-cancel:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(9, 39, 71, 0.12);
+}
+
+.user-management-confirm {
+    background: #238744;
+    color: #ffffff;
+    box-shadow: 0 6px 14px rgba(35, 135, 68, 0.22);
+}
+
+.user-management-confirm:disabled {
+    background: rgba(35, 135, 68, 0.35);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.user-management-confirm:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(35, 135, 68, 0.28);
+}
+
+.user-management-reservations {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.user-management-reservation {
+    display: grid;
+    grid-template-columns: minmax(150px, 1fr) minmax(180px, 1fr) auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.reservation-date {
+    font-weight: 600;
+    color: #092747;
+}
+
+.reservation-time {
+    display: block;
+    font-size: 0.85rem;
+    color: rgba(9, 39, 71, 0.65);
+}
+
+.reservation-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: rgba(9, 39, 71, 0.65);
+    font-size: 0.85rem;
+}
+
+.reservation-court {
+    font-weight: 600;
+    color: #092747;
+}
+
+.reservation-counterpart {
+    font-style: italic;
+}
+
+.reservation-status {
+    justify-self: flex-end;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.reservation-status--pendiente {
+    background: rgba(212, 136, 6, 0.12);
+    color: #d48806;
+}
+
+.reservation-status--confirmada {
+    background: rgba(35, 135, 68, 0.12);
+    color: #238744;
+}
+
+.reservation-status--cancelada {
+    background: rgba(185, 28, 28, 0.12);
+    color: #b91c1c;
+}
+
+.reservation-status--completada {
+    background: rgba(9, 39, 71, 0.12);
+    color: #092747;
+}
+
+.user-management-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .user-management-reservation {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+        grid-template-rows: auto auto;
+    }
+
+    .reservation-status {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+        text-align: center;
+    }
+}

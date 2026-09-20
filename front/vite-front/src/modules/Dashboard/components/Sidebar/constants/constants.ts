@@ -4,8 +4,7 @@ export const COMMON_MENU_ITEMS: MenuItem[] = [{ id: 'dashboard', label: 'Dashboa
 
 export const COACH_MENU_ITEMS: MenuItem[] = [
     { id: 'mis-clases', label: 'Mis Clases', icon: 'bi-calendar2-check' },
-    { id: 'alumnos', label: 'Mis Alumnos', icon: 'bi-people' },
-    { id: 'horarios', label: 'Horarios', icon: 'bi-clock' },
+    { id: 'horarios', label: 'Mis Horarios', icon: 'bi-clock' },
     { id: 'perfil', label: 'Mi Perfil', icon: 'bi-person' },
 ];
 
@@ -14,7 +13,6 @@ export const ADMIN_MENU_ITEMS: MenuItem[] = [
     { id: 'usuarios', label: 'Usuarios', icon: 'bi-people' },
     { id: 'canchas', label: 'Canchas', icon: 'bi-layout-three-columns' },
     { id: 'entrenadores', label: 'Entrenadores', icon: 'bi-person-badge' },
-    { id: 'reportes', label: 'Reportes', icon: 'bi-bar-chart' },
 ];
 
 export const SUPER_ADMIN_MENU_ITEMS: MenuItem[] = [
@@ -22,8 +20,6 @@ export const SUPER_ADMIN_MENU_ITEMS: MenuItem[] = [
     { id: 'usuarios', label: 'Usuarios', icon: 'bi-people' },
     { id: 'canchas', label: 'Canchas', icon: 'bi-layout-three-columns' },
     { id: 'entrenadores', label: 'Entrenadores', icon: 'bi-person-badge' },
-    { id: 'admins', label: 'Administradores', icon: 'bi-person-check' },
-    { id: 'reportes', label: 'Reportes', icon: 'bi-bar-chart' },
     { id: 'configuracion', label: 'Configuración', icon: 'bi-gear' },
 ];
 

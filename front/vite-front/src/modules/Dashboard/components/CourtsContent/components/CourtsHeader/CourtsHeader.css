@@ -1,0 +1,121 @@
+.courts-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.75rem 2rem;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 14px;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    box-shadow: 0 10px 20px rgba(9, 39, 71, 0.08);
+    margin-bottom: 2rem;
+}
+
+.courts-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.courts-header-title {
+    margin: 0;
+    font-size: 1.65rem;
+    color: #092747;
+    font-weight: 700;
+}
+
+.courts-header-caption {
+    font-size: 0.85rem;
+    color: rgba(9, 39, 71, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+.courts-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.courts-header-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.courts-header-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(9, 39, 71, 0.08);
+    background: rgba(255, 255, 255, 0.95);
+    min-width: 120px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.courts-header-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(9, 39, 71, 0.12);
+}
+
+.courts-header-stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #092747;
+}
+
+.courts-header-stat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: rgba(9, 39, 71, 0.55);
+}
+
+/* Colores específicos */
+.courts-header-stat--total .courts-header-stat-value {
+    color: #092747;
+}
+
+.courts-header-stat--active .courts-header-stat-value {
+    color: #238744;
+}
+
+.courts-header-stat--inactive .courts-header-stat-value {
+    color: #b91c1c;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+    .courts-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .courts-header-stats {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .courts-header-stat {
+        flex: 1 1 140px;
+    }
+}
+
+@media (max-width: 640px) {
+    .courts-header {
+        padding: 1.5rem;
+    }
+
+    .courts-header-title {
+        font-size: 1.45rem;
+    }
+
+    .courts-header-caption {
+        font-size: 0.75rem;
+    }
+}
